@@ -1,0 +1,488 @@
+[
+  {
+    "id": "residential",
+    "name": "Residential",
+    "img": "house.jpg",
+    "short": "Safe, code-compliant wiring, outlets, and upgrades for your home.",
+    "why": "Your home's electrical system should be safe, reliable, and ready for how you live today. From new outlets and EV charger circuits to full rewires, Voltera Plus delivers clean, code-compliant work.",
+    "perks": [
+      "Wiring and rewiring",
+      "Outlets, switches, and GFCI protection",
+      "EV charger and appliance circuits"
+    ],
+    "hub": [
+      {
+        "title": "Safety First",
+        "text": "Every job is completed to the Canadian Electrical Code and inspected for your peace of mind."
+      },
+      {
+        "title": "Clean, Tidy Work",
+        "text": "We protect your space and leave it clean when we are done."
+      },
+      {
+        "title": "Honest Pricing",
+        "text": "Free estimates and clear quotes with no surprises."
+      }
+    ],
+    "cat": "electric"
+  },
+  {
+    "id": "commercial",
+    "name": "Commercial",
+    "img": "blueprint.jpg",
+    "short": "Electrical installs and maintenance that keep your business running.",
+    "why": "Downtime costs money. Voltera Plus plans and completes commercial electrical work for offices, retail, and restaurants with minimal disruption to your operation.",
+    "perks": [
+      "Tenant improvements and build-outs",
+      "Power distribution and sub-panels",
+      "Scheduled maintenance and inspections"
+    ],
+    "hub": [
+      {
+        "title": "Minimal Downtime",
+        "text": "We schedule around your business hours."
+      },
+      {
+        "title": "Code Compliant",
+        "text": "Permits, inspections, and documentation handled properly."
+      },
+      {
+        "title": "Scalable Solutions",
+        "text": "Designs that are ready for your next expansion."
+      }
+    ],
+    "cat": "electric"
+  },
+  {
+    "id": "industrial",
+    "name": "Industrial",
+    "img": "site.jpg",
+    "short": "Heavy-duty power, motors, and controls for demanding environments.",
+    "why": "Industrial sites need robust electrical systems and a contractor who understands the risks. Voltera Plus works to strict safety standards on every project.",
+    "perks": [
+      "Motor and equipment connections",
+      "Heavy-duty power distribution",
+      "Shutdown and emergency repair work"
+    ],
+    "hub": [
+      {
+        "title": "Safety Standards",
+        "text": "Rigorous lockout and safe-work practices."
+      },
+      {
+        "title": "Reliable Power",
+        "text": "Systems built to run hard, day after day."
+      },
+      {
+        "title": "Rapid Response",
+        "text": "24/7 emergency availability when production stops."
+      }
+    ],
+    "cat": "electric"
+  },
+  {
+    "id": "panel-upgrades",
+    "name": "Panel Upgrades",
+    "img": "panel.jpg",
+    "short": "Upgrade your electrical panel for more capacity and better safety.",
+    "why": "Frequent breaker trips, flickering lights, or adding new appliances? An outdated panel may be the cause. We upgrade panels to handle today's demands safely.",
+    "perks": [
+      "100A to 200A service upgrades",
+      "Breaker and sub-panel replacement",
+      "Aluminum and outdated panel replacement"
+    ],
+    "hub": [
+      {
+        "title": "Signs You Need One",
+        "text": "Tripping breakers, buzzing, or a panel older than 30 years."
+      },
+      {
+        "title": "Capacity for Growth",
+        "text": "Room for EV chargers, heat pumps, and renovations."
+      },
+      {
+        "title": "Fully Permitted",
+        "text": "Work is done to code and inspected."
+      }
+    ],
+    "cat": "electric"
+  },
+  {
+    "id": "lighting",
+    "name": "Lighting Solutions",
+    "img": "board.jpg",
+    "short": "Interior, exterior, and energy-efficient lighting designed for you.",
+    "why": "Good lighting changes how a space looks and feels. We install pot lights, fixtures, outdoor lighting, and efficient LED upgrades that cut your energy bill.",
+    "perks": [
+      "Pot lights and LED retrofits",
+      "Indoor and outdoor fixtures",
+      "Dimmers and smart controls"
+    ],
+    "hub": [
+      {
+        "title": "Energy Efficient",
+        "text": "LED upgrades that lower your costs."
+      },
+      {
+        "title": "Custom Layouts",
+        "text": "Lighting planned around your space."
+      },
+      {
+        "title": "Smart Controls",
+        "text": "Dimmers, timers, and app-controlled options."
+      }
+    ],
+    "cat": "electric"
+  },
+  {
+    "id": "troubleshooting",
+    "name": "Troubleshooting & Repairs",
+    "img": "meter.jpg",
+    "short": "Fast diagnosis and repair of faults, outages, and failing circuits.",
+    "why": "Dead outlets, tripping breakers, or burning smells need attention right away. Voltera Plus tracks down the cause and fixes it correctly the first time.",
+    "perks": [
+      "Fault finding and diagnostics",
+      "Outage and breaker issues",
+      "24/7 emergency service"
+    ],
+    "hub": [
+      {
+        "title": "Accurate Diagnosis",
+        "text": "Proper testing to find the real cause."
+      },
+      {
+        "title": "Fixed Right",
+        "text": "Repairs that last, not quick patches."
+      },
+      {
+        "title": "Available 24/7",
+        "text": "Emergency service when you need us."
+      }
+    ],
+    "cat": "electric"
+  },
+  {
+    "id": "renovations",
+    "cat": "general-contractor",
+    "name": "Home Renovations",
+    "img": "reno.jpg",
+    "short": "Full-home and room renovations managed from plan to finish.",
+    "why": "Whether it is a kitchen, bathroom, or whole-home makeover, Voltera Plus manages the trades, schedule, and quality so your renovation runs smoothly.",
+    "perks": [
+      "Kitchen and bathroom remodels",
+      "Basement finishing",
+      "Whole-home renovations"
+    ],
+    "hub": [
+      {
+        "title": "One Point of Contact",
+        "text": "We coordinate every trade so you do not have to."
+      },
+      {
+        "title": "On Schedule",
+        "text": "Clear timelines and regular progress updates."
+      },
+      {
+        "title": "Quality Finishes",
+        "text": "Careful workmanship from framing to final touches."
+      }
+    ]
+  },
+  {
+    "id": "additions",
+    "cat": "general-contractor",
+    "name": "Additions & Extensions",
+    "img": "addition.jpg",
+    "short": "Add living space with well-planned additions and extensions.",
+    "why": "Need more room? We plan and build additions that blend with your existing home, including structure, electrical, and finishing.",
+    "perks": [
+      "Room and second-storey additions",
+      "Structural framing",
+      "Permits and drawings coordination"
+    ],
+    "hub": [
+      {
+        "title": "Planned Properly",
+        "text": "Layouts designed around how you live."
+      },
+      {
+        "title": "Permits Handled",
+        "text": "We manage permits and inspections."
+      },
+      {
+        "title": "Seamless Blend",
+        "text": "New space that matches your existing home."
+      }
+    ]
+  },
+  {
+    "id": "project-management",
+    "cat": "general-contractor",
+    "name": "Project Management",
+    "img": "pm.jpg",
+    "short": "Professional management of your build or renovation project.",
+    "why": "Keep your project on time and on budget. We handle scheduling, trades, materials, and site supervision from start to finish.",
+    "perks": [
+      "Scheduling and trade coordination",
+      "Budget and material tracking",
+      "On-site supervision"
+    ],
+    "hub": [
+      {
+        "title": "Budget Control",
+        "text": "Transparent costs with no surprises."
+      },
+      {
+        "title": "Reliable Trades",
+        "text": "Vetted, qualified professionals on every job."
+      },
+      {
+        "title": "Clear Communication",
+        "text": "You always know where your project stands."
+      }
+    ]
+  },
+  {
+    "id": "commercial-build-outs",
+    "cat": "general-contractor",
+    "name": "Commercial Build-Outs",
+    "img": "buildout.jpg",
+    "short": "Tenant improvements and fit-outs for offices, retail, and restaurants.",
+    "why": "We turn empty commercial space into a functional, code-compliant workplace with minimal disruption to your timeline.",
+    "perks": [
+      "Office and retail fit-outs",
+      "Restaurant renovations",
+      "Code-compliant construction"
+    ],
+    "hub": [
+      {
+        "title": "Fast Turnaround",
+        "text": "Efficient scheduling to get you open sooner."
+      },
+      {
+        "title": "Code Compliant",
+        "text": "Permits and inspections managed properly."
+      },
+      {
+        "title": "Built to Last",
+        "text": "Durable materials and professional workmanship."
+      }
+    ]
+  },
+  {
+    "id": "framing-drywall",
+    "cat": "general-contractor",
+    "name": "Framing & Drywall",
+    "img": "drywall.jpg",
+    "short": "Framing, drywall, and finishing for new and renovated spaces.",
+    "why": "Strong framing and smooth drywall are the foundation of a great finish. We deliver clean, accurate work ready for paint.",
+    "perks": [
+      "Wall framing and partitions",
+      "Drywall installation and taping",
+      "Patching and repair"
+    ],
+    "hub": [
+      {
+        "title": "Precise Work",
+        "text": "Straight, square, and solid."
+      },
+      {
+        "title": "Smooth Finish",
+        "text": "Paint-ready surfaces."
+      },
+      {
+        "title": "Tidy Site",
+        "text": "Dust control and clean-up every day."
+      }
+    ]
+  },
+  {
+    "id": "flooring-tiling",
+    "cat": "general-contractor",
+    "name": "Flooring & Tiling",
+    "img": "flooring.jpg",
+    "short": "Tile, hardwood, and laminate flooring installed with precision.",
+    "why": "New floors transform a space. We prepare the subfloor and install tile, hardwood, and laminate with tight seams and a durable finish.",
+    "perks": [
+      "Tile and grout installation",
+      "Hardwood and laminate flooring",
+      "Subfloor prep and levelling"
+    ],
+    "hub": [
+      {
+        "title": "Proper Prep",
+        "text": "Level, solid subfloors for lasting results."
+      },
+      {
+        "title": "Precise Layout",
+        "text": "Clean lines and tight seams."
+      },
+      {
+        "title": "Durable Finish",
+        "text": "Materials chosen for your traffic and budget."
+      }
+    ]
+  },
+  {
+    "id": "home-repairs",
+    "cat": "handyman",
+    "name": "General Home Repairs",
+    "img": "repairs.jpg",
+    "short": "Quick fixes for the small jobs around your home.",
+    "why": "From squeaky doors to damaged trim, our handy man services take care of the repairs that keep piling up on your to-do list.",
+    "perks": [
+      "Door and window adjustments",
+      "Trim and baseboard repair",
+      "Caulking and sealing"
+    ],
+    "hub": [
+      {
+        "title": "Quick Scheduling",
+        "text": "Fast response for small jobs."
+      },
+      {
+        "title": "Fair Pricing",
+        "text": "Clear quotes with no surprises."
+      },
+      {
+        "title": "Done Right",
+        "text": "Careful repairs that last."
+      }
+    ]
+  },
+  {
+    "id": "painting",
+    "cat": "handyman",
+    "name": "Painting & Touch-Ups",
+    "img": "painting.jpg",
+    "short": "Interior painting, touch-ups, and drywall patching.",
+    "why": "Refresh any room with clean, professional painting. We prep surfaces properly and protect your belongings.",
+    "perks": [
+      "Interior painting",
+      "Wall patching and repair",
+      "Trim and door painting"
+    ],
+    "hub": [
+      {
+        "title": "Proper Prep",
+        "text": "Great paint jobs start with good prep."
+      },
+      {
+        "title": "Protected Spaces",
+        "text": "Floors and furniture covered."
+      },
+      {
+        "title": "Clean Lines",
+        "text": "Sharp, even finishes."
+      }
+    ]
+  },
+  {
+    "id": "assembly-mounting",
+    "cat": "handyman",
+    "name": "Assembly & Mounting",
+    "img": "mounting.jpg",
+    "short": "Furniture assembly, TV mounting, shelves, and fixtures.",
+    "why": "Let us handle the heavy lifting and drilling. We assemble furniture and securely mount TVs, shelves, mirrors, and more.",
+    "perks": [
+      "Furniture assembly",
+      "TV and shelf mounting",
+      "Curtain rods and mirrors"
+    ],
+    "hub": [
+      {
+        "title": "Secure Mounting",
+        "text": "Anchored correctly for the wall type."
+      },
+      {
+        "title": "Neat Results",
+        "text": "Level, tidy, and clean."
+      },
+      {
+        "title": "Time Saver",
+        "text": "Get it done in a single visit."
+      }
+    ]
+  },
+  {
+    "id": "fixture-replacement",
+    "cat": "handyman",
+    "name": "Fixture & Hardware Replacement",
+    "img": "fixture.jpg",
+    "short": "Replace faucets, handles, locks, and other fixtures.",
+    "why": "Updating fixtures is an easy way to refresh your home. We replace and install hardware quickly and cleanly.",
+    "perks": [
+      "Faucet and showerhead swaps",
+      "Door locks and handles",
+      "Cabinet hardware"
+    ],
+    "hub": [
+      {
+        "title": "Quick Upgrades",
+        "text": "Most jobs finished in one visit."
+      },
+      {
+        "title": "Correct Fit",
+        "text": "Parts matched to your home."
+      },
+      {
+        "title": "Clean Install",
+        "text": "No mess left behind."
+      }
+    ]
+  },
+  {
+    "id": "maintenance",
+    "cat": "handyman",
+    "name": "Seasonal Maintenance",
+    "img": "maint.jpg",
+    "short": "Seasonal checks and upkeep to protect your home.",
+    "why": "Regular upkeep prevents costly problems. We handle seasonal tasks to keep your home in shape year-round.",
+    "perks": [
+      "Weatherproofing and sealing",
+      "Gutter and exterior checks",
+      "Smoke and CO alarm checks"
+    ],
+    "hub": [
+      {
+        "title": "Prevent Problems",
+        "text": "Catch small issues early."
+      },
+      {
+        "title": "Ottawa Ready",
+        "text": "Prepared for all four seasons."
+      },
+      {
+        "title": "Recurring Plans",
+        "text": "Scheduled visits available."
+      }
+    ]
+  },
+  {
+    "id": "minor-plumbing",
+    "cat": "handyman",
+    "name": "Minor Plumbing Repairs",
+    "img": "plumbing.jpg",
+    "short": "Leaky taps, running toilets, and clogged drains fixed fast.",
+    "why": "Small plumbing problems waste water and cause damage. We fix drips, clogs, and worn parts quickly so they do not become big repairs.",
+    "perks": [
+      "Leaky faucet and toilet repairs",
+      "Drain clearing",
+      "Supply line and valve replacement"
+    ],
+    "hub": [
+      {
+        "title": "Fast Fixes",
+        "text": "Most issues resolved in one visit."
+      },
+      {
+        "title": "Prevent Damage",
+        "text": "Stop leaks before they spread."
+      },
+      {
+        "title": "Honest Advice",
+        "text": "We tell you if a licensed plumber is needed."
+      }
+    ]
+  }
+]

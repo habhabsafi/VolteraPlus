@@ -1,0 +1,4 @@
+<%- include('partials/head') %>
+<section class="page-hero"><div class="container"><h1>Client Reviews</h1><p>What homeowners and businesses say about working with Voltera Plus.</p></div></section>
+<section class="section"><div class="container"><div class="grid grid-3"><% reviews.forEach(function(r){ %><%- include('partials/review-card', {r: r, cls: 'gray-card'}) %><% }) %></div></div></section>
+<%- include('partials/foot') %>

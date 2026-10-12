@@ -1,0 +1,7 @@
+<form class="form-card<%= typeof dark !== 'undefined' && dark ? ' dark' : '' %>" data-form<%- typeof formId !== 'undefined' ? ' id="' + formId + '"' : '' %>>
+  <% if (typeof heading !== 'undefined') { %><h3 style="margin-bottom:18px"><%= heading %></h3><% } %>
+  <div class="field"><label>Full Name</label><input name="Name" data-req placeholder="Your full name"><span class="err">Please enter your name.</span></div>
+  <div class="field"><label>Required Service</label><%- include('service-select', {selected: typeof selected !== 'undefined' ? selected : ''}) %><span class="err">Please choose a service.</span></div>
+  <div class="field"><label>Email Address</label><input name="Email" type="email" data-req placeholder="Type your mail address"><span class="err">Please enter a valid email.</span></div>
+  <button class="btn btn-gold" type="submit">Get a Quote</button><div class="form-ok"></div>
+</form>

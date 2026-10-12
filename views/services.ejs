@@ -1,0 +1,32 @@
+<%- include('partials/head') %>
+<section class="page-hero"><div class="container"><h1>Our Services</h1><p>Residential, commercial, and industrial services. Quality work. Trusted service.</p></div></section>
+
+<section class="section" id="electric"><div class="container"><h2 class="center section-title">Electric Services</h2><div class="grid grid-3"><% services.filter(function(s){return s.cat==='electric'}).forEach(function(s){ %><%- include('partials/service-card', {s: s}) %><% }) %></div></div></section>
+<section class="section" id="general-contractor" style="padding-top:0"><div class="container"><h2 class=" center section-title">General Contractor Services</h2><div class="grid grid-3"><% services.filter(function(s){return s.cat==='general-contractor'}).forEach(function(s){ %><%- include('partials/service-card', {s: s}) %><% }) %></div></div></section>
+<section class="section" id="handyman" style="padding-top:0"><div class="container"><h2 class=" center section-title">Handy Man Services</h2><div class="grid grid-3"><% services.filter(function(s){return s.cat==='handyman'}).forEach(function(s){ %><%- include('partials/service-card', {s: s}) %><% }) %></div></div></section>
+
+<section class="section" style="padding-top:0"><div class="container">
+  <h2 class="center section-title">How Voltera Plus Works</h2>
+  <div class="steps">
+    <div class="step"><div class="num">1</div><h3>Pick Your Service</h3><p>Tell us what you need.</p></div>
+    <div class="step"><div class="num">2</div><h3>Get a Free Estimate</h3><p>A clear quote with no surprises.</p></div>
+    <div class="step"><div class="num">3</div><h3>Confirm and Relax</h3><p>Safe, code-compliant work you can trust.</p></div>
+  </div>
+</div></section>
+
+<section class="reviews-wrap section"><div class="container">
+  <h2 class="center section-title">Customer Satisfaction is Our Priority</h2>
+  <div class="grid grid-3"><% reviews.forEach(function(r){ %><%- include('partials/review-card', {r: r}) %><% }) %></div>
+</div></section>
+
+<section class="section"><div class="dark-two">
+  <div class="left"><img src="/images/electrician.jpg" alt="" loading="lazy"><h3>Expert Electrical Services Tailored to Your Needs</h3><p>Serving Ottawa, ON and surrounding areas with free estimates.</p><a class="btn btn-light" style="margin-top:18px" href="/contact">Book Now</a></div>
+  <form class="form-card dark" data-form>
+    <h3 style="margin-bottom:8px">Request a Free Estimate</h3><p style="margin-bottom:20px">Tell us what you need and we will get back to you.</p>
+    <div class="field"><label>Full Name</label><input name="Name" data-req placeholder="Your full name"><span class="err">Please enter your name.</span></div>
+    <div class="field"><label>Required Service</label><%- include('partials/service-select', {selected: ''}) %><span class="err">Please choose a service.</span></div>
+    <div class="field"><label>Email Address</label><input name="Email" type="email" data-req placeholder="Type your mail address"><span class="err">Please enter a valid email.</span></div>
+    <button class="btn btn-gold" type="submit">Get a Quote</button><div class="form-ok"></div>
+  </form>
+</div></section>
+<%- include('partials/foot') %>

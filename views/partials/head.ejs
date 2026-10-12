@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= title %></title>
+<meta name="description" content="<%= description %>">
+<link rel="canonical" href="<%= canonical %>">
+<meta property="og:title" content="<%= title %>">
+<meta property="og:description" content="<%= description %>">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="/images/logo-mark.png">
+<link rel="stylesheet" href="/css/style.css">
+<script type="application/ld+json"><%- JSON.stringify({"@context":"https://schema.org","@type":"Electrician","name":site.name,"telephone":site.phone,"email":site.email,"url":baseUrl,"areaServed":"Ottawa, ON"}).replace(/</g,"\\u003c") %></script>
+</head>
+<body data-email="<%= site.email %>">
+<header class="site-header"><div class="container nav">
+  <a href="/" class="brand"><img src="/images/logo-mark.png" alt="Voltera Plus logo">VOLT<span style='margin-left:-8px'>ERA</span><small>PLUS</small></a>
+  <nav class="nav-links" id="navLinks">
+    <% [["home","Home","/"],["about","About","/about"],["services","Services","/services"],["reviews","Reviews","/reviews"],["blog","Blog","/blog"],["contact","Contact","/contact"]].forEach(function(n){ %><a href="<%= n[2] %>" class="<%= page === n[0] ? 'active' : '' %>"><%= n[1] %></a><% }) %>
+  </nav>
+  <a href="tel:+1<%= site.phone.replace(/\D/g, '') %>" class="btn btn-gold">Call <%= site.phone %></a>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">&#9776;</button>
+</div></header>
