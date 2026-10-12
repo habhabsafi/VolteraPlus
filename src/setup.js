@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { withConnection } = require("./db");
+const { bootstrapOwner } = require("./admin/auth");
 
 const dir = path.join(__dirname, "..", "migrations");
 
@@ -63,8 +64,9 @@ async function seed() {
 let ready;
 // Runs once per process; failed attempts can be retried.
 function init() {
-  if (!ready) ready = migrate().then(seed).catch((e) => { ready = null; throw e; });
+  if (!ready) ready = migrate().then(seed).then(bootstrapOwner).catch((e) => { ready = null; throw e; });
   return ready;
 }
 
 module.exports = { init };
+

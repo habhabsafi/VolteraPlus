@@ -1,0 +1,10 @@
+<%- include('head') %>
+<h1>My Account</h1>
+<form class="card narrow" method="post" action="/admin/account">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <label>Current password<input type="password" name="current" required autocomplete="current-password"></label>
+  <label>New password (10+ characters)<input type="password" name="password" minlength="10" required autocomplete="new-password"></label>
+  <label>Confirm new password<input type="password" name="confirm" minlength="10" required autocomplete="new-password"></label>
+  <button class="btn" type="submit">Change password</button>
+</form>
+<%- include('foot') %>

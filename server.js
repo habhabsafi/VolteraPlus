@@ -5,6 +5,7 @@ const helmet = require("helmet");
 const compression = require("compression");
 const store = require("./src/store");
 const { init } = require("./src/setup");
+const adminRoutes = require("./src/admin/routes");
 
 const app = express();
 app.set("view engine", "ejs");
@@ -46,6 +47,8 @@ app.use(async (req, res, next) => {
     next(e);
   }
 });
+
+app.use("/admin", express.urlencoded({ extended: false, limit: "100kb" }), adminRoutes);
 
 const wrap = (fn) => (req, res, next) => fn(req, res, next).catch(next);
 
@@ -105,7 +108,7 @@ app.get("/:file.html", (req, res, next) => {
 });
 
 app.get("/robots.txt", (req, res) =>
-  res.type("text/plain").send(`User-agent: *\nAllow: /\nSitemap: ${res.locals.baseUrl}/sitemap.xml\n`));
+  res.type("text/plain").send(`User-agent: *\nDisallow: /admin\nAllow: /\nSitemap: ${res.locals.baseUrl}/sitemap.xml\n`));
 
 app.get("/sitemap.xml", wrap(async (req, res) => {
   const [services, posts] = await Promise.all([store.getServices(), store.getPosts()]);
@@ -125,5 +128,6 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 3000;
 if (require.main === module) app.listen(port, () => console.log(`Listening on http://localhost:${port}`));
 module.exports = app;
+
 
 

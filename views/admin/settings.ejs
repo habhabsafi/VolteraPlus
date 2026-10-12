@@ -1,0 +1,9 @@
+<%- include('head') %>
+<h1>Contact Info</h1>
+<p class="muted">These details appear in the website header, footer and contact page.</p>
+<form class="card" method="post" action="/admin/settings">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <% fields.forEach(function(f){ %><label><%= f[1] %><input name="<%= f[0] %>" value="<%= values[f[0]] %>" maxlength="<%= f[2] %>" required></label><% }) %>
+  <button class="btn" type="submit">Save changes</button>
+</form>
+<%- include('foot') %>

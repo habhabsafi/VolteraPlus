@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin | Voltera Plus</title>
+<link rel="icon" href="/images/logo-mark.png"><link rel="stylesheet" href="/css/admin.css"></head>
+<body>
+<% if (typeof admin !== 'undefined') { %>
+<header class="top"><a class="brand" href="/admin"><img src="/images/logo-mark.png" alt="">Voltera Plus Admin</a>
+  <nav>
+    <% [['dashboard','Dashboard','/admin'],['settings','Contact Info','/admin/settings'],['account','My Account','/admin/account']].concat(admin.role === 'owner' ? [['users','Admin Users','/admin/users']] : []).forEach(function(n){ %><a href="<%= n[2] %>" class="<%= nav === n[0] ? 'active' : '' %>"><%= n[1] %></a><% }) %>
+    <a href="/" target="_blank" rel="noopener">View site</a>
+  </nav>
+  <form method="post" action="/admin/logout"><input type="hidden" name="_csrf" value="<%= csrf %>"><span class="who"><%= admin.email %></span><button class="btn ghost">Log out</button></form>
+</header>
+<% } %>
+<main class="wrap">
+<% if (error) { %><div class="alert err"><%= error %></div><% } %>
+<% if (saved) { %><div class="alert ok">Saved.</div><% } %>
