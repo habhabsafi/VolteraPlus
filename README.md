@@ -1,6 +1,6 @@
 # Voltera Plus
 
-Website for Voltera Plus, a Red Seal certified electrical and general contracting company serving Ottawa, ON and surrounding areas.
+Website for Voltera Plus, a Red Seal certified Electrical, general contracting and handy man company serving Ottawa, ON and surrounding areas.
 
 Static site built with HTML, CSS, and vanilla JavaScript. No build step.
 

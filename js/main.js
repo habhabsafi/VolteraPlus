@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   const SITE = {
     name: "Voltera Plus",
     tagline: "Building a better tomorrow.",
@@ -35,7 +35,65 @@
       why: "Dead outlets, tripping breakers, or burning smells need attention right away. Voltera Plus tracks down the cause and fixes it correctly the first time.",
       perks: ["Fault finding and diagnostics", "Outage and breaker issues", "24/7 emergency service"],
       hub: [["Accurate Diagnosis", "Proper testing to find the real cause."], ["Fixed Right", "Repairs that last, not quick patches."], ["Available 24/7", "Emergency service when you need us."]] },
+  ].map((s) => ({ ...s, cat: "electric" }));
+
+  const CATEGORIES = [
+    { id: "electric", name: "Electric Services" },
+    { id: "general-contractor", name: "General Contractor Services" },
+    { id: "handyman", name: "Handy Man Services" },
   ];
+
+  const extra = (cat, id, name, img, short, why, perks, hub) => ({ id, cat, name, img, short, why, perks, hub });
+  SERVICES.push(
+    extra("general-contractor", "renovations", "Home Renovations", "reno.jpg", "Full-home and room renovations managed from plan to finish.",
+      "Whether it is a kitchen, bathroom, or whole-home makeover, Voltera Plus manages the trades, schedule, and quality so your renovation runs smoothly.",
+      ["Kitchen and bathroom remodels", "Basement finishing", "Whole-home renovations"],
+      [["One Point of Contact", "We coordinate every trade so you do not have to."], ["On Schedule", "Clear timelines and regular progress updates."], ["Quality Finishes", "Careful workmanship from framing to final touches."]]),
+    extra("general-contractor", "additions", "Additions & Extensions", "addition.jpg", "Add living space with well-planned additions and extensions.",
+      "Need more room? We plan and build additions that blend with your existing home, including structure, electrical, and finishing.",
+      ["Room and second-storey additions", "Structural framing", "Permits and drawings coordination"],
+      [["Planned Properly", "Layouts designed around how you live."], ["Permits Handled", "We manage permits and inspections."], ["Seamless Blend", "New space that matches your existing home."]]),
+    extra("general-contractor", "project-management", "Project Management", "pm.jpg", "Professional management of your build or renovation project.",
+      "Keep your project on time and on budget. We handle scheduling, trades, materials, and site supervision from start to finish.",
+      ["Scheduling and trade coordination", "Budget and material tracking", "On-site supervision"],
+      [["Budget Control", "Transparent costs with no surprises."], ["Reliable Trades", "Vetted, qualified professionals on every job."], ["Clear Communication", "You always know where your project stands."]]),
+    extra("general-contractor", "commercial-build-outs", "Commercial Build-Outs", "buildout.jpg", "Tenant improvements and fit-outs for offices, retail, and restaurants.",
+      "We turn empty commercial space into a functional, code-compliant workplace with minimal disruption to your timeline.",
+      ["Office and retail fit-outs", "Restaurant renovations", "Code-compliant construction"],
+      [["Fast Turnaround", "Efficient scheduling to get you open sooner."], ["Code Compliant", "Permits and inspections managed properly."], ["Built to Last", "Durable materials and professional workmanship."]]),
+    extra("general-contractor", "framing-drywall", "Framing & Drywall", "drywall.jpg", "Framing, drywall, and finishing for new and renovated spaces.",
+      "Strong framing and smooth drywall are the foundation of a great finish. We deliver clean, accurate work ready for paint.",
+      ["Wall framing and partitions", "Drywall installation and taping", "Patching and repair"],
+      [["Precise Work", "Straight, square, and solid."], ["Smooth Finish", "Paint-ready surfaces."], ["Tidy Site", "Dust control and clean-up every day."]]),
+    extra("general-contractor", "flooring-tiling", "Flooring & Tiling", "flooring.jpg", "Tile, hardwood, and laminate flooring installed with precision.",
+      "New floors transform a space. We prepare the subfloor and install tile, hardwood, and laminate with tight seams and a durable finish.",
+      ["Tile and grout installation", "Hardwood and laminate flooring", "Subfloor prep and levelling"],
+      [["Proper Prep", "Level, solid subfloors for lasting results."], ["Precise Layout", "Clean lines and tight seams."], ["Durable Finish", "Materials chosen for your traffic and budget."]]),
+    extra("handyman", "home-repairs", "General Home Repairs", "repairs.jpg", "Quick fixes for the small jobs around your home.",
+      "From squeaky doors to damaged trim, our handy man services take care of the repairs that keep piling up on your to-do list.",
+      ["Door and window adjustments", "Trim and baseboard repair", "Caulking and sealing"],
+      [["Quick Scheduling", "Fast response for small jobs."], ["Fair Pricing", "Clear quotes with no surprises."], ["Done Right", "Careful repairs that last."]]),
+    extra("handyman", "painting", "Painting & Touch-Ups", "painting.jpg", "Interior painting, touch-ups, and drywall patching.",
+      "Refresh any room with clean, professional painting. We prep surfaces properly and protect your belongings.",
+      ["Interior painting", "Wall patching and repair", "Trim and door painting"],
+      [["Proper Prep", "Great paint jobs start with good prep."], ["Protected Spaces", "Floors and furniture covered."], ["Clean Lines", "Sharp, even finishes."]]),
+    extra("handyman", "assembly-mounting", "Assembly & Mounting", "mounting.jpg", "Furniture assembly, TV mounting, shelves, and fixtures.",
+      "Let us handle the heavy lifting and drilling. We assemble furniture and securely mount TVs, shelves, mirrors, and more.",
+      ["Furniture assembly", "TV and shelf mounting", "Curtain rods and mirrors"],
+      [["Secure Mounting", "Anchored correctly for the wall type."], ["Neat Results", "Level, tidy, and clean."], ["Time Saver", "Get it done in a single visit."]]),
+    extra("handyman", "fixture-replacement", "Fixture & Hardware Replacement", "fixture.jpg", "Replace faucets, handles, locks, and other fixtures.",
+      "Updating fixtures is an easy way to refresh your home. We replace and install hardware quickly and cleanly.",
+      ["Faucet and showerhead swaps", "Door locks and handles", "Cabinet hardware"],
+      [["Quick Upgrades", "Most jobs finished in one visit."], ["Correct Fit", "Parts matched to your home."], ["Clean Install", "No mess left behind."]]),
+    extra("handyman", "maintenance", "Seasonal Maintenance", "maint.jpg", "Seasonal checks and upkeep to protect your home.",
+      "Regular upkeep prevents costly problems. We handle seasonal tasks to keep your home in shape year-round.",
+      ["Weatherproofing and sealing", "Gutter and exterior checks", "Smoke and CO alarm checks"],
+      [["Prevent Problems", "Catch small issues early."], ["Ottawa Ready", "Prepared for all four seasons."],       ["Recurring Plans", "Scheduled visits available."]]),
+          extra("handyman", "minor-plumbing", "Minor Plumbing Repairs", "plumbing.jpg", "Leaky taps, running toilets, and clogged drains fixed fast.",
+            "Small plumbing problems waste water and cause damage. We fix drips, clogs, and worn parts quickly so they do not become big repairs.",
+            ["Leaky faucet and toilet repairs", "Drain clearing", "Supply line and valve replacement"],
+            [["Fast Fixes", "Most issues resolved in one visit."], ["Prevent Damage", "Stop leaks before they spread."], ["Honest Advice", "We tell you if a licensed plumber is needed."]])
+        );
 
   const REVIEWS = [
     ["Great value for money!", "Fair pricing and excellent quality work. The new panel was installed quickly and the whole job came in on budget.", "Olivia M.", "Homeowner"],
@@ -102,10 +160,10 @@
   <footer class="site-footer"><div class="container">
     <div class="foot-grid">
       <div><a href="index.html" class="brand"><img src="${img("logo-mark.png")}" alt="">VOLT<span style='margin-left:-8px'>ERA</span><small>PLUS</small></a>
-        <p style="margin-top:12px">Electrical and General Contracting Services. ${SITE.tagline}</p>
+        <p style="margin-top:12px">Electrical, general contracting and handy man Services. ${SITE.tagline}</p>
         <span class="badge-247">24/7 Available</span></div>
       <div><h4>Navigation</h4><ul><li><a href="about.html">About</a></li><li><a href="reviews.html">Client Reviews</a></li><li><a href="blog.html">Blog</a></li><li><a href="contact.html">Contact</a></li></ul></div>
-      <div><h4>Services</h4><ul>${SERVICES.map((s) => `<li><a href="service-details.html?id=${s.id}">${esc(s.name)}</a></li>`).join("")}</ul></div>
+      <div><h4>Services</h4><ul>${CATEGORIES.map((c) => `<li><a href="services.html#${c.id}">${esc(c.name)}</a></li>`).join("")}</ul></div>
       <div><h4>Contact</h4><ul>
         <li>${SITE.owner}, ${SITE.title}</li>
         <li><a href="tel:+1${SITE.phone.replace(/\D/g, "")}">${SITE.phone}</a></li>
@@ -124,9 +182,10 @@
     const [kind, n] = el.dataset.render.split(":");
     const lim = n ? +n : undefined;
     if (kind === "services") el.innerHTML = SERVICES.slice(0, lim).map(svcCard).join("");
+    if (kind === "services-cat") el.innerHTML = SERVICES.filter((s) => s.cat === n).map(svcCard).join("");
     if (kind === "reviews") el.innerHTML = REVIEWS.slice(0, lim).map((r) => reviewCard(r, el.dataset.card || "")).join("");
     if (kind === "posts") el.innerHTML = POSTS.slice(0, lim).map(postCard).join("");
-    if (kind === "svc-options") el.innerHTML = `<option value="">Select your required service</option>` + SERVICES.map((s) => `<option>${esc(s.name)}</option>`).join("") + `<option>Emergency Service</option>`;
+    if (kind === "svc-options") el.innerHTML = `<option value="">Select your required service</option>` + CATEGORIES.map((c) => `<optgroup label="${esc(c.name)}">${SERVICES.filter((s) => s.cat === c.id).map((s) => `<option>${esc(s.name)}</option>`).join("")}</optgroup>`).join("") + `<option>Emergency Service</option>`;
   });
 
   // service details
