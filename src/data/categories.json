@@ -1,0 +1,14 @@
+[
+  {
+    "id": "electric",
+    "name": "Electric Services"
+  },
+  {
+    "id": "general-contractor",
+    "name": "General Contractor Services"
+  },
+  {
+    "id": "handyman",
+    "name": "Handy Man Services"
+  }
+]

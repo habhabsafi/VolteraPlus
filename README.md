@@ -2,24 +2,25 @@
 
 Website for Voltera Plus, a Red Seal certified Electrical, general contracting and handy man company serving Ottawa, ON and surrounding areas.
 
-Static site built with HTML, CSS, and vanilla JavaScript. No build step.
+Server-rendered Node.js site using Express and EJS. Every page is real HTML for SEO.
 
 ## Run locally
 
-Open `index.html` in a browser, or serve the folder:
+```
+npm install
+npm run dev     # http://localhost:3000
+```
 
-```
-python -m http.server 8000
-```
+Requires Node 20+. Set `BASE_URL` (e.g. `https://www.volteraplus.ca`) in production for canonical URLs and the sitemap.
 
 ## Structure
 
-- `*.html`: pages (home, about, services, service details, reviews, blog, blog details, contact, 404)
-- `css/style.css`: styles
-- `js/main.js`: shared header/footer, service/review/blog data, forms
-- `images/`: logo, Red Seal badge, and photos
+- `server.js`: routes, security headers, legacy `.html` redirects, sitemap and robots
+- `src/store.js`: data access layer (swap for database queries in the next phase)
+- `src/data/*.json`: site info, services, reviews, and blog posts
+- `views/`: EJS pages; `views/partials/`: header, footer, cards, forms
+- `public/`: CSS, client JS, and images
 
 ## Editing content
 
-Services, reviews, blog posts, and contact details are defined at the top of `js/main.js`.
-Add a portrait of the owner at `images/abe.jpg` for the About page.
+Until the admin panel and database are added, edit the JSON files in `src/data/`.

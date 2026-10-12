@@ -1,0 +1,200 @@
+[
+  {
+    "id": 1,
+    "title": "7 Signs Your Electrical Panel Needs an Upgrade",
+    "img": "panel.jpg",
+    "date": "February 10, 2026",
+    "cta": "Learn More",
+    "short": "Tripping breakers and flickering lights can mean it is time for a new panel.",
+    "sections": [
+      {
+        "heading": "Why panels age",
+        "text": "Electrical panels do not last forever. Older panels may not cope with modern demands such as EV chargers, heat pumps, and home offices."
+      },
+      {
+        "heading": "Warning signs",
+        "text": "Frequent tripped breakers, buzzing sounds, scorch marks, flickering lights, and warm panel covers are all reasons to call a licensed electrician."
+      },
+      {
+        "heading": "Next steps",
+        "text": "A Red Seal electrician can assess your panel and recommend whether a repair or full upgrade is the safest choice."
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Energy-Efficient Lighting Ideas for Your Home",
+    "img": "board.jpg",
+    "date": "March 5, 2026",
+    "cta": "Discover Now",
+    "short": "Cut your power bill and brighten every room with LED lighting.",
+    "sections": [
+      {
+        "heading": "Switch to LED",
+        "text": "LED fixtures use far less electricity and last many times longer than traditional bulbs."
+      },
+      {
+        "heading": "Layer your lighting",
+        "text": "Combine ambient, task, and accent lighting for a space that is both useful and inviting."
+      },
+      {
+        "heading": "Add controls",
+        "text": "Dimmers and timers let you adjust brightness and save even more."
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "What To Do During a Power Outage",
+    "img": "meter.jpg",
+    "date": "April 20, 2026",
+    "cta": "Read More",
+    "short": "Simple steps to stay safe when the lights go out.",
+    "sections": [
+      {
+        "heading": "Check the basics",
+        "text": "Look at your breakers first. If neighbours have power, the issue is likely inside your home."
+      },
+      {
+        "heading": "Stay safe",
+        "text": "Never touch downed lines and avoid using generators indoors."
+      },
+      {
+        "heading": "When to call",
+        "text": "If a breaker keeps tripping or you smell burning, call an electrician right away."
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Choosing the Right Electrician for Your Project",
+    "img": "hero.jpg",
+    "date": "May 15, 2026",
+    "cta": "Find Out More",
+    "short": "Why Red Seal certification and proper licensing matter.",
+    "sections": [
+      {
+        "heading": "Check credentials",
+        "text": "Look for a licensed electrician with Red Seal certification, which is a national standard of excellence."
+      },
+      {
+        "heading": "Ask for estimates",
+        "text": "A professional will provide clear written quotes."
+      },
+      {
+        "heading": "Look for service",
+        "text": "Responsive communication is a good sign of reliable work."
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Preparing Your Business for an Electrical Upgrade",
+    "img": "blueprint.jpg",
+    "date": "June 2, 2026",
+    "cta": "Get Started",
+    "short": "Plan ahead to keep downtime low and costs under control.",
+    "sections": [
+      {
+        "heading": "Plan the scope",
+        "text": "Start with a clear list of your power needs now and in the future."
+      },
+      {
+        "heading": "Schedule smartly",
+        "text": "Work after hours or in phases reduces disruption."
+      },
+      {
+        "heading": "Permits and inspections",
+        "text": "Your electrician should handle both so you stay compliant."
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "EV Charger Installation: What You Need to Know",
+    "img": "house.jpg",
+    "date": "July 10, 2026",
+    "cta": "Learn How",
+    "short": "Is your home ready for a Level 2 charger?",
+    "sections": [
+      {
+        "heading": "Check capacity",
+        "text": "A Level 2 charger needs a dedicated circuit, and your panel must have the capacity."
+      },
+      {
+        "heading": "Location matters",
+        "text": "The closer the charger is to the panel, the simpler the install."
+      },
+      {
+        "heading": "Permits",
+        "text": "A licensed electrician handles the permit and inspection."
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Home Electrical Safety Checklist",
+    "img": "solder.jpg",
+    "date": "September 12, 2026",
+    "cta": "Discover Solutions",
+    "short": "Quick checks every homeowner should do each year.",
+    "sections": [
+      {
+        "heading": "Test your GFCIs",
+        "text": "Press the test and reset buttons monthly on bathroom, kitchen, and outdoor outlets."
+      },
+      {
+        "heading": "Inspect cords",
+        "text": "Replace anything frayed or damaged."
+      },
+      {
+        "heading": "Do not overload",
+        "text": "Avoid daisy-chaining power bars and extension cords."
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "title": "Winter Electrical Tips for Ottawa Homes",
+    "img": "house.jpg",
+    "date": "October 18, 2026",
+    "cta": "Prepare Now",
+    "short": "Get your home ready for cold months and heavy heating loads.",
+    "sections": [
+      {
+        "heading": "Heating loads",
+        "text": "Space heaters and block heaters can overload circuits. Use dedicated, rated outlets."
+      },
+      {
+        "heading": "Outdoor safety",
+        "text": "Check outdoor lights and outlets for weather damage before winter."
+      },
+      {
+        "heading": "Backup plan",
+        "text": "Know where your panel is and have a trusted electrician on call."
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "title": "Why Regular Electrical Inspections Matter",
+    "img": "electrician.jpg",
+    "date": "December 1, 2026",
+    "cta": "Learn More",
+    "short": "Catch hidden problems before they become expensive hazards.",
+    "sections": [
+      {
+        "heading": "Hidden issues",
+        "text": "Loose connections and worn wiring often cause problems you cannot see."
+      },
+      {
+        "heading": "Peace of mind",
+        "text": "An inspection confirms your system is safe and up to date."
+      },
+      {
+        "heading": "Before you buy",
+        "text": "Inspect a property before purchasing to avoid surprises."
+      }
+    ]
+  }
+]

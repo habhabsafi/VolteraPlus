@@ -1,0 +1,25 @@
+<%- include('partials/head') %>
+<section class="page-hero"><div class="container"><h1><%= service.name %></h1><p><%= service.short %></p></div></section>
+
+<main>
+<section class="section"><div class="container">
+  <img src="/images/<%= service.img %>" alt="<%= service.name %>" style="border-radius:16px;width:100%;aspect-ratio:16/8;object-fit:cover">
+</div></section>
+
+<section class="section" style="padding-top:0"><div class="container grid" style="grid-template-columns:1.5fr 1fr;align-items:start">
+  <div>
+    <h2>Why choose Voltera Plus for <%= service.name.toLowerCase() %>?</h2>
+    <p style="margin:14px 0 28px"><%= service.why %></p>
+    <h3 style="margin-bottom:12px">Advantages of choosing Voltera Plus</h3>
+    <ul class="checks" style="grid-template-columns:1fr"><% service.perks.forEach(function(p){ %><li><%= p %></li><% }) %></ul>
+  </div>
+  <%- include('partials/quote-form', {dark: true, heading: 'Request a Free Estimate', selected: service.name}) %>
+</div></section>
+
+<section class="section" style="padding-top:0"><div class="container split" style="grid-template-columns:1fr 1.2fr">
+  <div><h2>The Complete Electrical Service Hub</h2><p style="margin:12px 0 22px">Our crew ensures every detail is attended to.</p>
+    <div class="acc"><% service.hub.forEach(function(h, i){ %><div class="<%= i === 0 ? 'open' : '' %>"><button type="button"><%= h.title %><span><%- i === 0 ? '&minus;' : '+' %></span></button><div class="panel"><p><%= h.text %></p></div></div><% }) %></div></div>
+  <div class="side-img"><img src="/images/<%= hubImage %>" alt=""></div>
+</div></section>
+</main>
+<%- include('partials/foot') %>

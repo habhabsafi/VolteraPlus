@@ -1,23 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Voltera Plus | Electrical, general contracting and handy man Services in Ottawa, ON</title>
-<meta name="description" content="Voltera Plus: Red Seal certified Electrical, general contracting and handy man in Ottawa, ON. 24/7 emergency service and free estimates.">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="icon" href="images/logo-mark.png">
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body data-page="home">
-<div id="site-header"></div>
-
+<%- include('partials/head') %>
 <section class="hero"><div class="container"><div class="inner">
   <h1>Certified. <em>Red Seal.</em> Licensed. Trusted.</h1>
   <p>Electrical, general contracting and handy man services for homes and businesses across Ottawa, ON. Quality work, trusted service, building a better tomorrow.</p>
-  <div class="btns"><a class="btn btn-gold" href="contact.html">Get a Free Estimate</a><a class="btn btn-outline" href="about.html">Learn More</a></div>
-  <div class="hero-badges"><img src="images/red-seal.png" alt="Canada Interprovincial Red Seal certified"><div><strong>24/7 Emergency Service</strong>Serving Ottawa, ON and surrounding areas</div></div>
+  <div class="btns"><a class="btn btn-gold" href="/contact">Get a Free Estimate</a><a class="btn btn-outline" href="/about">Learn More</a></div>
+  <div class="hero-badges"><img src="/images/red-seal.png" alt="Canada Interprovincial Red Seal certified"><div><strong>24/7 Emergency Service</strong>Serving Ottawa, ON and surrounding areas</div></div>
 </div></div></section>
 
 <section class="section"><div class="container grid grid-3">
@@ -27,11 +13,11 @@
 </div></section>
 
 <section class="section" style="padding-top:20px"><div class="container split">
-  <img src="images/electrician.jpg" alt="Voltera Plus electrician at work" loading="lazy">
+  <img src="/images/electrician.jpg" alt="Voltera Plus electrician at work" loading="lazy">
   <div><span class="eyebrow">About Voltera Plus</span><h2>Your Ultimate One-Stop Electrical Solution</h2>
     <p>From a single outlet to full commercial installations, Voltera Plus handles it with care. Our licensed team ensures every detail is addressed, giving you peace of mind.</p>
     <ul class="checks"><li>Licensed electrician</li><li>Red Seal certified</li><li>Free estimates</li><li>Available 24/7</li></ul>
-    <a class="btn btn-gold" style="margin-top:26px" href="about.html">About Us</a></div>
+    <a class="btn btn-gold" style="margin-top:26px" href="/about">About Us</a></div>
 </div></section>
 
 <section class="section" style="padding-top:0"><div class="container track">
@@ -46,23 +32,23 @@
 <section class="dark-band section"><div class="container split">
   <div><h2>Customer Satisfaction is Our Priority</h2><p style="margin:14px 0">Your comprehensive and reliable electrical and contracting provider for all your needs.</p>
     <ul class="checks" style="grid-template-columns:1fr"><li>Quality work. Trusted service.</li><li>Open communication and responsive support</li></ul>
-    <a class="btn btn-gold" style="margin-top:26px" href="services.html">Explore Our Services</a></div>
-  <img src="images/site.jpg" alt="Commercial and industrial electrical work" loading="lazy">
+    <a class="btn btn-gold" style="margin-top:26px" href="/services">Explore Our Services</a></div>
+  <img src="/images/site.jpg" alt="Commercial and industrial electrical work" loading="lazy">
 </div></section>
 
 <section class="section"><div class="container">
-  <div class="section-head"><h2 class="section-title">Our Electrical Services</h2><a class="btn btn-gold" href="services.html#electric">And More &rarr;</a></div>
-  <div class="grid grid-3" data-render="services-top:electric"></div>
+  <div class="section-head"><h2 class="section-title">Our Electrical Services</h2><a class="btn btn-gold" href="/services#electric">And More &rarr;</a></div>
+  <div class="grid grid-3"><% featured.electric.forEach(function(s){ %><%- include('partials/service-card', {s: s}) %><% }) %></div>
 </div></section>
 
 <section class="section" style="padding-top:0"><div class="container">
-  <div class="section-head"><h2 class="section-title">General Contractor Services</h2><a class="btn btn-gold" href="services.html#general-contractor">And More &rarr;</a></div>
-  <div class="grid grid-3" data-render="services-top:general-contractor"></div>
+  <div class="section-head"><h2 class="section-title">General Contractor Services</h2><a class="btn btn-gold" href="/services#general-contractor">And More &rarr;</a></div>
+  <div class="grid grid-3"><% featured.general.forEach(function(s){ %><%- include('partials/service-card', {s: s}) %><% }) %></div>
 </div></section>
 
 <section class="section" style="padding-top:0"><div class="container">
-  <div class="section-head"><h2 class="section-title">Handy Man Services</h2><a class="btn btn-gold" href="services.html#handyman">And More &rarr;</a></div>
-  <div class="grid grid-3" data-render="services-top:handyman"></div>
+  <div class="section-head"><h2 class="section-title">Handy Man Services</h2><a class="btn btn-gold" href="/services#handyman">And More &rarr;</a></div>
+  <div class="grid grid-3"><% featured.handy.forEach(function(s){ %><%- include('partials/service-card', {s: s}) %><% }) %></div>
 </div></section>
 
 <section class="section" style="padding-top:0"><div class="container">
@@ -76,16 +62,11 @@
 
 <section class="reviews-wrap section"><div class="container">
   <h2 class="center section-title">Customer Satisfaction is Our Priority</h2>
-  <div class="grid grid-3" data-render="reviews:3"></div>
+  <div class="grid grid-3"><% reviews.forEach(function(r){ %><%- include('partials/review-card', {r: r}) %><% }) %></div>
 </div></section>
 
 <section class="section"><div class="container">
   <h2 class="center section-title">Latest from Our Blog</h2>
-  <div class="grid grid-3" data-render="posts:3"></div>
+  <div class="grid grid-3"><% posts.forEach(function(p){ %><%- include('partials/post-card', {p: p}) %><% }) %></div>
 </div></section>
-
-<div id="cta"></div>
-<div id="site-footer"></div>
-<script src="js/main.js"></script>
-</body>
-</html>
+<%- include('partials/foot') %>

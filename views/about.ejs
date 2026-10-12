@@ -1,28 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>About | Voltera Plus</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="icon" href="images/logo-mark.png">
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body data-page="about">
-<div id="site-header"></div>
+<%- include('partials/head') %>
 <section class="page-hero"><div class="container"><h1>About Voltera Plus</h1><p>Licensed Electrical, general contracting and handy man professionals dedicated to quality service in Ottawa, ON.</p></div></section>
 
 <section class="section"><div class="container">
-  <div class="video"><img src="images/electrician.jpg" alt="Voltera Plus electrician" style="object-position:center 30%"><button class="play" aria-label="Play video">&#9654;</button></div>
+  <div class="video"><img src="/images/electrician.jpg" alt="Voltera Plus electrician" style="object-position:center 30%"><button class="play" aria-label="Play video">&#9654;</button></div>
 </div></section>
 
 <section class="section" style="padding-top:0"><div class="container split">
-  <img src="images/abe.jpg" onerror="this.onerror=null;this.src='images/abe.jpg'" alt="Abe Barham, Licensed Electrician" loading="lazy" style="object-position:center 20%">
+  <img src="/images/abe.jpg" alt="Abe Barham, Licensed Electrician" loading="lazy" style="object-position:center 20%">
   <div><span class="eyebrow">Meet Abe Barham</span><h2>Your Ultimate One-Stop Electrical Solution</h2>
     <p>Abe Barham is a licensed, Red Seal certified electrician serving Ottawa, ON and surrounding areas. Voltera Plus was built on one idea: Building a better tomorrow through quality work and trusted service.</p>
     <ul class="checks"><li>Residential</li><li>Commercial</li><li>Industrial</li><li>Free estimates</li></ul>
-    <img class="seal" src="images/red-seal.png" alt="Red Seal certified" style="margin-top:26px"></div>
+    <img class="seal" src="/images/red-seal.png" alt="Red Seal certified" style="margin-top:26px"></div>
 </div></section>
 
 <section class="section" style="padding-top:0"><div class="container grid grid-3">
@@ -38,7 +26,7 @@
       <div><button type="button">24/7 Emergency Service<span>+</span></button><div class="panel"><p>Power out or an electrical hazard? Call us any time, day or night.</p></div></div>
       <div><button type="button">Competitive Rates<span>+</span></button><div class="panel"><p>Free estimates and fair prices for homes and businesses.</p></div></div>
     </div></div>
-  <div class="side-img"><img src="images/solder.jpg" alt="Electrical work" loading="lazy"></div>
+  <div class="side-img"><img src="/images/solder.jpg" alt="Electrical work" loading="lazy"></div>
 </div></section>
 
 <section class="section" style="padding-top:0"><div class="container">
@@ -48,9 +36,4 @@
     <p>We show up on time, explain the work clearly, give honest free estimates, and leave your space clean and safe. With 24/7 emergency availability across Ottawa, ON and surrounding areas, you can count on us when it matters most. Quality work. Trusted service. Building a better tomorrow.</p>
   </div>
 </div></section>
-
-<div id="cta"></div>
-<div id="site-footer"></div>
-<script src="js/main.js"></script>
-</body>
-</html>
+<%- include('partials/foot') %>
