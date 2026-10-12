@@ -5,14 +5,17 @@ const helmet = require("helmet");
 const compression = require("compression");
 const store = require("./src/store");
 const { init } = require("./src/setup");
+const adminRoutes = require("./src/admin/routes");
 
 const app = express();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.set("trust proxy", 1);
+app.locals.imgUrl = (img) => (String(img).startsWith("uploads/") ? "/" + img : "/images/" + img);
 
 app.use(
   helmet({
+    referrerPolicy: { policy: "same-origin" },
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
@@ -27,6 +30,15 @@ app.use(
   })
 );
 app.use(compression());
+// Images uploaded through the admin are stored in MySQL so they survive redeploys.
+app.get("/uploads/:name", async (req, res, next) => {
+  try {
+    const row = (await require("./src/db").query("SELECT mime, data FROM media WHERE name = ?", [req.params.name]))[0];
+    if (!row) return next();
+    res.set({ "Content-Type": row.mime, "Cache-Control": "public, max-age=31536000, immutable", "X-Content-Type-Options": "nosniff" });
+    res.send(row.data);
+  } catch (e) { next(e); }
+});
 app.use(express.static(path.join(__dirname, "public"), { maxAge: "7d" }));
 
 // Shared template data
@@ -46,6 +58,8 @@ app.use(async (req, res, next) => {
     next(e);
   }
 });
+
+app.use("/admin", express.urlencoded({ extended: false, limit: "100kb" }), adminRoutes);
 
 const wrap = (fn) => (req, res, next) => fn(req, res, next).catch(next);
 
@@ -105,7 +119,7 @@ app.get("/:file.html", (req, res, next) => {
 });
 
 app.get("/robots.txt", (req, res) =>
-  res.type("text/plain").send(`User-agent: *\nAllow: /\nSitemap: ${res.locals.baseUrl}/sitemap.xml\n`));
+  res.type("text/plain").send(`User-agent: *\nDisallow: /admin\nAllow: /\nSitemap: ${res.locals.baseUrl}/sitemap.xml\n`));
 
 app.get("/sitemap.xml", wrap(async (req, res) => {
   const [services, posts] = await Promise.all([store.getServices(), store.getPosts()]);
@@ -125,5 +139,7 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 3000;
 if (require.main === module) app.listen(port, () => console.log(`Listening on http://localhost:${port}`));
 module.exports = app;
+
+
 
 

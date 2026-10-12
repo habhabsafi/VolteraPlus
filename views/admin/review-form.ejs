@@ -1,0 +1,15 @@
+<%- include('head') %>
+<div class="bar"><h1><%= isNew ? 'Add review' : 'Edit review' %></h1><a class="btn ghost" href="/admin/reviews">&larr; All reviews</a></div>
+<form class="card" method="post" action="<%= isNew ? '/admin/reviews' : '/admin/reviews/' + review.id %>">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <label>Headline<input name="title" value="<%= review.title %>" maxlength="190" required></label>
+  <label>Review text<textarea name="body" rows="4" maxlength="2000" required><%= review.body %></textarea></label>
+  <div class="grid2">
+    <label>Customer name<input name="name" value="<%= review.name %>" maxlength="150" required></label>
+    <label>Customer type (e.g. Homeowner)<input name="role" value="<%= review.role %>" maxlength="150" required></label>
+  </div>
+  <label>Display order (lower first)<input type="number" name="sort_order" value="<%= review.sort_order %>" min="0"></label>
+  <label class="check"><input type="checkbox" name="published" value="1"<%= review.published ? ' checked' : '' %>> Published (visible on the website)</label>
+  <button class="btn" type="submit">Save review</button>
+</form>
+<%- include('foot') %>

@@ -1,0 +1,19 @@
+*{box-sizing:border-box}body{margin:0;font-family:Outfit,system-ui,sans-serif;background:#f3f4f6;color:#1f2937}
+.top{display:flex;align-items:center;gap:24px;background:#111827;color:#fff;padding:12px 24px;flex-wrap:wrap}
+.top .brand{display:flex;align-items:center;gap:8px;color:#fff;text-decoration:none;font-weight:700}.top .brand img{height:28px}
+.top nav{display:flex;gap:16px;flex:1;flex-wrap:wrap}.top nav a{color:#d1d5db;text-decoration:none}.top nav a.active,.top nav a:hover{color:#fbbf24}
+.top form{display:flex;align-items:center;gap:12px;margin:0}.who{font-size:.85rem;color:#9ca3af}
+.wrap{max-width:960px;margin:28px auto;padding:0 20px}h1{margin:0 0 8px}.muted{color:#6b7280}
+.card{background:#fff;border-radius:12px;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,.08);margin:16px 0}.narrow{max-width:420px;margin:40px auto}
+label{display:block;font-weight:600;margin-bottom:14px}input,select,textarea{display:block;width:100%;margin-top:6px;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;font:inherit}
+.btn{background:#f59e0b;color:#111;border:0;border-radius:8px;padding:10px 18px;font-weight:700;cursor:pointer}.btn.ghost{background:#e5e7eb;font-weight:600;padding:8px 12px}
+.alert{padding:12px 16px;border-radius:8px;margin:12px 0}.alert.err{background:#fee2e2;color:#991b1b}.alert.ok{background:#dcfce7;color:#166534}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px}.stats .card{margin:0;text-align:center;color:#6b7280}.stats strong{display:block;font-size:2rem;color:#111827}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px;border-bottom:1px solid #e5e7eb;vertical-align:middle}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.actions form{display:flex;gap:6px;margin:0}.actions input{margin:0;width:150px;padding:7px 9px}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}.bar h1{margin:0}
+.btn.danger{background:#fee2e2;color:#991b1b;font-weight:600;padding:8px 12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+.row-item{display:grid;gap:6px;padding:10px;border:1px dashed #d1d5db;border-radius:8px;margin-bottom:10px}.row-item input,.row-item textarea{margin:0}
+label.check{display:flex;align-items:center;gap:8px}label.check input{width:auto;margin:0}
+.card a{color:#b45309;font-weight:600;text-decoration:none}.card a.btn{color:#111}

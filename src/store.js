@@ -27,11 +27,12 @@ module.exports = {
     return all[(i + 1) % all.length];
   },
   getReviews: async (limit) => query(`SELECT title, body, name, role FROM reviews WHERE published = 1 ORDER BY sort_order, id${lim(limit)}`),
-  getPosts: async (limit) => (await query(`SELECT * FROM posts WHERE published = 1 ORDER BY published_at, id${lim(limit)}`)).map(toPost),
+  getPosts: async (limit) => (await query(`SELECT * FROM posts WHERE published = 1 ORDER BY published_at DESC, id DESC${lim(limit)}`)).map(toPost),
   getPost: async (id) => {
     const r = (await query("SELECT * FROM posts WHERE published = 1 AND id = ?", [Number(id) || 0]))[0];
     return r ? toPost(r) : null;
   },
   getRelatedPosts: async (id, limit = 3) =>
-    (await query(`SELECT * FROM posts WHERE published = 1 AND id <> ? ORDER BY published_at, id${lim(limit)}`, [Number(id) || 0])).map(toPost),
+    (await query(`SELECT * FROM posts WHERE published = 1 AND id <> ? ORDER BY published_at DESC, id DESC${lim(limit)}`, [Number(id) || 0])).map(toPost),
 };
+

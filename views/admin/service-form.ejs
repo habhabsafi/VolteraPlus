@@ -1,0 +1,25 @@
+<%- include('head') %>
+<div class="bar"><h1><%= isNew ? 'Add service' : 'Edit service' %></h1><a class="btn ghost" href="/admin/services">&larr; All services</a></div>
+<form class="card" method="post" enctype="multipart/form-data" action="<%= isNew ? '/admin/services' : '/admin/services/' + service.id %>">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <label>Name<input name="name" value="<%= service.name %>" maxlength="190" required></label>
+  <label>Category<select name="cat"><% categories.forEach(function(c){ %><option value="<%= c.id %>"<%= c.id === service.cat ? ' selected' : '' %>><%= c.name %></option><% }) %></select></label>
+  <label>Short description (shown on cards)<input name="short" value="<%= service.short %>" maxlength="500" required></label>
+  <label>Description<textarea name="why" rows="5" required><%= service.why %></textarea></label>
+  <label>Advantages (one per line)<textarea name="perks" rows="4"><%= service.perks.join('\n') %></textarea></label>
+  <%- include('_image', {current: service.img}) %>
+  <h3>Service hub items</h3>
+  <div data-rows>
+    <% var hub = service.hub.concat([{}, {}, {}]); hub.forEach(function(h, i){ %>
+    <div class="row-item"><input name="title_<%= i %>" value="<%= h.title || '' %>" placeholder="Title" maxlength="150"><textarea name="text_<%= i %>" rows="2" placeholder="Text" maxlength="600"><%= h.text || '' %></textarea></div>
+    <% }) %>
+  </div>
+  <button type="button" class="btn ghost" data-add-row>+ Add item</button>
+  <div class="grid2">
+    <label>Display order (lower first)<input type="number" name="sort_order" value="<%= service.sort_order %>" min="0"></label>
+    <label>Home page position (0 = not shown, 1-3)<input type="number" name="featured_order" value="<%= service.featured_order %>" min="0" max="9"></label>
+  </div>
+  <label class="check"><input type="checkbox" name="published" value="1"<%= service.published ? ' checked' : '' %>> Published (visible on the website)</label>
+  <button class="btn" type="submit">Save service</button>
+</form>
+<%- include('foot') %>

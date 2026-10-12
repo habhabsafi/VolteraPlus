@@ -1,0 +1,23 @@
+<%- include('head') %>
+<h1>Admin Users</h1>
+<table class="card">
+  <tr><th>Email</th><th>Role</th><th>Status</th><th>Last login</th><th>Actions</th></tr>
+  <% users.forEach(function(u){ %>
+  <tr>
+    <td><%= u.email %></td><td><%= u.role %></td><td><%= u.active ? 'Active' : 'Disabled' %></td><td><%= u.last_login_at || 'Never' %></td>
+    <td class="actions">
+      <form method="post" action="/admin/users/<%= u.id %>/password"><input type="hidden" name="_csrf" value="<%= csrf %>"><input type="password" name="password" placeholder="New password" minlength="10" required autocomplete="new-password"><button class="btn ghost">Reset</button></form>
+      <% if (u.id !== admin.id) { %><form method="post" action="/admin/users/<%= u.id %>/toggle" data-confirm="<%= u.active ? 'Disable' : 'Enable' %> this user?"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn ghost"><%= u.active ? 'Disable' : 'Enable' %></button></form><% } %>
+    </td>
+  </tr>
+  <% }) %>
+</table>
+<h2>Add user</h2>
+<form class="card narrow" method="post" action="/admin/users">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <label>Email<input type="email" name="email" required></label>
+  <label>Password (10+ characters)<input type="password" name="password" minlength="10" required autocomplete="new-password"></label>
+  <label>Role<select name="role"><option value="staff">Staff</option><option value="owner">Owner</option></select></label>
+  <button class="btn" type="submit">Create user</button>
+</form>
+<%- include('foot') %>

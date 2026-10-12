@@ -1,0 +1,13 @@
+<%- include('head') %>
+<div class="bar"><h1>Blog posts</h1><a class="btn" href="/admin/posts/new">+ Add post</a></div>
+<table class="card">
+  <tr><th>Title</th><th>Date</th><th>Status</th><th></th></tr>
+  <% posts.forEach(function(p){ %>
+  <tr>
+    <td><a href="/admin/posts/<%= p.id %>"><%= p.title %></a></td><td><%= String(p.published_at).slice(0, 10) %></td><td><%= p.published ? 'Published' : 'Draft' %></td>
+    <td class="actions"><a class="btn ghost" href="/admin/posts/<%= p.id %>">Edit</a>
+      <form method="post" action="/admin/posts/<%= p.id %>/delete" data-confirm="Delete this post? This cannot be undone."><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn danger">Delete</button></form></td>
+  </tr>
+  <% }) %>
+</table>
+<%- include('foot') %>

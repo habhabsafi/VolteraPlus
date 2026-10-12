@@ -3,7 +3,7 @@
 
 <main>
 <section class="section"><div class="container">
-  <img src="/images/<%= service.img %>" alt="<%= service.name %>" style="border-radius:16px;width:100%;aspect-ratio:16/8;object-fit:cover">
+  <img src="<%= imgUrl(service.img) %>" alt="<%= service.name %>" style="border-radius:16px;width:100%;aspect-ratio:16/8;object-fit:cover">
 </div></section>
 
 <section class="section" style="padding-top:0"><div class="container grid" style="grid-template-columns:1.5fr 1fr;align-items:start">
@@ -19,7 +19,7 @@
 <section class="section" style="padding-top:0"><div class="container split" style="grid-template-columns:1fr 1.2fr">
   <div><h2>The Complete Electrical Service Hub</h2><p style="margin:12px 0 22px">Our crew ensures every detail is attended to.</p>
     <div class="acc"><% service.hub.forEach(function(h, i){ %><div class="<%= i === 0 ? 'open' : '' %>"><button type="button"><%= h.title %><span><%- i === 0 ? '&minus;' : '+' %></span></button><div class="panel"><p><%= h.text %></p></div></div><% }) %></div></div>
-  <div class="side-img"><img src="/images/<%= hubImage %>" alt=""></div>
+  <div class="side-img"><img src="<%= imgUrl(hubImage) %>" alt=""></div>
 </div></section>
 </main>
 <%- include('partials/foot') %>
