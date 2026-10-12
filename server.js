@@ -1,8 +1,10 @@
+require("dotenv").config({ quiet: true });
 const path = require("path");
 const express = require("express");
 const helmet = require("helmet");
 const compression = require("compression");
 const store = require("./src/store");
+const { init } = require("./src/setup");
 
 const app = express();
 app.set("view engine", "ejs");
@@ -30,6 +32,7 @@ app.use(express.static(path.join(__dirname, "public"), { maxAge: "7d" }));
 // Shared template data
 app.use(async (req, res, next) => {
   try {
+    await init();
     res.locals.site = await store.getSite();
     res.locals.categories = await store.getCategories();
     res.locals.page = "";
@@ -122,4 +125,5 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 3000;
 if (require.main === module) app.listen(port, () => console.log(`Listening on http://localhost:${port}`));
 module.exports = app;
+
 
