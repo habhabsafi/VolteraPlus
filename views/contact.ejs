@@ -2,7 +2,9 @@
 <section class="page-hero" style="padding-bottom:140px"><div class="container"><h1>Contact Us</h1><p>Have a question or need a free estimate? Reach out using the form below or call us 24/7.</p></div></section>
 
 <section style="margin-top:-90px"><div class="container">
-  <form class="form-card" data-form>
+  <% if (typeof sent !== 'undefined' && sent) { %><p class="form-ok" style="display:block">Thank you! We received your request and will contact you shortly.</p><% } %>
+  <form class="form-card" data-form method="post" action="/quote">
+  <%- include('partials/form-extras', {source: 'contact'}) %>
     <div class="field"><label>Full Name</label><input name="Name" data-req placeholder="Your full name"><span class="err">Please enter your name.</span></div>
     <div class="row">
       <div class="field"><label>Email Address</label><input name="Email" type="email" data-req placeholder="Type your mail address"><span class="err">Please enter a valid email.</span></div>

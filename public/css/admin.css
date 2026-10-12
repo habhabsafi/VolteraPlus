@@ -17,3 +17,6 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px;bor
 .row-item{display:grid;gap:6px;padding:10px;border:1px dashed #d1d5db;border-radius:8px;margin-bottom:10px}.row-item input,.row-item textarea{margin:0}
 label.check{display:flex;align-items:center;gap:8px}label.check input{width:auto;margin:0}
 .card a{color:#b45309;font-weight:600;text-decoration:none}.card a.btn{color:#111}
+.filters{display:flex;gap:8px;flex-wrap:wrap}.chip{padding:6px 12px;border-radius:999px;background:#e5e7eb;color:#374151;text-decoration:none;font-weight:600}.chip.on{background:#f59e0b;color:#111}
+.pill{padding:3px 10px;border-radius:999px;background:#e5e7eb;font-size:.8rem;text-transform:capitalize}.pill.new{background:#fef3c7}.pill.won{background:#dcfce7}.pill.lost{background:#fee2e2}
+.stats a.card{text-decoration:none}

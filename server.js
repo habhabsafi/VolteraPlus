@@ -6,6 +6,7 @@ const compression = require("compression");
 const store = require("./src/store");
 const { init } = require("./src/setup");
 const adminRoutes = require("./src/admin/routes");
+const quoteRoutes = require("./src/quote");
 
 const app = express();
 app.set("view engine", "ejs");
@@ -61,6 +62,8 @@ app.use(async (req, res, next) => {
 
 app.use("/admin", express.urlencoded({ extended: false, limit: "100kb" }), adminRoutes);
 
+app.use("/quote", quoteRoutes);
+
 const wrap = (fn) => (req, res, next) => fn(req, res, next).catch(next);
 
 app.get("/", wrap(async (req, res) => {
@@ -105,7 +108,7 @@ app.get("/blog/:id", wrap(async (req, res, next) => {
 }));
 
 app.get("/contact", wrap(async (req, res) => {
-  res.render("contact", { page: "contact", title: "Contact | Voltera Plus", description: "Request a free estimate or call Voltera Plus 24/7.", allServices: await store.getServices() });
+  res.render("contact", { page: "contact", sent: req.query.sent === "1", title: "Contact | Voltera Plus", description: "Request a free estimate or call Voltera Plus 24/7.", allServices: await store.getServices() });
 }));
 
 // Redirect legacy .html URLs
@@ -139,6 +142,7 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 3000;
 if (require.main === module) app.listen(port, () => console.log(`Listening on http://localhost:${port}`));
 module.exports = app;
+
 
 
 
