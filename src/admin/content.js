@@ -206,6 +206,37 @@ router.post("/reviews/:id/delete", wrap(async (req, res) => {
   res.redirect("/admin/reviews?saved=1");
 }));
 
+// =============================== quote requests
+const STATUSES = ["new", "contacted", "quoted", "won", "lost"];
+
+router.get("/quotes", wrap(async (req, res) => {
+  const filter = STATUSES.includes(req.query.status) ? req.query.status : "";
+  const [quotes, groups] = await Promise.all([
+    filter
+      ? query("SELECT id, name, email, phone, service, status, created_at FROM quote_requests WHERE status = ? ORDER BY created_at DESC LIMIT 500", [filter])
+      : query("SELECT id, name, email, phone, service, status, created_at FROM quote_requests ORDER BY created_at DESC LIMIT 500"),
+    query("SELECT status, COUNT(*) n FROM quote_requests GROUP BY status"),
+  ]);
+  const counts = Object.fromEntries(groups.map((g) => [g.status, g.n]));
+  res.render("admin/quotes", { nav: "quotes", quotes, filter, counts });
+}));
+
+router.get("/quotes/:id", wrap(async (req, res, next) => {
+  const quote = (await query("SELECT * FROM quote_requests WHERE id = ?", [Number(req.params.id) || 0]))[0];
+  if (!quote) return next();
+  res.render("admin/quote-detail", { nav: "quotes", quote, saved: req.query.saved === "1" });
+}));
+
+router.post("/quotes/:id", wrap(async (req, res) => {
+  const status = STATUSES.includes(req.body.status) ? req.body.status : "new";
+  await query("UPDATE quote_requests SET status = ?, notes = ? WHERE id = ?", [status, str(req.body.notes, 4000), Number(req.params.id) || 0]);
+  res.redirect(`/admin/quotes/${Number(req.params.id) || 0}?saved=1`);
+}));
+
+router.post("/quotes/:id/delete", wrap(async (req, res) => {
+  await query("DELETE FROM quote_requests WHERE id = ?", [Number(req.params.id) || 0]);
+  res.redirect("/admin/quotes");
+}));
 router.parseMultipart = parseMultipart;
 module.exports = router;
 

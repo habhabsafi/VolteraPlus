@@ -1,0 +1,15 @@
+CREATE TABLE quote_requests (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(150) NOT NULL,
+  email VARCHAR(190) NOT NULL,
+  phone VARCHAR(40) NOT NULL DEFAULT '',
+  service VARCHAR(190) NOT NULL DEFAULT '',
+  message TEXT NOT NULL,
+  source VARCHAR(40) NOT NULL DEFAULT '',
+  status ENUM('new','contacted','quoted','won','lost') NOT NULL DEFAULT 'new',
+  notes TEXT NOT NULL,
+  email_sent TINYINT(1) NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_quotes_status (status, created_at)
+) CHARACTER SET utf8mb4;

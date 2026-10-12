@@ -1,0 +1,18 @@
+<%- include('head') %>
+<div class="bar"><h1>Quote requests</h1></div>
+<p class="filters">
+  <% [['', 'All'], ['new','New'], ['contacted','Contacted'], ['quoted','Quoted'], ['won','Won'], ['lost','Lost']].forEach(function(f){ %><a class="chip<%= filter === f[0] ? ' on' : '' %>" href="/admin/quotes<%= f[0] ? '?status=' + f[0] : '' %>"><%= f[1] %><% if (f[0] && counts[f[0]]) { %> (<%= counts[f[0]] %>)<% } %></a><% }) %>
+</p>
+<table class="card">
+  <tr><th>Received</th><th>Name</th><th>Service</th><th>Contact</th><th>Status</th></tr>
+  <% quotes.forEach(function(q){ %>
+  <tr>
+    <td><%= String(q.created_at).slice(0, 16).replace('T', ' ') %></td>
+    <td><a href="/admin/quotes/<%= q.id %>"><%= q.name %></a></td><td><%= q.service || '-' %></td>
+    <td><%= q.email %><% if (q.phone) { %><br><%= q.phone %><% } %></td>
+    <td><span class="pill <%= q.status %>"><%= q.status %></span></td>
+  </tr>
+  <% }) %>
+  <% if (!quotes.length) { %><tr><td colspan="5" class="muted">No requests yet.</td></tr><% } %>
+</table>
+<%- include('foot') %>

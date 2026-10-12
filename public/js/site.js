@@ -28,12 +28,15 @@
         if (bad) ok = false;
       });
       if (!ok) return;
-      const d = Object.fromEntries(new FormData(f));
-      const body = Object.entries(d).map(([k, v]) => `${k}: ${v}`).join("\n");
       const ms = $(".form-ok", f);
-      if (ms) { ms.style.display = "block"; ms.textContent = "Thank you! Your email app will open to send your request."; }
-      location.href = `mailto:${document.body.dataset.email}?subject=${encodeURIComponent("Estimate request from website")}&body=${encodeURIComponent(body)}`;
-      f.reset();
+      const btn = $("button[type=submit]", f);
+      const show = (text, error) => { if (ms) { ms.style.display = "block"; ms.classList.toggle("error", !!error); ms.textContent = text; } };
+      if (btn) btn.disabled = true;
+      fetch(f.action, { method: "POST", headers: { Accept: "application/json", "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(new FormData(f)) })
+        .then((r) => r.json().catch(() => ({ ok: false })))
+        .then((d) => { show(d.message || "Something went wrong. Please call us.", !d.ok); if (d.ok) f.reset(); })
+        .catch(() => show("Could not send your request. Please call us.", true))
+        .finally(() => { if (btn) btn.disabled = false; });
     });
   });
 })();
