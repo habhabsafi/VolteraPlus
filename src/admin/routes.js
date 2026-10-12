@@ -1,6 +1,7 @@
 const express = require("express");
 const { query } = require("../db");
 const auth = require("./auth");
+const content = require("./content");
 
 const router = express.Router();
 const wrap = (fn) => (req, res, next) => fn(req, res, next).catch(next);
@@ -16,6 +17,7 @@ router.use((req, res, next) => {
   next();
 });
 router.use(wrap(auth.loadAdmin));
+router.use(content.parseMultipart);
 router.use(auth.csrfGuard);
 
 // --- login / logout
@@ -49,6 +51,8 @@ router.get("/", wrap(async (req, res) => {
   ]);
   res.render("admin/dashboard", { nav: "dashboard", counts: c });
 }));
+
+router.use(content);
 
 // --- contact / site settings
 const FIELDS = [
@@ -126,3 +130,4 @@ router.post("/users/:id/password", wrap(async (req, res) => {
 }));
 
 module.exports = router;
+

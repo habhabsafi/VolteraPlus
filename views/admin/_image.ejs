@@ -1,0 +1,7 @@
+<label>Image
+  <select name="img">
+    <option value="">Choose an existing image…</option>
+    <% images.forEach(function(i){ %><option value="<%= i %>"<%= i === current ? ' selected' : '' %>><%= i.indexOf('uploads/') === 0 ? 'Uploaded: ' + i.slice(8) : i %></option><% }) %>
+  </select>
+</label>
+<label>…or upload a new image (JPG, PNG or WebP, max 2 MB)<input type="file" name="image" accept="image/jpeg,image/png,image/webp"></label>

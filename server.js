@@ -11,6 +11,7 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.set("trust proxy", 1);
+app.locals.imgUrl = (img) => (String(img).startsWith("uploads/") ? "/" + img : "/images/" + img);
 
 app.use(
   helmet({
@@ -29,6 +30,15 @@ app.use(
   })
 );
 app.use(compression());
+// Images uploaded through the admin are stored in MySQL so they survive redeploys.
+app.get("/uploads/:name", async (req, res, next) => {
+  try {
+    const row = (await require("./src/db").query("SELECT mime, data FROM media WHERE name = ?", [req.params.name]))[0];
+    if (!row) return next();
+    res.set({ "Content-Type": row.mime, "Cache-Control": "public, max-age=31536000, immutable", "X-Content-Type-Options": "nosniff" });
+    res.send(row.data);
+  } catch (e) { next(e); }
+});
 app.use(express.static(path.join(__dirname, "public"), { maxAge: "7d" }));
 
 // Shared template data
@@ -129,6 +139,7 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 3000;
 if (require.main === module) app.listen(port, () => console.log(`Listening on http://localhost:${port}`));
 module.exports = app;
+
 
 
 

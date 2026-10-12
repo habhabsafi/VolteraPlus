@@ -1,0 +1,22 @@
+<%- include('head') %>
+<div class="bar"><h1><%= isNew ? 'Add post' : 'Edit post' %></h1><a class="btn ghost" href="/admin/posts">&larr; All posts</a></div>
+<form class="card" method="post" enctype="multipart/form-data" action="<%= isNew ? '/admin/posts' : '/admin/posts/' + post.id %>">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <label>Title<input name="title" value="<%= post.title %>" maxlength="255" required></label>
+  <label>Summary (shown on cards)<input name="short" value="<%= post.short %>" maxlength="500" required></label>
+  <div class="grid2">
+    <label>Date<input type="date" name="published_at" value="<%= post.published_at %>" required></label>
+    <label>Card button text<input name="cta" value="<%= post.cta %>" maxlength="80"></label>
+  </div>
+  <%- include('_image', {current: post.img}) %>
+  <h3>Sections</h3>
+  <div data-rows>
+    <% var secs = post.sections.concat([{}, {}]); if (secs.length < 3) secs.push({}); secs.forEach(function(s, i){ %>
+    <div class="row-item"><input name="heading_<%= i %>" value="<%= s.heading || '' %>" placeholder="Heading" maxlength="200"><textarea name="text_<%= i %>" rows="4" placeholder="Paragraph text"><%= s.text || '' %></textarea></div>
+    <% }) %>
+  </div>
+  <button type="button" class="btn ghost" data-add-row>+ Add section</button>
+  <label class="check"><input type="checkbox" name="published" value="1"<%= post.published ? ' checked' : '' %>> Published (uncheck to keep as a draft)</label>
+  <button class="btn" type="submit">Save post</button>
+</form>
+<%- include('foot') %>

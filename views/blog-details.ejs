@@ -1,7 +1,7 @@
 <%- include('partials/head') %>
 <section class="page-hero"><div class="container"><span class="tag"><%= post.date %></span><h1 style="font-size:clamp(1.9rem,4vw,2.8rem)"><%= post.title %></h1><p><%= post.short %></p></div></section>
 <section class="section"><div class="container"><article class="article">
-  <img src="/images/<%= post.img %>" alt="">
+  <img src="<%= imgUrl(post.img) %>" alt="">
   <% post.sections.forEach(function(s){ %><h2><%= s.heading %></h2><p><%= s.text %></p><% }) %>
 </article></div></section>
 <section class="section" style="padding-top:0"><div class="container"><h2 class="section-title">Read More Articles</h2><div class="grid grid-3"><% more.forEach(function(p){ %><%- include('partials/post-card', {p: p}) %><% }) %></div></div></section>
