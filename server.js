@@ -14,6 +14,7 @@ app.set("trust proxy", 1);
 
 app.use(
   helmet({
+    referrerPolicy: { policy: "same-origin" },
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],

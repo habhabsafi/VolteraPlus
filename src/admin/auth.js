@@ -74,7 +74,14 @@ const requireOwner = (req, res, next) => (req.admin && req.admin.role === "owner
 function csrfGuard(req, res, next) {
   if (req.method !== "POST") return next();
   const origin = req.get("origin");
-  if (origin && new URL(origin).host !== req.get("host")) return res.status(403).send("Forbidden");
+  const site = req.get("sec-fetch-site");
+  if (site && site !== "same-origin" && site !== "none") return res.status(403).send("Forbidden");
+  // Browsers may send "Origin: null" (e.g. with a no-referrer policy); the token check below still applies.
+  if (origin && origin !== "null") {
+    let host = null;
+    try { host = new URL(origin).host; } catch { /* invalid origin */ }
+    if (host !== req.get("host")) return res.status(403).send("Forbidden");
+  }
   if (req.admin) {
     const given = Buffer.from(String((req.body && req.body._csrf) || ""));
     const want = Buffer.from(req.csrf);
