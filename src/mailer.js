@@ -11,6 +11,7 @@ function getTransport() {
       host: process.env.SMTP_HOST || "smtp.gmail.com",
       port,
       secure: port === 465,
+      family: 4,
       auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASSWORD },
       connectionTimeout: 10000,
       greetingTimeout: 10000,
@@ -20,19 +21,30 @@ function getTransport() {
   return transport;
 }
 
-// Sends the owner notification and customer confirmation. Returns true if the owner email went out.
+// Sends the owner notification and customer confirmation. Returns { sent, error } for the owner email.
+// Gmail connections occasionally stall; one retry covers it.
+async function send(message) {
+  try {
+    return await getTransport().sendMail(message);
+  } catch (e) {
+    if (!/ETIMEDOUT|ECONNRESET|ESOCKET/.test(e.code || "")) throw e;
+    return getTransport().sendMail(message);
+  }
+}
+
 async function sendQuoteEmails(q, site) {
   if (!configured()) {
     console.warn("SMTP not configured; quote emails skipped.");
-    return false;
+    return { sent: false, error: "SMTP_USER / SMTP_PASSWORD are not set on the server." };
   }
   const from = `"${site.name}" <${process.env.MAIL_FROM || process.env.SMTP_USER}>`;
   const to = process.env.MAIL_TO || site.email;
   const rows = [["Name", q.name], ["Email", q.email], ["Phone", q.phone || "-"], ["Service", q.service || "-"], ["Source", q.source || "-"]];
   const table = rows.map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0"><b>${k}</b></td><td>${esc(v)}</td></tr>`).join("");
   let sent = false;
+  let error = "";
   try {
-    await getTransport().sendMail({
+    await send({
       from, to, replyTo: `"${q.name.replace(/"/g, "")}" <${q.email}>`,
       subject: `New estimate request from ${q.name}`,
       text: `${rows.map(([k, v]) => `${k}: ${v}`).join("\n")}\n\nMessage:\n${q.message || "-"}`,
@@ -40,10 +52,11 @@ async function sendQuoteEmails(q, site) {
     });
     sent = true;
   } catch (e) {
-    console.error("Owner quote email failed:", e.message);
+    console.error("Owner quote email failed:", e.code, e.message);
+    error = `${e.code || ""} ${e.message}`.trim().slice(0, 500);
   }
   try {
-    await getTransport().sendMail({
+    await send({
       from, to: q.email, replyTo: to,
       subject: `We received your request | ${site.name}`,
       text: `Hi ${q.name},\n\nThanks for contacting ${site.name}. We received your request and will get back to you shortly.\nFor urgent matters call ${site.phone}.\n\n${site.name}`,
@@ -52,7 +65,13 @@ async function sendQuoteEmails(q, site) {
   } catch (e) {
     console.error("Customer confirmation email failed:", e.message);
   }
-  return sent;
+  return { sent, error };
 }
 
-module.exports = { sendQuoteEmails };
+// Used by the admin "send test email" button.
+async function sendTestEmail(to) {
+  if (!configured()) throw new Error("SMTP_USER / SMTP_PASSWORD are not set on the server.");
+  await send({ from: process.env.MAIL_FROM || process.env.SMTP_USER, to, subject: "Test email from your website", text: "Email sending is working." });
+}
+
+module.exports = { sendQuoteEmails, sendTestEmail };

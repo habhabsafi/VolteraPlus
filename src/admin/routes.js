@@ -62,7 +62,7 @@ const FIELDS = [
 
 router.get("/settings", wrap(async (req, res) => {
   const row = (await query("SELECT * FROM site_settings WHERE id = 1"))[0];
-  res.render("admin/settings", { nav: "settings", fields: FIELDS, values: row, saved: req.query.saved === "1" });
+  res.render("admin/settings", { nav: "settings", fields: FIELDS, values: row, saved: req.query.saved === "1", mail: req.query.mail || "" });
 }));
 
 router.post("/settings", wrap(async (req, res) => {
@@ -73,6 +73,18 @@ router.post("/settings", wrap(async (req, res) => {
   if (error) return res.status(400).render("admin/settings", { nav: "settings", fields: FIELDS, values, error });
   await query(`UPDATE site_settings SET ${FIELDS.map(([k]) => `${k} = ?`).join(", ")} WHERE id = 1`, FIELDS.map(([k]) => values[k]));
   res.redirect("/admin/settings?saved=1");
+}));
+
+// --- email test
+router.post("/settings/test-email", wrap(async (req, res) => {
+  const site = (await query("SELECT email FROM site_settings WHERE id = 1"))[0];
+  const to = process.env.MAIL_TO || site.email;
+  try {
+    await require("../mailer").sendTestEmail(to);
+    res.redirect("/admin/settings?mail=ok");
+  } catch (e) {
+    res.redirect("/admin/settings?mail=" + encodeURIComponent(`${e.code || ""} ${e.message}`.trim().slice(0, 300)));
+  }
 }));
 
 // --- own password
