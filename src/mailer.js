@@ -1,7 +1,25 @@
 const nodemailer = require("nodemailer");
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const configured = () => !!(process.env.SMTP_USER && process.env.SMTP_PASSWORD);
+const useResend = () => !!process.env.RESEND_API_KEY;
+const configured = () => useResend() || !!(process.env.SMTP_USER && process.env.SMTP_PASSWORD);
+const fromAddress = () => process.env.MAIL_FROM || process.env.SMTP_USER;
+
+// Resend sends over HTTPS, which works on hosts that block outbound SMTP.
+async function sendViaResend(m) {
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ from: m.from, to: [m.to], reply_to: m.replyTo, subject: m.subject, text: m.text, html: m.html }),
+    signal: AbortSignal.timeout(15000),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    const err = new Error(body.message || `Resend returned HTTP ${res.status}`);
+    err.code = `RESEND_${res.status}`;
+    throw err;
+  }
+}
 
 let transport;
 function getTransport() {
@@ -24,6 +42,7 @@ function getTransport() {
 // Sends the owner notification and customer confirmation. Returns { sent, error } for the owner email.
 // Gmail connections occasionally stall; one retry covers it.
 async function send(message) {
+  if (useResend()) return sendViaResend(message);
   try {
     return await getTransport().sendMail(message);
   } catch (e) {
@@ -35,9 +54,9 @@ async function send(message) {
 async function sendQuoteEmails(q, site) {
   if (!configured()) {
     console.warn("SMTP not configured; quote emails skipped.");
-    return { sent: false, error: "SMTP_USER / SMTP_PASSWORD are not set on the server." };
+    return { sent: false, error: "No email settings found: set RESEND_API_KEY and MAIL_FROM on the server." };
   }
-  const from = `"${site.name}" <${process.env.MAIL_FROM || process.env.SMTP_USER}>`;
+  const from = `"${site.name}" <${fromAddress()}>`;
   const to = process.env.MAIL_TO || site.email;
   const rows = [["Name", q.name], ["Email", q.email], ["Phone", q.phone || "-"], ["Service", q.service || "-"], ["Source", q.source || "-"]];
   const table = rows.map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0"><b>${k}</b></td><td>${esc(v)}</td></tr>`).join("");
@@ -70,8 +89,8 @@ async function sendQuoteEmails(q, site) {
 
 // Used by the admin "send test email" button.
 async function sendTestEmail(to) {
-  if (!configured()) throw new Error("SMTP_USER / SMTP_PASSWORD are not set on the server.");
-  await send({ from: process.env.MAIL_FROM || process.env.SMTP_USER, to, subject: "Test email from your website", text: "Email sending is working." });
+  if (!configured()) throw new Error("No email settings found: set RESEND_API_KEY and MAIL_FROM on the server.");
+  await send({ from: fromAddress(), to, subject: "Test email from your website", text: "Email sending is working." });
 }
 
 module.exports = { sendQuoteEmails, sendTestEmail };
