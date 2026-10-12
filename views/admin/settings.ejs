@@ -6,4 +6,12 @@
   <% fields.forEach(function(f){ %><label><%= f[1] %><input name="<%= f[0] %>" value="<%= values[f[0]] %>" maxlength="<%= f[2] %>" required></label><% }) %>
   <button class="btn" type="submit">Save changes</button>
 </form>
+<h2>Email</h2>
+<form class="card" method="post" action="/admin/settings/test-email">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <% if (mail === 'ok') { %><div class="alert ok">Test email sent. Check the inbox of the contact email.</div>
+  <% } else if (mail) { %><div class="alert err"><b>Email failed:</b> <%= mail %></div><% } %>
+  <p class="muted">Sends a test message to the contact email above, to confirm the website can send email.</p>
+  <button class="btn" type="submit">Send test email</button>
+</form>
 <%- include('foot') %>

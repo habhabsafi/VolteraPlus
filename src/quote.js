@@ -33,8 +33,8 @@ router.post("/", express.urlencoded({ extended: false, limit: "20kb" }), async (
       [q.name, q.email, q.phone, q.service, q.message, q.source]
     )).insertId;
     // The request is saved first; email problems must not lose it or fail the visitor.
-    const sent = await sendQuoteEmails(q, res.locals.site);
-    if (sent) await query("UPDATE quote_requests SET email_sent = 1 WHERE id = ?", [id]);
+    const { sent, error } = await sendQuoteEmails(q, res.locals.site);
+    await query("UPDATE quote_requests SET email_sent = ?, email_error = ? WHERE id = ?", [sent ? 1 : 0, error, id]);
     reply(200, true, "Thank you! We received your request and will contact you shortly.");
   } catch (e) {
     next(e);

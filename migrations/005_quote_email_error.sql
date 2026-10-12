@@ -1,0 +1,1 @@
+ALTER TABLE quote_requests ADD COLUMN email_error VARCHAR(500) NOT NULL DEFAULT '';
