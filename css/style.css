@@ -224,3 +224,8 @@ h3 { font-size: 1.2rem; }
   .cta .txt { padding: 40px 28px; }
   .hero { min-height: 520px; }
 }
+
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.section-head .section-title{margin:0}
+html{scroll-behavior:smooth}
+#electric,#general-contractor,#handyman{scroll-margin-top:90px}

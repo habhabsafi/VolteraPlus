@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   const SITE = {
     name: "Voltera Plus",
     tagline: "Building a better tomorrow.",
@@ -178,10 +178,17 @@
   const reviewCard = (r, cls = "") => `<div class="review ${cls}"><div class="quote">&ldquo;</div><h3>${esc(r[0])}</h3><p>${esc(r[1])}</p><div class="who"><div class="avatar">${esc(r[2][0])}</div><div><strong>${esc(r[2])}</strong><small>${esc(r[3])}</small></div></div></div>`;
   const postCard = (p) => `<a class="post" href="blog-details.html?id=${p.id}"><img src="${img(p.img)}" alt="" loading="lazy"><div class="body"><h3>${esc(p.title)}</h3><p>${esc(p.short)}</p><div class="meta"><span class="more">${esc(p.cta)} &rarr;</span><span class="date">${esc(p.date)}</span></div></div></a>`;
 
+  const FEATURED = {
+    electric: ["troubleshooting", "panel-upgrades", "lighting"],
+    "general-contractor": ["renovations", "additions", "project-management"],
+    handyman: ["home-repairs", "painting", "assembly-mounting"],
+  };
+
   $$("[data-render]").forEach((el) => {
     const [kind, n] = el.dataset.render.split(":");
     const lim = n ? +n : undefined;
     if (kind === "services") el.innerHTML = SERVICES.slice(0, lim).map(svcCard).join("");
+    if (kind === "services-top") el.innerHTML = (FEATURED[n] || []).map((id) => SERVICES.find((s) => s.id === id)).filter(Boolean).map(svcCard).join("");
     if (kind === "services-cat") el.innerHTML = SERVICES.filter((s) => s.cat === n).map(svcCard).join("");
     if (kind === "reviews") el.innerHTML = REVIEWS.slice(0, lim).map((r) => reviewCard(r, el.dataset.card || "")).join("");
     if (kind === "posts") el.innerHTML = POSTS.slice(0, lim).map(postCard).join("");
