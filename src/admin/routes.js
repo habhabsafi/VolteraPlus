@@ -47,7 +47,7 @@ router.use(auth.requireAdmin);
 
 router.get("/", wrap(async (req, res) => {
   const [[c]] = await Promise.all([
-    query("SELECT (SELECT COUNT(*) FROM services) services, (SELECT COUNT(*) FROM posts) posts, (SELECT COUNT(*) FROM reviews) reviews, (SELECT COUNT(*) FROM admin_users) users, (SELECT COUNT(*) FROM quote_requests WHERE status = 'new') newQuotes"),
+    query("SELECT (SELECT COUNT(*) FROM services) services, (SELECT COUNT(*) FROM people) people, (SELECT COUNT(*) FROM posts) posts, (SELECT COUNT(*) FROM reviews) reviews, (SELECT COUNT(*) FROM admin_users) users, (SELECT COUNT(*) FROM quote_requests WHERE status = 'new') newQuotes"),
   ]);
   res.render("admin/dashboard", { nav: "dashboard", counts: c });
 }));
@@ -142,4 +142,3 @@ router.post("/users/:id/password", wrap(async (req, res) => {
 }));
 
 module.exports = router;
-

@@ -1,0 +1,11 @@
+[
+  {
+    "name": "Abe Barham",
+    "role": "Licensed Electrician",
+    "headline": "Your Ultimate One-Stop Electrical Solution",
+    "bio": "Abe Barham is a licensed, Red Seal certified electrician serving Ottawa, ON and surrounding areas. Voltera Plus was built on one idea: Building a better tomorrow through quality work and trusted service.",
+    "img": "abe.jpg",
+    "highlights": ["Residential", "Commercial", "Industrial", "Free estimates"],
+    "badge_img": "red-seal.png"
+  }
+]

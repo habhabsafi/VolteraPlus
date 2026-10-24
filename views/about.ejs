@@ -1,16 +1,20 @@
 <%- include('partials/head') %>
 <section class="page-hero"><div class="container"><h1>About Voltera Plus</h1><p>Licensed Electrical, general contracting and handy man professionals dedicated to quality service in Ottawa, ON.</p></div></section>
 
-<section class="section"><div class="container">
-  <div class="video"><img src="/images/electrician.jpg" alt="Voltera Plus electrician" style="object-position:center 30%"><button class="play" aria-label="Play video">&#9654;</button></div>
-</div></section>
-
-<section class="section" style="padding-top:0"><div class="container split">
-  <img src="/images/abe.jpg" alt="Abe Barham, Licensed Electrician" loading="lazy" style="object-position:center 20%">
-  <div><span class="eyebrow">Meet Abe Barham</span><h2>Your Ultimate One-Stop Electrical Solution</h2>
-    <p>Abe Barham is a licensed, Red Seal certified electrician serving Ottawa, ON and surrounding areas. Voltera Plus was built on one idea: Building a better tomorrow through quality work and trusted service.</p>
-    <ul class="checks"><li>Residential</li><li>Commercial</li><li>Industrial</li><li>Free estimates</li></ul>
-    <img class="seal" src="/images/red-seal.png" alt="Red Seal certified" style="margin-top:26px"></div>
+<section class="section" ><div class="container">
+  <h2 class="center section-title">Meet Our Team</h2>
+  <div class="team-profiles">
+    <% people.forEach(function(person){ %>
+    <div class="split team-profile">
+      <img class="profile-photo" src="<%= imgUrl(person.img) %>" alt="<%= person.name %>, <%= person.role %>" loading="lazy">
+      <div><span class="eyebrow">Meet <%= person.name %></span><h2><%= person.headline %></h2>
+        <p class="muted"><%= person.role %></p><p><%= person.bio %></p>
+        <% if (person.highlights.length) { %><ul class="checks"><% person.highlights.forEach(function(highlight){ %><li><%= highlight %></li><% }) %></ul><% } %>
+        <% if (person.badge_img) { %><img class="seal" src="<%= imgUrl(person.badge_img) %>" alt="<%= person.role %> credential" loading="lazy" style="margin-top:26px"><% } %>
+      </div>
+    </div>
+    <% }) %>
+  </div>
 </div></section>
 
 <section class="section" style="padding-top:0"><div class="container grid grid-3">

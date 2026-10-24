@@ -13,14 +13,21 @@ npm run dev     # http://localhost:3000
 
 Requires Node 20+. Set `BASE_URL` (e.g. `https://www.volteraplus.ca`) in production for canonical URLs and the sitemap.
 
+## Production database and migrations
+
+Configure `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD` in the Node.js application's environment. On startup, the application applies numbered SQL files from `migrations/` in order and records each completed migration in `schema_migrations`. This includes new migrations such as `005_people.sql`; no separate shell command is required, but the configured database user must be allowed to create and alter tables.
+
+Initial content is seeded only when its corresponding table is empty. Existing database content is not overwritten during deployment. Back up the database before deploying schema changes, and keep the database credentials in the hosting environment rather than in source control.
+
 ## Structure
 
 - `server.js`: routes, security headers, legacy `.html` redirects, sitemap and robots
-- `src/store.js`: data access layer (swap for database queries in the next phase)
-- `src/data/*.json`: site info, services, reviews, and blog posts
+- `src/store.js`: database-backed public content access
+- `src/setup.js`: startup migrations and initial content seeding
+- `migrations/`: ordered MySQL/MariaDB schema migrations
+- `src/data/*.json`: initial seed content
+- `src/admin/`: admin authentication, CRUD routes, and content handling
 - `views/`: EJS pages; `views/partials/`: header, footer, cards, forms
 - `public/`: CSS, client JS, and images
 
-## Editing content
-
-Until the admin panel and database are added, edit the JSON files in `src/data/`.
+Manage services, team members, blog posts, reviews, and site settings through `/admin`. Uploaded images are stored in the database so they persist across application redeployments.

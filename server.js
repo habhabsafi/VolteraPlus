@@ -78,8 +78,8 @@ app.get("/", wrap(async (req, res) => {
   res.render("home", { page: "home", featured: { electric, general, handy }, reviews, posts, allServices });
 }));
 
-app.get("/about", (req, res) =>
-  res.render("about", { page: "about", title: "About | Voltera Plus", description: "Meet Abe Barham, a Red Seal certified electrician serving Ottawa, ON." }));
+app.get("/about", wrap(async (req, res) =>
+  res.render("about", { page: "about", title: "About | Voltera Plus", description: "Meet the Voltera Plus team serving Ottawa, ON.", people: await store.getPeople() })));
 
 app.get("/services", wrap(async (req, res) => {
   const [services, reviews] = await Promise.all([store.getServices(), store.getReviews(3)]);
@@ -142,7 +142,6 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 3000;
 if (require.main === module) app.listen(port, () => console.log(`Listening on http://localhost:${port}`));
 module.exports = app;
-
 
 
 
