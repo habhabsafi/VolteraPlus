@@ -29,6 +29,8 @@ Requires Node 20+. Set `BASE_URL` (e.g. `https://www.volteraplus.ca`) in product
 
 Run the unit and HTTP integration tests from `site/` with `npm test`. The tests use Node's built-in test runner and do not require database credentials. GitHub Actions runs them on pull requests targeting `main` or `master`.
 
+Coverage includes public page and detail rendering, sitemap/robots/static assets, quote-form validation/honeypot/upload/rate-limit paths, appointment-form rendering, and unit tests for authentication/CSRF, appointment helpers, JSON parsing, and Turnstile verification. HTTP tests use fixture data instead of MySQL; they do not yet cover migrations, successful database-backed quote or appointment submissions, admin CRUD, email delivery, or live Turnstile calls.
+
 To prevent merging until they pass, an administrator must configure repository branch protection or a ruleset for each target branch (`main` and/or `master`) and require the **Test website / test** status check. The check appears after the workflow runs once. The workflow reports this check but cannot enable GitHub's repository-level merge rules by itself.
 
 ## Production database and migrations

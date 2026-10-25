@@ -30,4 +30,5 @@ test("Ottawa calendar helpers return matching date and month formats", () => {
 
 test("far-future appointments have sufficient rescheduling notice", () => {
   assert.equal(has24HoursNotice("2099-06-15", "08:00"), true);
+  assert.equal(has24HoursNotice("2000-06-15", "08:00"), false);
 });
