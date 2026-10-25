@@ -17,6 +17,18 @@
   $(".video .play")?.addEventListener("click", () => alert("Add your company video here."));
 
   $$("form[data-form]").forEach((f) => {
+    const photoInput = $("input[name='photos']", f);
+    const photoList = photoInput && $("#quote-photo-files", photoInput.closest(".field"));
+    const updatePhotoList = () => {
+      if (!photoInput || !photoList) return;
+      const files = [...photoInput.files];
+      photoList.textContent = files.length
+        ? files.map((file) => file.name).join(", ")
+        : "No photos selected.";
+      photoList.classList.toggle("photo-files-error", files.length > 3 || files.some((file) => file.size > 2 * 1024 * 1024));
+    };
+    photoInput?.addEventListener("change", updatePhotoList);
+    f.addEventListener("reset", () => window.setTimeout(updatePhotoList));
     f.noValidate = true;
     f.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -27,6 +39,13 @@
         inp.closest(".field").classList.toggle("bad", bad);
         if (bad) ok = false;
       });
+      if (photoInput && (photoInput.files.length > 3 || [...photoInput.files].some((file) => file.size > 2 * 1024 * 1024))) {
+        updatePhotoList();
+        photoInput.closest(".field").classList.add("bad");
+        ok = false;
+      } else {
+        photoInput?.closest(".field").classList.remove("bad");
+      }
       if (!ok) return;
       const ms = $(".form-ok", f);
       const btn = $("button[type=submit]", f);

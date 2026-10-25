@@ -1,5 +1,13 @@
 <div class="field">
-  <label for="quote-photos">Project photos (optional)</label>
-  <input id="quote-photos" type="file" name="photos" accept="image/jpeg,image/png,image/webp" multiple>
-  <small>Upload up to 3 JPG, PNG or WebP photos, 2 MB each.</small>
+  <label for="quote-photos">Project photos <span class="photo-optional">Optional</span></label>
+  <label class="quote-photo-picker" for="quote-photos">
+    <input class="quote-photo-input" id="quote-photos" type="file" name="photos" accept="image/jpeg,image/png,image/webp" multiple aria-describedby="quote-photo-help quote-photo-files">
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none">
+      <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14.5v4A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="photo-picker-copy"><strong>Add photos of your project</strong><small>Choose images from your device</small></span>
+    <span class="photo-browse">Browse files</span>
+  </label>
+  <small id="quote-photo-help" class="photo-help">Up to 3 JPG, PNG or WebP photos, 2 MB each.</small>
+  <small id="quote-photo-files" class="photo-files" aria-live="polite">No photos selected.</small>
 </div>
