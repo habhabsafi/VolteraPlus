@@ -1,0 +1,23 @@
+<%- include('head') %>
+<div class="bar"><h1><%= isNew ? 'Add team member' : 'Edit team member' %></h1><a class="btn ghost" href="/admin/people">&larr; All team members</a></div>
+<form class="card" method="post" enctype="multipart/form-data" action="<%= isNew ? '/admin/people' : '/admin/people/' + person.id %>">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <div class="grid2">
+    <label>Name<input name="name" value="<%= person.name %>" maxlength="150" required></label>
+    <label>Role or title<input name="role" value="<%= person.role %>" maxlength="150" required></label>
+  </div>
+  <label>Headline<input name="headline" value="<%= person.headline %>" maxlength="190" required></label>
+  <label>Biography<textarea name="bio" rows="5" maxlength="4000" required><%= person.bio %></textarea></label>
+  <%- include('_image', {current: person.img, images}) %>
+  <label>Highlights (one per line)<textarea name="highlights" rows="4" maxlength="4000"><%= person.highlights.join('\n') %></textarea></label>
+  <label>Optional credential badge
+    <select name="badge_img">
+      <option value="">No badge</option>
+      <% images.forEach(function(image){ %><option value="<%= image %>"<%= image === person.badge_img ? ' selected' : '' %>><%= image.indexOf('uploads/') === 0 ? 'Uploaded: ' + image.slice(8) : image %></option><% }) %>
+    </select>
+  </label>
+  <label>Display order (lower first)<input type="number" name="sort_order" value="<%= person.sort_order %>" min="0" max="9999"></label>
+  <label class="check"><input type="checkbox" name="published" value="1"<%= person.published ? ' checked' : '' %>> Published (visible on the About page)</label>
+  <button class="btn" type="submit">Save team member</button>
+</form>
+<%- include('foot') %>

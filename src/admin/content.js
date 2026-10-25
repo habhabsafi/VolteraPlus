@@ -206,6 +206,57 @@ router.post("/reviews/:id/delete", wrap(async (req, res) => {
   res.redirect("/admin/reviews?saved=1");
 }));
 
+// =============================== team members
+const peopleList = () => query("SELECT id, name, role, sort_order, published FROM people ORDER BY sort_order, id");
+
+router.get("/people", wrap(async (req, res) => {
+  res.render("admin/people", { nav: "people", people: await peopleList(), saved: req.query.saved === "1" });
+}));
+
+const blankPerson = { id: 0, name: "", role: "", headline: "", bio: "", img: "", highlights: [], badge_img: "", sort_order: 0, published: 1 };
+async function personForm(res, person, extra = {}) {
+  res.status(extra.error ? 400 : 200).render("admin/person-form", { nav: "people", person, images: await imageOptions(), isNew: !person.id, ...extra });
+}
+
+router.get("/people/new", wrap(async (req, res) => personForm(res, { ...blankPerson })));
+
+router.get("/people/:id", wrap(async (req, res, next) => {
+  const person = (await query("SELECT * FROM people WHERE id = ?", [Number(req.params.id) || 0]))[0];
+  if (!person) return next();
+  await personForm(res, { ...person, highlights: parseJson(person.highlights) }, { saved: req.query.saved === "1" });
+}));
+
+async function savePerson(req, res, next) {
+  const id = Number(req.params.id) || 0;
+  if (id && !(await query("SELECT id FROM people WHERE id = ?", [id]))[0]) return next();
+  const b = req.body;
+  const errors = req.uploadError ? [req.uploadError] : [];
+  const person = {
+    ...blankPerson, id, name: str(b.name, 150), role: str(b.role, 150), headline: str(b.headline, 190),
+    bio: str(b.bio, 4000), img: str(b.img, 190),
+    highlights: String(b.highlights || "").split(/\r?\n/).map((v) => v.trim().slice(0, 150)).filter(Boolean).slice(0, 20),
+    badge_img: str(b.badge_img, 190), sort_order: int(b.sort_order, 0, 9999), published: flag(b.published),
+  };
+  const missing = ["name", "role", "headline", "bio"].filter((key) => !person[key]);
+  if (missing.length) errors.push(`Required: ${missing.join(", ")}.`);
+  if (person.badge_img && !/^(uploads\/)?[\w.\-]+\.(jpe?g|png|webp)$/i.test(person.badge_img))
+    errors.push("Choose a valid badge image.");
+  const img = await resolveImage(req, errors);
+  if (errors.length) return personForm(res, person, { error: errors.join(" "), isNew: !id });
+  person.img = img;
+  const values = [person.name, person.role, person.headline, person.bio, person.img, JSON.stringify(person.highlights), person.badge_img, person.sort_order, person.published];
+  let personId = id;
+  if (!id) personId = (await query("INSERT INTO people (name,role,headline,bio,img,highlights,badge_img,sort_order,published) VALUES (?,?,?,?,?,?,?,?,?)", values)).insertId;
+  else await query("UPDATE people SET name=?,role=?,headline=?,bio=?,img=?,highlights=?,badge_img=?,sort_order=?,published=? WHERE id=?", [...values, id]);
+  res.redirect(`/admin/people/${personId}?saved=1`);
+}
+router.post("/people", wrap(savePerson));
+router.post("/people/:id", wrap(savePerson));
+router.post("/people/:id/delete", wrap(async (req, res) => {
+  await query("DELETE FROM people WHERE id = ?", [Number(req.params.id) || 0]);
+  res.redirect("/admin/people?saved=1");
+}));
+
 // =============================== quote requests
 const STATUSES = ["new", "contacted", "quoted", "won", "lost"];
 
@@ -239,4 +290,3 @@ router.post("/quotes/:id/delete", wrap(async (req, res) => {
 }));
 router.parseMultipart = parseMultipart;
 module.exports = router;
-

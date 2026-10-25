@@ -53,6 +53,11 @@ async function seed() {
       for (const [i, r] of load("reviews").entries())
         await c.execute("INSERT INTO reviews (title,body,name,role,sort_order) VALUES (?,?,?,?,?)", [r.title, r.body, r.name, r.role, i]);
     }
+    if (!(await count("people"))) {
+      for (const [i, person] of load("people").entries())
+        await c.execute("INSERT INTO people (name,role,headline,bio,img,highlights,badge_img,sort_order) VALUES (?,?,?,?,?,?,?,?)",
+          [person.name, person.role, person.headline, person.bio, person.img, JSON.stringify(person.highlights), person.badge_img || "", i]);
+    }
     if (!(await count("posts"))) {
       for (const p of load("posts"))
         await c.execute("INSERT INTO posts (id,title,img,cta,short,sections,published_at) VALUES (?,?,?,?,?,?,?)",
@@ -69,4 +74,3 @@ function init() {
 }
 
 module.exports = { init };
-

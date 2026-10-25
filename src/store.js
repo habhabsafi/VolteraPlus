@@ -27,6 +27,8 @@ module.exports = {
     return all[(i + 1) % all.length];
   },
   getReviews: async (limit) => query(`SELECT title, body, name, role FROM reviews WHERE published = 1 ORDER BY sort_order, id${lim(limit)}`),
+  getPeople: async () => (await query("SELECT id, name, role, headline, bio, img, highlights, badge_img FROM people WHERE published = 1 ORDER BY sort_order, id"))
+    .map((person) => ({ ...person, highlights: parseJson(person.highlights) })),
   getPosts: async (limit) => (await query(`SELECT * FROM posts WHERE published = 1 ORDER BY published_at DESC, id DESC${lim(limit)}`)).map(toPost),
   getPost: async (id) => {
     const r = (await query("SELECT * FROM posts WHERE published = 1 AND id = ?", [Number(id) || 0]))[0];
@@ -35,4 +37,3 @@ module.exports = {
   getRelatedPosts: async (id, limit = 3) =>
     (await query(`SELECT * FROM posts WHERE published = 1 AND id <> ? ORDER BY published_at DESC, id DESC${lim(limit)}`, [Number(id) || 0])).map(toPost),
 };
-
