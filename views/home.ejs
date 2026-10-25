@@ -65,6 +65,13 @@
   <div class="grid grid-3"><% reviews.forEach(function(r){ %><%- include('partials/review-card', {r: r}) %><% }) %></div>
 </div></section>
 
+<% if (featuredProducts.length) { %>
+<section class="section"><div class="container">
+  <div class="section-head"><h2 class="section-title">Featured Products</h2><a class="btn btn-gold" href="/products">Browse Products &rarr;</a></div>
+  <div class="product-grid"><% featuredProducts.forEach(function(product){ %><%- include('partials/product-card', {product: product}) %><% }) %></div>
+</div></section>
+<% } %>
+
 <section class="section"><div class="container">
   <h2 class="center section-title">Latest from Our Blog</h2>
   <div class="grid grid-3"><% posts.forEach(function(p){ %><%- include('partials/post-card', {p: p}) %><% }) %></div>

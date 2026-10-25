@@ -49,6 +49,7 @@ const products = Array.from({ length: 13 }, (_, index) => ({
 }));
 const productQuoteRecords = [];
 const productQuoteEmails = [];
+const productQuoteVerifications = [];
 const productQuoteDb = {
   dbWithConnection: async (run) => run({
     beginTransaction: async () => {},
@@ -86,7 +87,10 @@ const productQuoteDb = {
     productQuoteEmails.push({ quote, site });
     return { sent: true, error: "" };
   },
-  verify: async () => ({ valid: true, unavailable: false }),
+  verify: async (req, token, action) => {
+    productQuoteVerifications.push({ token, action });
+    return { valid: true, unavailable: false };
+  },
 };
 const fakeStore = {
   getSite: async () => ({
@@ -95,8 +99,15 @@ const fakeStore = {
     email: "hello@example.test",
   }),
   getProductCategories: async () => [{ id: 1, slug: "test-equipment", name: "Test Equipment", product_count: products.length }],
-  getProducts: async ({ category = "", limit = 12, offset = 0 } = {}) => {
-    const matches = !category || category === "test-equipment" ? products : [];
+  getProducts: async ({ category = "", search = "", limit = 12, offset = 0 } = {}) => {
+    const categoryMatches = !category || category === "test-equipment" ? products : [];
+    const term = search.toLowerCase();
+    const matches = term
+      ? categoryMatches.filter((product) =>
+        [product.title, product.category_name, product.description, product.details, ...product.tags]
+          .some((value) => value.toLowerCase().includes(term))
+      )
+      : categoryMatches;
     return { products: matches.slice(offset, offset + limit), total: matches.length };
   },
   getProduct: async (slug) => products.find((product) => product.slug === slug) || null,
@@ -159,6 +170,15 @@ test("home page renders through the HTTP stack with security headers", async () 
   assert.match(html, /id="quoteCartCount" aria-hidden="true">0<\/span>/);
   assert.match(html, /class="nav-icon phone-nav" aria-label="Call 613-555-0100" title="Call 613-555-0100"/);
   assert.match(html, /id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="navLinks"/);
+  assert.equal((html.match(/class="product-card">/g) || []).length, 3);
+  const firstFeatured = html.indexOf('href="/products/test-product-1"');
+  const secondFeatured = html.indexOf('href="/products/test-product-2"');
+  const thirdFeatured = html.indexOf('href="/products/test-product-3"');
+  const fourthFeatured = html.indexOf('href="/products/test-product-4"');
+  assert.ok(firstFeatured < secondFeatured && secondFeatured < thirdFeatured);
+  assert.equal(fourthFeatured, -1);
+  assert.ok(html.indexOf("Featured Products") < html.indexOf("Latest from Our Blog"));
+  assert.match(html, /<script src="\/js\/products\.js\?v=2" defer><\/script>/);
 });
 
 test("public pages render and legacy URLs redirect permanently", async () => {
@@ -215,9 +235,13 @@ test("product catalogue filters categories and paginates results", async () => {
   const firstPage = await fetch(`${baseUrl}/products`);
   const firstHtml = await firstPage.text();
   assert.equal(firstPage.status, 200);
+  assert.equal((firstHtml.match(/<article class="product-card">/g) || []).length, 12);
   assert.match(firstHtml, /Test product 1/);
   assert.doesNotMatch(firstHtml, /Test product 13/);
   assert.match(firstHtml, /href="\/products\?page=2"/);
+  assert.match(firstHtml, /aria-label="Add Test product 1 to quote cart"/);
+  assert.match(firstHtml, /data-product-slug="test-product-1"/);
+  assert.match(firstHtml, /class="product-card-quantity-input"[^>]*hidden/);
 
   const filteredPage = await fetch(`${baseUrl}/products?category=test-equipment&page=2`);
   const filteredHtml = await filteredPage.text();
@@ -225,6 +249,25 @@ test("product catalogue filters categories and paginates results", async () => {
   assert.match(filteredHtml, /Test product 13/);
   assert.match(filteredHtml, /aria-current="page"/);
   assert.match(filteredHtml, /Test Equipment/);
+});
+
+test("product search filters results and preserves the term with categories and pagination", async () => {
+  const search = await fetch(`${baseUrl}/products?search=Test%20product`);
+  const html = await search.text();
+  assert.equal(search.status, 200);
+  assert.match(html, /name="search" maxlength="100" value="Test product"/);
+  assert.equal((html.match(/<article class="product-card">/g) || []).length, 12);
+  assert.match(html, /href="\/products\?search=Test\+product&amp;page=2"/);
+  assert.match(html, /href="\/products\?category=test-equipment&amp;search=Test\+product"/);
+
+  const secondPage = await fetch(`${baseUrl}/products?search=Test%20product&page=2`);
+  const secondHtml = await secondPage.text();
+  assert.equal(secondPage.status, 200);
+  assert.match(secondHtml, /Test product 13/);
+  assert.doesNotMatch(secondHtml, /Test product 12/);
+
+  const noMatches = await fetch(`${baseUrl}/products?search=not-found`);
+  assert.match(await noMatches.text(), /No products found/);
 });
 
 test("product detail sanitizes rich text and shows tag-related products", async () => {
@@ -253,9 +296,26 @@ test("quote cart and buy-now pages render without a payment flow", async () => {
   assert.match(checkoutHtml, /Request a product quote/);
   assert.match(checkoutHtml, /data-product-quote-direct="[^"]*test-product-1/);
   assert.match(checkoutHtml, /no payment or purchase/i);
+  assert.match(checkoutHtml, /<div class="product-form-panel"><h2>Your contact details<\/h2>[\s\S]*class="hp"/);
+  assert.match(checkoutHtml, /class="product-contact-form"[\s\S]*<aside class="product-form-panel product-checkout-summary"/);
 
   const directCheckout = await fetch(`${baseUrl}/product-quote?product=test-product-1&quantity=4`);
   assert.match(await directCheckout.text(), /&#34;quantity&#34;:4/);
+});
+
+test("product quote checkout renders the action-specific Cloudflare Turnstile widget", async () => {
+  const previousSiteKey = process.env.TURNSTILE_SITE_KEY;
+  process.env.TURNSTILE_SITE_KEY = "test-turnstile-site-key";
+  try {
+    const response = await fetch(`${baseUrl}/product-quote`);
+    const html = await response.text();
+    assert.equal(response.status, 200);
+    assert.match(html, /challenges\.cloudflare\.com\/turnstile\/v0\/api\.js/);
+    assert.match(html, /class="cf-turnstile" data-sitekey="test-turnstile-site-key" data-action="product-quote"/);
+  } finally {
+    if (previousSiteKey === undefined) delete process.env.TURNSTILE_SITE_KEY;
+    else process.env.TURNSTILE_SITE_KEY = previousSiteKey;
+  }
 });
 
 test("product quote submission snapshots validated items and sends a notification", async () => {
@@ -268,6 +328,7 @@ test("product quote submission snapshots validated items and sends a notificatio
       phone: "613-555-0101",
       message: "Please include shipping details.",
       website: "",
+      "cf-turnstile-response": "valid-test-token",
       items: JSON.stringify([{ slug: "test-product-1", quantity: 3 }]),
     }),
     redirect: "manual",
@@ -291,7 +352,9 @@ test("product quote submission snapshots validated items and sends a notificatio
     emailSent: 1,
     emailError: "",
   });
-  assert.match(productQuoteEmails.at(-1).quote.message, /Test product 1 x 3/);
+  assert.equal(productQuoteEmails.at(-1).quote.message, "Please include shipping details.");
+  assert.deepEqual(productQuoteEmails.at(-1).quote.items, [{ title: "Test product 1", slug: "test-product-1", quantity: 3 }]);
+  assert.deepEqual(productQuoteVerifications.at(-1), { token: "valid-test-token", action: "product-quote" });
 
   const confirmation = await fetch(`${baseUrl}${response.headers.get("location")}`);
   assert.match(await confirmation.text(), /Thank you for your quote request/);

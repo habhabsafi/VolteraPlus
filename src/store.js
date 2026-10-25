@@ -47,9 +47,22 @@ module.exports = {
      GROUP BY c.id, c.slug, c.name, c.sort_order
      ORDER BY c.sort_order, c.name`
   ),
-  getProducts: async ({ category = "", limit = 12, offset = 0 } = {}) => {
-    const where = category ? "WHERE p.published = 1 AND c.slug = ?" : "WHERE p.published = 1";
-    const params = category ? [category] : [];
+  getProducts: async ({ category = "", search = "", limit = 12, offset = 0 } = {}) => {
+    const conditions = ["p.published = 1"];
+    const params = [];
+    if (category) {
+      conditions.push("c.slug = ?");
+      params.push(category);
+    }
+    if (search) {
+      const term = `%${search.replace(/[\\%_]/g, "\\$&")}%`;
+      conditions.push(`(
+        p.title LIKE ? OR p.description LIKE ? OR p.details LIKE ? OR c.name LIKE ?
+        OR EXISTS (SELECT 1 FROM product_tags pt WHERE pt.product_id = p.id AND pt.tag LIKE ?)
+      )`);
+      params.push(term, term, term, term, term);
+    }
+    const where = `WHERE ${conditions.join(" AND ")}`;
     const pageLimit = Math.min(48, Math.max(1, Number(limit) | 0));
     const pageOffset = Math.max(0, Number(offset) | 0);
     const [products, totalRows] = await Promise.all([

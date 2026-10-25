@@ -54,6 +54,55 @@ async function sendQuoteEmails(q, site) {
   return { sent, error };
 }
 
+async function sendProductQuoteEmails(q, site) {
+  if (!configured()) {
+    console.warn("Resend not configured; product quote emails skipped.");
+    return { sent: false, error: "No email settings found: set RESEND_API_KEY and MAIL_FROM on the server." };
+  }
+  const from = `"${site.name}" <${fromAddress()}>`;
+  const recipient = "abe@volteraplus.ca";
+  const safeName = q.name.replace(/[\r\n"]/g, "");
+  const itemLines = q.items.map((item) => `${item.title} x ${item.quantity}`);
+  const itemRows = q.items.map((item) =>
+    `<li>${esc(item.title)} x ${Number(item.quantity)}</li>`
+  ).join("");
+  const rows = [["Name", q.name], ["Email", q.email], ["Phone", q.phone || "-"]];
+  const contactTable = rows.map(([key, value]) =>
+    `<tr><td style="padding:4px 12px 4px 0"><b>${key}</b></td><td>${esc(value)}</td></tr>`
+  ).join("");
+  let sent = false;
+  let error = "";
+
+  try {
+    await sendViaResend({
+      from,
+      to: recipient,
+      replyTo: `"${safeName}" <${q.email}>`,
+      subject: `New product quote request from ${safeName}`,
+      text: `${rows.map(([key, value]) => `${key}: ${value}`).join("\n")}\n\nProducts:\n${itemLines.join("\n")}\n\nAdditional details:\n${q.message || "-"}`,
+      html: `<table>${contactTable}</table><h3>Products</h3><ul>${itemRows}</ul><p><b>Additional details</b></p><p style="white-space:pre-wrap">${esc(q.message || "-")}</p>`,
+    });
+    sent = true;
+  } catch (e) {
+    console.error("Owner product quote email failed:", e.code, e.message);
+    error = `${e.code || ""} ${e.message}`.trim().slice(0, 500);
+  }
+
+  try {
+    await sendViaResend({
+      from,
+      to: q.email,
+      replyTo: recipient,
+      subject: `We received your product quote request | ${site.name}`,
+      text: `Hi ${q.name},\n\nWe received your quote request for:\n${itemLines.join("\n")}\n\nOur team will follow up soon. For urgent questions, call ${site.phone}.\n\n${site.name}`,
+      html: `<p>Hi ${esc(q.name)},</p><p>We received your quote request for:</p><ul>${itemRows}</ul><p>Our team will follow up soon. For urgent questions, call <b>${esc(site.phone)}</b>.</p><p>${esc(site.name)}</p>`,
+    });
+  } catch (e) {
+    console.error("Product quote confirmation email failed:", e.message);
+  }
+  return { sent, error };
+}
+
 const appointmentDate = (date) => new Intl.DateTimeFormat("en-CA", {
   timeZone: "UTC",
   weekday: "long",
@@ -184,4 +233,4 @@ async function sendTestEmail(to) {
   await sendViaResend({ from: fromAddress(), to, subject: "Test email from your website", text: "Email sending is working." });
 }
 
-module.exports = { sendQuoteEmails, sendAppointmentEmails, sendTestEmail };
+module.exports = { sendQuoteEmails, sendProductQuoteEmails, sendAppointmentEmails, sendTestEmail };

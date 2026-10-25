@@ -4,7 +4,25 @@
     <div class="product-card-copy">
       <span class="product-category"><%= product.category_name %></span>
       <h2><%= product.title %></h2>
-      <span class="product-card-cta">View product <span aria-hidden="true">&rarr;</span></span>
     </div>
   </a>
+  <div class="product-card-actions">
+    <a class="product-card-cta" href="/products/<%= product.slug %>">View product <span aria-hidden="true">&rarr;</span></a>
+    <div class="product-card-cart-control">
+      <button class="product-card-add" type="button" data-product-add
+        data-product-slug="<%= product.slug %>"
+        data-product-title="<%= product.title %>"
+        data-product-image="<%= imgUrl(product.image) %>"
+        data-product-category="<%= product.category_name %>"
+        aria-label="Add <%= product.title %> to quote cart"
+        aria-pressed="false"
+        title="Add to quote cart">
+        <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M3 3h2l2.2 11.2a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 8H6"></path><circle cx="10" cy="20" r="1"></circle><circle cx="18" cy="20" r="1"></circle></svg>
+      </button>
+      <input class="product-card-quantity-input" type="number" min="1" max="99" value="1" hidden
+        data-product-card-quantity data-product-slug="<%= product.slug %>"
+        aria-label="Quantity for <%= product.title %>">
+    </div>
+  </div>
+  <span class="product-card-feedback" aria-live="polite" data-product-feedback></span>
 </article>

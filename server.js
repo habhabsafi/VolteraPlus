@@ -75,15 +75,23 @@ app.use("/", products.createRouter({ ...productOptions, productStore: contentSto
 const wrap = (fn) => (req, res, next) => fn(req, res, next).catch(next);
 
 app.get("/", wrap(async (req, res) => {
-  const [electric, general, handy, reviews, posts, allServices] = await Promise.all([
+  const [electric, general, handy, reviews, posts, allServices, productResult] = await Promise.all([
     contentStore.getFeaturedServices("electric"),
     contentStore.getFeaturedServices("general-contractor"),
     contentStore.getFeaturedServices("handyman"),
     contentStore.getReviews(3),
     contentStore.getPosts(3),
     contentStore.getServices(),
+    contentStore.getProducts({ limit: 3, offset: 0 }),
   ]);
-  res.render("home", { page: "home", featured: { electric, general, handy }, reviews, posts, allServices });
+  res.render("home", {
+    page: "home",
+    featured: { electric, general, handy },
+    featuredProducts: productResult.products,
+    reviews,
+    posts,
+    allServices,
+  });
 }));
 
 app.get("/about", wrap(async (req, res) =>
