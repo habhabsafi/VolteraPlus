@@ -1,0 +1,8 @@
+<div class="rich-field">
+  <div class="rich-field-heading"><strong><%= label %></strong><span>Formatting is cleaned before it is displayed publicly.</span></div>
+  <div class="rich-toolbar" role="toolbar" aria-label="<%= label %> formatting">
+    <% [['bold','Bold'],['italic','Italic'],['underline','Underline'],['formatBlock','Heading'],['insertUnorderedList','Bulleted list'],['insertOrderedList','Numbered list'],['createLink','Link']].forEach(function(action){ %><button type="button" class="btn ghost" data-rich-command="<%= action[0] %>"<%= action[0] === 'formatBlock' ? ' data-rich-value="h2"' : '' %>><%= action[1] %></button><% }) %>
+  </div>
+  <div class="rich-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="<%= label %>" data-rich-editor><%- content %></div>
+  <textarea name="<%= fieldName %>" hidden data-rich-value><%= content %></textarea>
+</div>

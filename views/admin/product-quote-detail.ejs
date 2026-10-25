@@ -1,0 +1,23 @@
+<%- include('head') %>
+<div class="bar"><h1>Product quote from <%= quote.name %></h1><a class="btn ghost" href="/admin/product-quotes">&larr; All product quotes</a></div>
+<section class="card">
+  <p><b>Received:</b> <%= String(quote.created_at).slice(0, 16).replace('T', ' ') %> &middot; <b>Email delivered:</b> <%= quote.email_sent ? 'yes' : 'no' %></p>
+  <% if (quote.email_error) { %><p class="alert err"><b>Email error:</b> <%= quote.email_error %></p><% } %>
+  <p><b>Email:</b> <a href="mailto:<%= quote.email %>"><%= quote.email %></a><% if (quote.phone) { %> &middot; <b>Phone:</b> <a href="tel:<%= quote.phone.replace(/[^\d+]/g, '') %>"><%= quote.phone %></a><% } %></p>
+  <h2>Requested products</h2>
+  <div class="table-scroll"><table class="admin-list"><thead><tr><th>Product</th><th>Quantity</th></tr></thead><tbody>
+    <% items.forEach(function(item){ %><tr>
+      <td><img class="admin-product-thumb" src="<%= imgUrl(item.product_image) %>" alt=""><strong><%= item.product_title %></strong><% if (item.product_id) { %><br><a href="/admin/products/<%= item.product_id %>">Edit current product</a><% } %></td>
+      <td><%= item.quantity %></td>
+    </tr><% }) %>
+  </tbody></table></div>
+  <% if (quote.message) { %><h3>Customer details</h3><p class="product-quote-message"><%= quote.message %></p><% } %>
+</section>
+<form class="card" method="post" action="/admin/product-quotes/<%= quote.id %>">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <label>Status<select name="status"><% ['new','contacted','quoted','won','lost'].forEach(function(status){ %><option value="<%= status %>"<%= quote.status === status ? ' selected' : '' %>><%= status.charAt(0).toUpperCase() + status.slice(1) %></option><% }) %></select></label>
+  <label>Internal notes<textarea name="notes" rows="4" maxlength="4000"><%= quote.notes %></textarea></label>
+  <button class="btn" type="submit">Save quote</button>
+</form>
+<form method="post" action="/admin/product-quotes/<%= quote.id %>/delete" data-confirm="Delete this product quote request?"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn danger" type="submit">Delete request</button></form>
+<%- include('foot') %>

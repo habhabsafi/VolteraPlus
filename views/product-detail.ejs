@@ -1,0 +1,27 @@
+<%- include('partials/head') %>
+<section class="product-detail-shell"><div class="container">
+  <nav class="product-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/products">Products</a><span>/</span><span><%= product.title %></span></nav>
+  <div class="product-detail-grid">
+    <div class="product-detail-image"><img src="<%= imgUrl(product.image) %>" alt="<%= product.title %>"></div>
+    <div class="product-detail-summary">
+      <a class="product-category" href="/products?category=<%= encodeURIComponent(product.category_slug) %>"><%= product.category_name %></a>
+      <h1><%= product.title %></h1>
+      <p class="product-detail-intro"><%= product.description.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() %></p>
+      <% if (product.tags.length) { %><div class="product-tags" aria-label="Product tags"><% product.tags.forEach(function(tag){ %><span><%= tag %></span><% }) %></div><% } %>
+      <div class="product-quote-action">
+        <label for="productQuantity">Quantity</label>
+        <input id="productQuantity" type="number" min="1" max="99" value="1" data-product-quantity>
+        <button class="btn btn-gold" type="button" data-product-add data-product-slug="<%= product.slug %>" data-product-title="<%= product.title %>" data-product-image="<%= imgUrl(product.image) %>" data-product-category="<%= product.category_name %>">Add to quote cart</button>
+        <a class="btn btn-outline-dark" href="/product-quote?product=<%= encodeURIComponent(product.slug) %>" data-product-buy-now>Request a quote now</a>
+        <small>No payment or purchase is required. We’ll follow up with a quote.</small>
+        <p class="product-cart-feedback" aria-live="polite" data-product-feedback></p>
+      </div>
+    </div>
+  </div>
+  <div class="product-information">
+    <section><h2>Description</h2><div class="product-rich-content"><%- product.description %></div></section>
+    <section><h2>Details</h2><div class="product-rich-content"><%- product.details %></div></section>
+  </div>
+</div></section>
+<% if (related.length) { %><section class="section related-products"><div class="container"><div class="product-catalog-heading"><div><span class="eyebrow">Explore more</span><h2>Related products</h2></div></div><div class="product-grid"><% related.forEach(function(product){ %><%- include('partials/product-card', {product: product}) %><% }) %></div></div></section><% } %>
+<%- include('partials/foot') %>

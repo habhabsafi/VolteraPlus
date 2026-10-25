@@ -1,0 +1,46 @@
+<%- include('partials/head') %>
+<section class="page-hero"><div class="container"><h1>Your Appointment</h1><p>View your request or manage your appointment using this private link.</p></div></section>
+
+<section class="section"><div class="container appointment-manage">
+  <% if (notice === 'requested') { %><p class="form-ok" style="display:block">Your appointment request was received. It is pending approval and is not confirmed yet. A confirmation email has been sent if email delivery is configured.</p><% } %>
+  <% if (notice === 'cancelled') { %><p class="form-ok" style="display:block">Your appointment has been cancelled. A cancellation email has been sent if email delivery is configured.</p><% } %>
+  <% if (notice === 'reschedule-requested') { %><p class="form-ok" style="display:block">Your reschedule request was received. We will email you when it is reviewed.</p><% } %>
+  <% if (error === 'cutoff') { %><p class="form-ok error" style="display:block" role="alert">Changes must be requested at least 24 hours in advance. Please call <%= site.phone %> for help.</p><% } %>
+  <% if (error === 'slot') { %><p class="form-ok error" style="display:block" role="alert">That time is no longer available, or is not a valid appointment slot. Please choose another.</p><% } %>
+  <% if (error === 'closed') { %><p class="form-ok error" style="display:block" role="alert">This appointment can no longer be changed.</p><% } %>
+  <div class="form-card">
+    <div class="appointment-heading"><h2><%= appointment.service %></h2><span class="appointment-status <%= appointment.status %>"><%= appointment.status %></span></div>
+    <p><b>Current appointment:</b> <%= appointment.formattedDate %> at <%= appointment.formattedTime %> (Ottawa time)</p>
+    <p><b>Address:</b> <%= appointment.address %></p>
+    <p><b>Details:</b></p><p class="appointment-details"><%= appointment.details %></p>
+    <% if (appointment.proposed_date) { %><p class="appointment-proposal"><b>Reschedule requested:</b> <%= appointment.formattedProposedDate %> at <%= appointment.formattedProposedTime %>. Your current appointment remains in place until we approve the change.</p><% } %>
+    <% if (attachments.length) { %><h3>Uploaded photos</h3><div class="appointment-photos"><% attachments.forEach(function(photo, i){ %><a href="/appointments/manage/<%= token %>/attachments/<%= photo.id %>" target="_blank" rel="noopener"><img src="/appointments/manage/<%= token %>/attachments/<%= photo.id %>" alt="Appointment photo <%= i + 1 %>"><span>Photo <%= i + 1 %></span></a><% }) %></div><% } %>
+    <% if (appointment.email_error) { %><p class="appointment-policy">There was an email delivery problem. Please call <%= site.phone %> to confirm the latest status.</p><% } %>
+  </div>
+  <% if (canChange) { %>
+    <form class="form-card appointment-form" method="post" action="/appointments/manage/<%= token %>/reschedule">
+      <h2>Request a Reschedule</h2>
+      <% if (appointment.status === 'confirmed') { %><p>Your existing confirmed appointment stays reserved until we approve your new time.</p><% } else { %><p>Your request will remain pending until we approve it.</p><% } %>
+      <div class="field"><label>Choose a new date and start time</label>
+        <div class="appointment-calendar" data-availability="/appointments/availability" data-month="<%= (appointment.proposed_date || '').slice(0, 7) || initialMonth %>" data-min-month="<%= initialMonth %>" data-date-name="new_date" data-time-name="new_time">
+          <div class="calendar-toolbar"><button type="button" data-calendar-prev aria-label="Previous month">&lsaquo;</button><strong data-calendar-title></strong><button type="button" data-calendar-next aria-label="Next month">&rsaquo;</button></div>
+          <div class="calendar-weekdays" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+          <div class="calendar-days" data-calendar-days role="group" aria-label="Appointment dates"></div>
+          <p class="calendar-message" data-calendar-message aria-live="polite">Loading available dates…</p>
+          <div class="calendar-times" data-calendar-times></div>
+        </div>
+        <input type="hidden" name="new_date" value="">
+        <input type="hidden" name="new_time" value="">
+      </div>
+      <p class="appointment-policy">Requests to reschedule must be made at least 24 hours before your current appointment.</p>
+      <button class="btn btn-gold" type="submit">Request Reschedule</button>
+    </form>
+    <form class="form-card" method="post" action="/appointments/manage/<%= token %>/cancel" data-confirm="Cancel this appointment?">
+      <h2>Cancel Appointment</h2><p>Cancellations must be requested at least 24 hours before your appointment.</p>
+      <button class="btn btn-outline-dark" type="submit">Cancel Appointment</button>
+    </form>
+  <% } else if (['pending', 'confirmed'].includes(appointment.status)) { %>
+    <p class="appointment-policy">This appointment is less than 24 hours away, so online changes are closed. Please call <a href="tel:<%= site.phone.replace(/[^\d+]/g, '') %>"><%= site.phone %></a> for help.</p>
+  <% } %>
+</div></section>
+<%- include('partials/foot') %>

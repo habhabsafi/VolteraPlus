@@ -1,0 +1,40 @@
+<%- include('head') %>
+<div class="bar"><h1>Appointment from <%= appointment.name %></h1><a class="btn ghost" href="/admin/appointments">&larr; Calendar</a></div>
+<div class="card">
+  <p><b>Status:</b> <span class="pill <%= appointment.status %>"><%= appointment.status %></span> &middot; <b>Received:</b> <%= String(appointment.created_at).slice(0, 16).replace('T', ' ') %></p>
+  <% if (appointment.email_error) { %><p class="alert err"><b>Email delivery issue:</b> <%= appointment.email_error %></p><% } %>
+  <p><b>Email:</b> <a href="mailto:<%= appointment.email %>"><%= appointment.email %></a> &middot; <b>Phone:</b> <a href="tel:<%= appointment.phone.replace(/[^\d+]/g, '') %>"><%= appointment.phone %></a></p>
+  <p><b>Service:</b> <%= appointment.service %></p>
+  <p><b>Appointment:</b> <%= appointment.formattedDate %> at <%= appointment.formattedTime %> (Ottawa time)</p>
+  <% if (appointment.proposed_date) { %><p class="appointment-proposal"><b>Requested reschedule:</b> <%= appointment.formattedProposedDate %> at <%= appointment.formattedProposedTime %></p><% } %>
+  <p><b>Address:</b> <%= appointment.address %></p>
+  <p><b>Details:</b></p><p class="appointment-details"><%= appointment.details %></p>
+  <% if (attachments.length) { %><h3>Customer photos</h3><div class="quote-photos"><% attachments.forEach(function(photo, i){ %><a href="/admin/appointments/<%= appointment.id %>/attachments/<%= photo.id %>" target="_blank" rel="noopener"><img src="/admin/appointments/<%= appointment.id %>/attachments/<%= photo.id %>" alt="Appointment photo <%= i + 1 %>"><span>Photo <%= i + 1 %> · <%= Math.max(1, Math.round(photo.bytes / 1024)) %> KB</span></a><% }) %></div><% } %>
+</div>
+
+<% if (appointment.status === 'pending' || appointment.proposed_date) { %>
+  <div class="actions">
+    <form method="post" action="/admin/appointments/<%= appointment.id %>/approve"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn" type="submit"><%= appointment.proposed_date ? 'Approve Reschedule' : 'Approve Appointment' %></button></form>
+    <form method="post" action="/admin/appointments/<%= appointment.id %>/reject" data-confirm="<%= appointment.proposed_date ? 'Decline this reschedule request? The current appointment will remain confirmed.' : 'Reject this appointment request?' %>"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn danger" type="submit"><%= appointment.proposed_date ? 'Decline Reschedule' : 'Reject Request' %></button></form>
+  </div>
+<% } %>
+<% if (appointment.status === 'pending' || appointment.status === 'confirmed') { %>
+  <form class="card" method="post" action="/admin/appointments/<%= appointment.id %>/reschedule">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <h2>Reschedule Appointment</h2><p>Admin reschedules take effect immediately. All appointment times use Ottawa time.</p>
+    <div class="grid2">
+      <label>New date<input type="date" name="appointment_date" min="<%= today || '' %>" required></label>
+      <label>Start time<select name="start_time" required><option value="">Choose a time</option><% ['08:00','10:00','12:00','14:00','16:00'].forEach(function(time){ %><option value="<%= time %>"><%= time %></option><% }) %></select></label>
+    </div>
+    <button class="btn" type="submit">Save New Time</button>
+  </form>
+  <form class="card" method="post" action="/admin/appointments/<%= appointment.id %>/cancel" data-confirm="Cancel this appointment and release its reserved time?">
+    <input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn danger" type="submit">Cancel Appointment</button>
+  </form>
+<% } %>
+<form class="card" method="post" action="/admin/appointments/<%= appointment.id %>/notes">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <label>Internal notes<textarea name="internal_notes" rows="4" maxlength="4000"><%= appointment.internal_notes %></textarea></label>
+  <button class="btn ghost" type="submit">Save Notes</button>
+</form>
+<%- include('foot') %>

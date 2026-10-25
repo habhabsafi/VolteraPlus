@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const { query, withConnection } = require("./db");
 const { sendQuoteEmails } = require("./mailer");
+const { verifyTurnstile } = require("./turnstile");
 
 const router = express.Router();
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -21,32 +22,6 @@ function parseImage(buffer) {
   if (buffer.length > 8 && buffer.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) return "image/png";
   if (buffer.length > 12 && buffer.subarray(0, 4).toString() === "RIFF" && buffer.subarray(8, 12).toString() === "WEBP") return "image/webp";
   return null;
-}
-
-async function verifyTurnstile(req, token) {
-  const siteKey = process.env.TURNSTILE_SITE_KEY;
-  const secret = process.env.TURNSTILE_SECRET_KEY;
-  if (!siteKey && !secret) return { valid: true, enabled: false };
-  if (!siteKey || !secret) return { valid: false, unavailable: true };
-  if (!token) return { valid: false, unavailable: false };
-
-  try {
-    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ secret, response: token, remoteip: req.ip }),
-      signal: AbortSignal.timeout(10000),
-    });
-    if (!response.ok) throw new Error(`Siteverify returned HTTP ${response.status}`);
-    const result = await response.json();
-    const valid = result.success === true
-      && String(result.hostname || "").toLowerCase() === req.hostname.toLowerCase()
-      && result.action === "quote";
-    return { valid, unavailable: false };
-  } catch (e) {
-    console.error("Turnstile verification unavailable:", e.message);
-    return { valid: false, unavailable: true };
-  }
 }
 
 function parseQuoteBody(req, res, next) {
@@ -93,7 +68,7 @@ router.post("/", parseQuoteBody, async (req, res, next) => {
       console.error("Turnstile must have both TURNSTILE_SITE_KEY and TURNSTILE_SECRET_KEY configured.");
       return reply(503, false, "Verification is temporarily unavailable. Please call us instead.");
     }
-    const verification = await verifyTurnstile(req, str(b["cf-turnstile-response"], 2048));
+    const verification = await verifyTurnstile(req, str(b["cf-turnstile-response"], 2048), "quote");
     if (!verification.valid) {
       return reply(
         verification.unavailable ? 503 : 403,

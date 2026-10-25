@@ -1,0 +1,22 @@
+<%- include('partials/head') %>
+<section class="page-hero product-hero"><div class="container"><span class="eyebrow">Voltera Plus</span><h1>Products</h1><p>Browse our product range and request a quote for the items you need.</p></div></section>
+<section class="section product-catalog-section"><div class="container">
+  <div class="product-catalog-heading"><div><span class="eyebrow">Find what you need</span><h2>Product catalogue</h2></div><p><%= resultCount %> <%= resultCount === 1 ? 'product' : 'products' %></p></div>
+  <nav class="product-filters" aria-label="Filter products by category">
+    <a href="/products" class="<%= selectedCategory ? '' : 'active' %>">All products</a>
+    <% categories.forEach(function(category){ %><a href="/products?category=<%= encodeURIComponent(category.slug) %>" class="<%= selectedCategory === category.slug ? 'active' : '' %>"><%= category.name %><span><%= category.product_count %></span></a><% }) %>
+  </nav>
+  <% if (products.length) { %>
+  <div class="product-grid"><% products.forEach(function(product){ %><%- include('partials/product-card', {product: product}) %><% }) %></div>
+  <% } else { %>
+  <div class="product-empty"><h2>No products found</h2><p>Try another category or browse all products.</p><a class="btn btn-gold" href="/products">View all products</a></div>
+  <% } %>
+  <% if (totalPages > 1) { %>
+  <nav class="product-pagination" aria-label="Product pages">
+    <% if (currentPage > 1) { %><a href="<%= pageUrl(currentPage - 1) %>" aria-label="Previous page">&larr; Previous</a><% } %>
+    <% for (let number = Math.max(1, currentPage - 2); number <= Math.min(totalPages, currentPage + 2); number++) { %><a href="<%= pageUrl(number) %>" class="<%= number === currentPage ? 'active' : '' %>"<% if (number === currentPage) { %> aria-current="page"<% } %>><%= number %></a><% } %>
+    <% if (currentPage < totalPages) { %><a href="<%= pageUrl(currentPage + 1) %>" aria-label="Next page">Next &rarr;</a><% } %>
+  </nav>
+  <% } %>
+</div></section>
+<%- include('partials/foot') %>

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><%= title %></title>
 <meta name="description" content="<%= description %>">
+<% if (page === 'appointment' || page === 'cart' || page === 'checkout') { %><meta name="robots" content="noindex,nofollow"><% } %>
 <link rel="canonical" href="<%= canonical %>">
 <meta property="og:title" content="<%= title %>">
 <meta property="og:description" content="<%= description %>">
@@ -20,8 +21,16 @@
 <header class="site-header"><div class="container nav">
   <a href="/" class="brand"><img src="/images/logo-mark.png" alt="Voltera Plus logo">VOLT<span style='margin-left:-8px'>ERA</span><small>PLUS</small></a>
   <nav class="nav-links" id="navLinks">
-    <% [["home","Home","/"],["about","About","/about"],["services","Services","/services"],["reviews","Reviews","/reviews"],["blog","Blog","/blog"],["contact","Contact","/contact"]].forEach(function(n){ %><a href="<%= n[2] %>" class="<%= page === n[0] ? 'active' : '' %>"><%= n[1] %></a><% }) %>
+    <% [["home","Home","/"],["about","About","/about"],["services","Services","/services"],["products","Products","/products"],["book","Book Appointment","/book-appointment"],["reviews","Reviews","/reviews"],["blog","Blog","/blog"],["contact","Contact","/contact"]].forEach(function(n){ %><a href="<%= n[2] %>" class="<%= page === n[0] ? 'active' : '' %>"><%= n[1] %></a><% }) %>
   </nav>
-  <a href="tel:+1<%= site.phone.replace(/\D/g, '') %>" class="btn btn-gold">Call <%= site.phone %></a>
-  <button class="nav-toggle" id="navToggle" aria-label="Menu">&#9776;</button>
+  <div class="nav-actions">
+    <a href="/cart" class="nav-icon cart-nav<%= page === 'cart' || page === 'checkout' ? ' active' : '' %>" aria-label="Quote cart" title="Quote cart">
+      <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M3 3h2l2.2 11.2a2 2 0 0 0 2 1.6h8.6a2 2 0 0 0 2-1.6L21 8H6"></path><circle cx="10" cy="20" r="1"></circle><circle cx="18" cy="20" r="1"></circle></svg>
+      <span id="quoteCartCount" aria-hidden="true">0</span>
+    </a>
+    <a href="tel:+1<%= site.phone.replace(/\D/g, '') %>" class="nav-icon phone-nav" aria-label="Call <%= site.phone %>" title="Call <%= site.phone %>">
+      <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.84.58 2.8.7a2 2 0 0 1 1.73 2.03z"></path></svg>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">&#9776;</button>
+  </div>
 </div></header>

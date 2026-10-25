@@ -21,3 +21,108 @@ label.check{display:flex;align-items:center;gap:8px}label.check input{width:auto
 .pill{padding:3px 10px;border-radius:999px;background:#e5e7eb;font-size:.8rem;text-transform:capitalize}.pill.new{background:#fef3c7}.pill.won{background:#dcfce7}.pill.lost{background:#fee2e2}
 .stats a.card{text-decoration:none}
 .quote-photos{display:flex;gap:14px;flex-wrap:wrap}.quote-photos a{display:grid;gap:6px;width:min(220px,100%);color:#4b5563;font-size:.85rem}.quote-photos img{width:100%;height:160px;object-fit:cover;border-radius:8px;background:#e5e7eb}
+.calendar-navigation{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:16px 0}.calendar-navigation h2{margin:0;font-size:1.35rem}
+.admin-calendar-wrap{overflow-x:auto;background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.admin-calendar{table-layout:fixed;min-width:700px}.admin-calendar th{text-align:center;background:#f9fafb}.admin-calendar td{height:120px;vertical-align:top;padding:7px;overflow-wrap:anywhere}
+.admin-calendar td.empty-day{background:#f9fafb}.admin-calendar td.past-day{background:#fafafa;color:#9ca3af}.admin-calendar td.blocked-day{background:#fff4f4}
+.calendar-date{display:block;margin-bottom:5px;font-weight:700}.calendar-blocked{display:block;margin-bottom:4px;color:#991b1b;font-size:.72rem;font-weight:700}
+.admin-calendar-event{display:block;margin:4px 0;padding:5px 6px;border-left:3px solid #f59e0b;border-radius:4px;background:#fffbeb;color:#422006;font-size:.72rem;text-decoration:none}
+.admin-calendar-event.confirmed{border-left-color:#16a34a;background:#f0fdf4}.admin-calendar-event.proposed{border-left-color:#7c3aed;background:#f5f3ff}
+.admin-calendar-event small{display:block;color:#4b5563}.admin-calendar-event:hover{text-decoration:underline}
+.block-form{display:grid;grid-template-columns:1fr 1fr 2fr auto;gap:12px;align-items:end;margin:18px 0}.block-form label{margin:0}.block-form input{margin-top:6px}
+.block-table form{margin:0}.block-table button{white-space:nowrap}
+.pill.pending{background:#fef3c7}.pill.confirmed{background:#dcfce7}.pill.cancelled,.pill.rejected{background:#fee2e2}
+@media(max-width:720px){.block-form{grid-template-columns:1fr 1fr}.calendar-navigation{flex-wrap:wrap}.calendar-navigation h2{order:-1;width:100%;text-align:center}}
+
+.admin-menu{flex:1;min-width:0}
+.admin-menu summary{display:none}
+
+@media(max-width:760px){
+  .top{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;padding:12px 16px}
+  .top .brand{min-width:0;gap:7px;font-size:.95rem}
+  .top .brand img{height:26px}
+  .top form{gap:8px}
+  .top form .btn{padding:8px 10px}
+  .who{display:none}
+  .top .admin-menu{position:relative;flex:none}
+  .admin-menu summary{display:block;list-style:none;cursor:pointer;background:#374151;color:#fff;border-radius:8px;padding:9px 12px;font-weight:700;white-space:nowrap}
+  .admin-menu summary::-webkit-details-marker{display:none}
+  .admin-menu summary::after{content:"+";margin-left:8px}
+  .admin-menu[open] summary::after{content:"−"}
+  .top .admin-menu nav{display:none;position:absolute;z-index:10;top:calc(100% + 8px);right:0;width:min(280px,calc(100vw - 32px));padding:8px;background:#111827;border:1px solid #374151;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.24);flex-direction:column;flex-wrap:nowrap;gap:2px}
+  .top .admin-menu[open] nav{display:flex}
+  .top .admin-menu nav a{display:block;padding:10px 12px;border-radius:6px}
+  .top .admin-menu nav a.active,.top .admin-menu nav a:hover{background:#1f2937}
+  .wrap{width:100%;margin:20px auto;padding:0 14px}
+  h1{font-size:clamp(1.55rem,7vw,2rem);line-height:1.2;overflow-wrap:anywhere}
+  .card{padding:16px;margin:14px 0}
+  .narrow{margin:24px auto}
+  .bar{align-items:stretch;flex-direction:column}
+  .bar .btn{align-self:flex-start}
+  .btn{min-height:44px;padding:10px 14px}
+  .btn.ghost,.btn.danger{min-height:42px}
+  .top .btn{min-height:40px}
+  .filters{margin:12px 0}
+  .chip{display:inline-flex;align-items:center;min-height:40px}
+  .actions{align-items:flex-start}
+  .calendar-navigation{gap:8px}
+  .calendar-navigation .btn{flex:1;text-align:center}
+  .block-form{grid-template-columns:1fr}
+  .admin-calendar-wrap{overflow:visible;background:transparent;box-shadow:none}
+  .admin-calendar{display:block;width:100%;min-width:0;table-layout:auto;border-collapse:separate;border-spacing:0}
+  .admin-calendar thead{display:none}
+  .admin-calendar tbody{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .admin-calendar tr{display:contents}
+  .admin-calendar td{display:block;height:auto;min-height:92px;padding:8px;border:1px solid #e5e7eb;border-radius:8px;background:#fff;overflow-wrap:anywhere}
+  .admin-calendar td::before{content:attr(data-weekday);display:block;margin-bottom:3px;color:#6b7280;font-size:.72rem;font-weight:700}
+  .admin-calendar td.empty-day{display:none}
+  .calendar-date{margin-bottom:4px}
+  .admin-calendar-event{padding:4px;font-size:.7rem;overflow-wrap:anywhere}
+  .admin-list{display:block;width:100%;margin:14px 0;padding:0;border-collapse:separate;border-spacing:0;background:transparent;box-shadow:none}
+  .admin-list>thead{display:none}
+  .admin-list>tbody{display:grid;gap:12px}
+  .admin-list:not(.block-table)>tbody>tr:first-child{display:none}
+  .admin-list>tbody>tr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px;padding:8px 14px;background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .admin-list>tbody>tr>td{display:block;min-width:0;padding:9px 0;border-bottom:1px solid #e5e7eb;overflow-wrap:anywhere}
+  .admin-list>tbody>tr>td::before{content:attr(data-label);display:block;margin-bottom:3px;color:#6b7280;font-size:.7rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+  .admin-list>tbody>tr>td.actions{grid-column:1/-1;display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding-top:12px;border-bottom:0}
+  .admin-list>tbody>tr>td.actions::before{display:none}
+  .admin-list>tbody>tr>td.actions form{display:flex;flex:1 1 auto;align-items:center;flex-wrap:wrap;gap:8px;min-width:0}
+  .admin-list>tbody>tr>td.actions input:not([type="hidden"]){flex:1 1 140px;min-width:0;width:auto}
+  .admin-list>tbody>tr>td[colspan]{grid-column:1/-1}
+  .admin-list:not(.block-table)>tbody>tr>td[colspan]::before{display:none}
+}
+
+.category-add-form,.category-admin-row>form{display:flex;align-items:end;gap:12px;flex-wrap:wrap}
+.category-add-form label,.category-admin-row label{flex:1;min-width:150px}
+.category-admin-list{display:grid;gap:12px;margin-top:18px}
+.category-admin-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px;border:1px solid #e5e7eb;border-radius:10px}
+.category-admin-row>form:first-child{flex:1}
+.category-admin-row label{margin:0}
+.category-admin-row input{margin-top:4px}
+.admin-product-thumb{display:inline-block;width:58px;height:48px;object-fit:cover;border-radius:7px;vertical-align:middle;margin-right:8px}
+.table-scroll{overflow-x:auto}
+.product-admin-form{max-width:900px}
+.product-slug{align-self:center}
+.rich-field{margin:20px 0}
+.rich-field-heading{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.rich-field-heading span{color:#6b7280;font-size:.85rem}
+.rich-toolbar{display:flex;gap:6px;flex-wrap:wrap;padding:8px;background:#f3f4f6;border:1px solid #d1d5db;border-bottom:0;border-radius:8px 8px 0 0}
+.rich-toolbar .btn{font-size:.8rem;padding:6px 10px}
+.rich-editor{min-height:180px;padding:14px;border:1px solid #d1d5db;border-radius:0 0 8px 8px;background:#fff;line-height:1.6}
+.rich-editor:focus{outline:2px solid #f59e0b;outline-offset:1px}
+.rich-editor ul,.rich-editor ol{padding-left:24px;list-style:revert}
+.rich-editor a{color:#b45309;text-decoration:underline}
+.product-quote-message{white-space:pre-wrap}
+@media(max-width:640px){.category-add-form,.category-admin-row>form{align-items:stretch;flex-direction:column}.category-admin-row>form{width:100%}.category-admin-row>form>*{width:100%}}
+
+@media(max-width:380px){
+  .top{grid-template-columns:minmax(0,1fr) auto auto;padding:10px 12px}
+  .top .brand{font-size:.88rem}
+  .top .brand img{height:24px}
+  .top .btn{padding:8px}
+  .admin-menu summary{padding:9px}
+  .wrap{padding:0 12px}
+  .stats{grid-template-columns:1fr}
+  .quote-photos a{width:100%}
+}

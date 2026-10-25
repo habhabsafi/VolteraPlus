@@ -3,7 +3,11 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
-  $("#navToggle")?.addEventListener("click", () => $("#navLinks").classList.toggle("open"));
+  $("#navToggle")?.addEventListener("click", (event) => {
+    const button = event.currentTarget;
+    const open = $("#navLinks").classList.toggle("open");
+    button.setAttribute("aria-expanded", String(open));
+  });
 
   document.addEventListener("click", (e) => {
     const b = e.target.closest(".acc button");
@@ -12,6 +16,11 @@
     const was = item.classList.contains("open");
     $$(".acc > div").forEach((d) => { d.classList.remove("open"); $("span", d).innerHTML = "+"; });
     if (!was) { item.classList.add("open"); $("span", item).innerHTML = "&minus;"; }
+  });
+
+  document.addEventListener("submit", (e) => {
+    const form = e.target.closest("form[data-confirm]");
+    if (form && !window.confirm(form.dataset.confirm)) e.preventDefault();
   });
 
   $(".video .play")?.addEventListener("click", () => alert("Add your company video here."));
