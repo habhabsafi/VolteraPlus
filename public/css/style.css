@@ -256,3 +256,35 @@ html{scroll-behavior:smooth}
 .team-profile{
   margin-top:10px;
 }
+
+.appointment-form,.appointment-manage{max-width:820px;margin-inline:auto}
+.appointment-form .field{margin-bottom:20px}
+.appointment-calendar{border:1px solid #e5e5e5;border-radius:14px;padding:18px;background:#fff}
+.calendar-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;color:var(--ink)}
+.calendar-toolbar strong{font-size:1.05rem}
+.calendar-toolbar button{width:38px;height:38px;border:1px solid #ddd;border-radius:50%;background:#fff;font:inherit;font-size:1.4rem;line-height:1;cursor:pointer}
+.calendar-toolbar button:disabled{opacity:.4;cursor:not-allowed}
+.calendar-weekdays,.calendar-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;text-align:center}
+.calendar-weekdays{margin-bottom:6px;color:#777;font-size:.78rem;font-weight:600}
+.calendar-day{min-height:40px;border:1px solid transparent;border-radius:8px;background:#f4f4f4;color:#555;font:inherit}
+button.calendar-day{cursor:pointer}
+.calendar-day.available{border-color:#e3b341;background:#fff8e6;color:var(--ink);font-weight:600}
+.calendar-day.available:hover,.calendar-day.available.selected{background:var(--gold);border-color:var(--gold-dark);color:var(--black)}
+.calendar-day:disabled{opacity:.48;cursor:not-allowed}
+.calendar-day.blank{visibility:hidden}
+.calendar-message{min-height:24px;margin-top:12px;font-size:.88rem}
+.calendar-message.calendar-error{color:#b91c1c;font-weight:600}
+.calendar-times{display:flex;gap:8px;flex-wrap:wrap}
+.calendar-time{padding:9px 12px;border:1px solid #ddd;border-radius:8px;background:#fff;font:inherit;cursor:pointer}
+.calendar-time:hover,.calendar-time.selected{border-color:var(--gold-dark);background:var(--gold);color:var(--black)}
+.appointment-policy,.appointment-proposal{padding:12px 14px;border-radius:9px;background:#fff7e2;color:#55420d;font-size:.92rem}
+.appointment-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.appointment-status{padding:5px 10px;border-radius:999px;background:#eee;color:#333;font-size:.78rem;font-weight:700;text-transform:capitalize}
+.appointment-status.pending{background:#fff1bf}.appointment-status.confirmed{background:#dcfce7;color:#166534}
+.appointment-status.cancelled,.appointment-status.rejected{background:#fee2e2;color:#991b1b}
+.appointment-details{white-space:pre-wrap}
+.appointment-photos{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+.appointment-photos a{display:grid;gap:6px;width:min(180px,45%);color:var(--text);font-size:.85rem}
+.appointment-photos img{width:100%;height:130px;object-fit:cover;border-radius:8px;background:#eee}
+.btn-outline-dark{border:2px solid var(--ink);border-radius:999px;background:#fff;color:var(--ink);padding:10px 18px;font:inherit;font-weight:600;cursor:pointer}
+@media(max-width:520px){.appointment-calendar{padding:12px}.calendar-weekdays,.calendar-days{gap:3px}.calendar-day{min-height:36px;font-size:.9rem}.appointment-heading{align-items:flex-start;flex-direction:column}}

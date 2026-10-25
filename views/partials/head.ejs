@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><%= title %></title>
 <meta name="description" content="<%= description %>">
+<% if (page === 'appointment') { %><meta name="robots" content="noindex,nofollow"><% } %>
 <link rel="canonical" href="<%= canonical %>">
 <meta property="og:title" content="<%= title %>">
 <meta property="og:description" content="<%= description %>">
@@ -20,7 +21,7 @@
 <header class="site-header"><div class="container nav">
   <a href="/" class="brand"><img src="/images/logo-mark.png" alt="Voltera Plus logo">VOLT<span style='margin-left:-8px'>ERA</span><small>PLUS</small></a>
   <nav class="nav-links" id="navLinks">
-    <% [["home","Home","/"],["about","About","/about"],["services","Services","/services"],["reviews","Reviews","/reviews"],["blog","Blog","/blog"],["contact","Contact","/contact"]].forEach(function(n){ %><a href="<%= n[2] %>" class="<%= page === n[0] ? 'active' : '' %>"><%= n[1] %></a><% }) %>
+    <% [["home","Home","/"],["about","About","/about"],["services","Services","/services"],["book","Book Appointment","/book-appointment"],["reviews","Reviews","/reviews"],["blog","Blog","/blog"],["contact","Contact","/contact"]].forEach(function(n){ %><a href="<%= n[2] %>" class="<%= page === n[0] ? 'active' : '' %>"><%= n[1] %></a><% }) %>
   </nav>
   <a href="tel:+1<%= site.phone.replace(/\D/g, '') %>" class="btn btn-gold">Call <%= site.phone %></a>
   <button class="nav-toggle" id="navToggle" aria-label="Menu">&#9776;</button>

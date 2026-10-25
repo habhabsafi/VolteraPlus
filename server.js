@@ -7,6 +7,7 @@ const store = require("./src/store");
 const { init } = require("./src/setup");
 const adminRoutes = require("./src/admin/routes");
 const quoteRoutes = require("./src/quote");
+const appointments = require("./src/appointments");
 
 const app = express();
 app.set("view engine", "ejs");
@@ -66,6 +67,7 @@ app.use(async (req, res, next) => {
 app.use("/admin", express.urlencoded({ extended: false, limit: "100kb" }), adminRoutes);
 
 app.use("/quote", quoteRoutes);
+app.use("/appointments", appointments.router);
 
 const wrap = (fn) => (req, res, next) => fn(req, res, next).catch(next);
 
@@ -87,6 +89,19 @@ app.get("/about", wrap(async (req, res) =>
 app.get("/services", wrap(async (req, res) => {
   const [services, reviews] = await Promise.all([store.getServices(), store.getReviews(3)]);
   res.render("services", { page: "services", title: "Services | Voltera Plus", description: "Electrical, general contractor and handy man services in Ottawa, ON.", services, reviews, allServices: services });
+}));
+
+app.get("/book-appointment", wrap(async (req, res) => {
+  res.render("book-appointment", {
+    page: "book",
+    title: "Book an Appointment | Voltera Plus",
+    description: "Request a two-hour appointment with Voltera Plus in Ottawa.",
+    allServices: await store.getServices(),
+    initialMonth: appointments.currentOttawaMonth(),
+    minMonth: appointments.currentOttawaMonth(),
+    values: {},
+    error: null,
+  });
 }));
 
 app.get("/services/:id", wrap(async (req, res, next) => {
@@ -125,11 +140,11 @@ app.get("/:file.html", (req, res, next) => {
 });
 
 app.get("/robots.txt", (req, res) =>
-  res.type("text/plain").send(`User-agent: *\nDisallow: /admin\nAllow: /\nSitemap: ${res.locals.baseUrl}/sitemap.xml\n`));
+  res.type("text/plain").send(`User-agent: *\nDisallow: /admin\nDisallow: /appointments/\nAllow: /\nSitemap: ${res.locals.baseUrl}/sitemap.xml\n`));
 
 app.get("/sitemap.xml", wrap(async (req, res) => {
   const [services, posts] = await Promise.all([store.getServices(), store.getPosts()]);
-  const urls = ["/", "/about", "/services", "/reviews", "/blog", "/contact", ...services.map((s) => `/services/${s.id}`), ...posts.map((p) => `/blog/${p.id}`)];
+  const urls = ["/", "/about", "/services", "/book-appointment", "/reviews", "/blog", "/contact", ...services.map((s) => `/services/${s.id}`), ...posts.map((p) => `/blog/${p.id}`)];
   res.type("application/xml").send(
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
       urls.map((u) => `  <url><loc>${res.locals.baseUrl}${u}</loc></url>`).join("\n") + `\n</urlset>\n`);
@@ -145,5 +160,3 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 3000;
 if (require.main === module) app.listen(port, () => console.log(`Listening on http://localhost:${port}`));
 module.exports = app;
-
-

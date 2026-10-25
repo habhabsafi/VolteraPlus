@@ -8,6 +8,14 @@ Quote photos are stored as private MySQL attachments, not in the source tree or 
 
 Quote forms support Cloudflare Turnstile when `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` are set. Both are required to enable verification; submissions are verified server-side before they are saved. Without either key, the existing honeypot and rate limit remain active.
 
+## Appointments
+
+Customers can request appointments at `/book-appointment`. Appointments are two hours, offered every day (including weekends) at 8:00 a.m., 10:00 a.m., noon, 2:00 p.m., and 4:00 p.m. Ottawa time. Pending and confirmed appointments reserve their time. Customers receive a private link to view, reschedule, or cancel without creating an account; rescheduling and cancellation close 24 hours before the appointment. Customer reschedule requests for confirmed appointments keep the current time reserved until an admin approves the change.
+
+Manage appointments and unavailable date ranges in `/admin/appointments`. Blocking a range that contains any pending or confirmed booking is prevented; move or cancel those appointments first. Appointment email uses the existing Resend settings. Set `APPOINTMENT_TOKEN_SECRET` to a persistent 64-character hexadecimal key (generate one with the command in `.env.example`) so management-link tokens can be encrypted for future email notifications. Keep this secret in the hosting environment and do not rotate it while appointments are active.
+
+Cloudflare Turnstile is reused for appointment submissions when both Turnstile keys are configured. Confirmation emails include a Google Calendar add link for customers. Admin Google Calendar synchronization is not enabled, so no Google Workspace API or paid scheduling provider is required.
+
 ## Run locally
 
 ```

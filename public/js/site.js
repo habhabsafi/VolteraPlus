@@ -14,6 +14,11 @@
     if (!was) { item.classList.add("open"); $("span", item).innerHTML = "&minus;"; }
   });
 
+  document.addEventListener("submit", (e) => {
+    const form = e.target.closest("form[data-confirm]");
+    if (form && !window.confirm(form.dataset.confirm)) e.preventDefault();
+  });
+
   $(".video .play")?.addEventListener("click", () => alert("Add your company video here."));
 
   $$("form[data-form]").forEach((f) => {

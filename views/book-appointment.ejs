@@ -1,0 +1,45 @@
+<%- include('partials/head') %>
+<section class="page-hero"><div class="container"><h1>Book an Appointment</h1><p>Choose a service and a two-hour time. Your request is not confirmed until we approve it.</p></div></section>
+
+<section class="section"><div class="container">
+  <% if (error) { %><p class="form-ok error" style="display:block" role="alert"><%= error %></p><% } %>
+  <form class="form-card appointment-form" method="post" action="/appointments" enctype="multipart/form-data">
+    <%- include('partials/form-extras', {source: 'appointment', action: 'appointment'}) %>
+    <div class="field"><label for="appointment-name">Full Name</label><input id="appointment-name" name="name" autocomplete="name" maxlength="150" required value="<%= values.name || '' %>"></div>
+    <div class="row">
+      <div class="field"><label for="appointment-email">Email Address</label><input id="appointment-email" name="email" type="email" autocomplete="email" maxlength="190" required value="<%= values.email || '' %>"></div>
+      <div class="field"><label for="appointment-phone">Phone Number</label><input id="appointment-phone" name="phone" type="tel" autocomplete="tel" maxlength="40" required value="<%= values.phone || '' %>"></div>
+    </div>
+    <div class="field"><label for="appointment-service">Required Service</label>
+      <select id="appointment-service" name="service" required>
+        <option value="">Select your service</option>
+        <% categories.forEach(function(category){ %>
+          <optgroup label="<%= category.name %>">
+            <% allServices.filter(function(service){ return service.cat === category.id; }).forEach(function(service){ %>
+              <option value="<%= service.name %>"<%= values.service === service.name ? ' selected' : '' %>><%= service.name %></option>
+            <% }) %>
+          </optgroup>
+        <% }) %>
+        <option value="Emergency Service"<%= values.service === 'Emergency Service' ? ' selected' : '' %>>Emergency Service</option>
+      </select>
+    </div>
+    <div class="field"><label for="appointment-address">Appointment Address</label><input id="appointment-address" name="address" autocomplete="street-address" maxlength="500" required value="<%= values.address || '' %>" placeholder="Street address, city, postal code"></div>
+    <div class="field"><label for="appointment-details">Appointment Details</label><textarea id="appointment-details" name="details" rows="4" maxlength="4000" required placeholder="Tell us what you need help with"><%= values.details || '' %></textarea></div>
+    <div class="field"><label>Choose an available date and start time</label>
+      <div class="appointment-calendar" data-availability="/appointments/availability" data-month="<%= initialMonth %>" data-min-month="<%= minMonth %>" data-date-name="appointment_date" data-time-name="start_time">
+        <div class="calendar-toolbar"><button type="button" data-calendar-prev aria-label="Previous month">&lsaquo;</button><strong data-calendar-title></strong><button type="button" data-calendar-next aria-label="Next month">&rsaquo;</button></div>
+        <div class="calendar-weekdays" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+        <div class="calendar-days" data-calendar-days role="group" aria-label="Appointment dates"></div>
+        <p class="calendar-message" data-calendar-message aria-live="polite">Loading available dates…</p>
+        <div class="calendar-times" data-calendar-times></div>
+      </div>
+      <input type="hidden" name="appointment_date" value="<%= values.appointment_date || '' %>">
+      <input type="hidden" name="start_time" value="<%= values.start_time || '' %>">
+      <small class="photo-help">Appointments are available every day from 8:00 a.m. to 6:00 p.m. Ottawa time. Each visit is two hours.</small>
+    </div>
+    <%- include('partials/quote-photo-upload') %>
+    <p class="appointment-policy">Requests remain pending until approved. Rescheduling or cancellation must be requested at least 24 hours before the appointment.</p>
+    <button class="btn btn-gold" type="submit">Request Appointment</button>
+  </form>
+</div></section>
+<%- include('partials/foot') %>

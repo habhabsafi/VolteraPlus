@@ -15,5 +15,6 @@
   <div class="foot-bottom"><span>&copy; <%= new Date().getFullYear() %> Voltera Plus. All rights reserved.</span><span>Red Seal Certified. Free Estimates.</span></div>
 </div></footer>
 <script src="/js/site.js"></script>
+<% if (page === 'book' || page === 'appointment') { %><script src="/js/booking.js" defer></script><% } %>
 </body>
 </html>

@@ -21,3 +21,15 @@ label.check{display:flex;align-items:center;gap:8px}label.check input{width:auto
 .pill{padding:3px 10px;border-radius:999px;background:#e5e7eb;font-size:.8rem;text-transform:capitalize}.pill.new{background:#fef3c7}.pill.won{background:#dcfce7}.pill.lost{background:#fee2e2}
 .stats a.card{text-decoration:none}
 .quote-photos{display:flex;gap:14px;flex-wrap:wrap}.quote-photos a{display:grid;gap:6px;width:min(220px,100%);color:#4b5563;font-size:.85rem}.quote-photos img{width:100%;height:160px;object-fit:cover;border-radius:8px;background:#e5e7eb}
+.calendar-navigation{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:16px 0}.calendar-navigation h2{margin:0;font-size:1.35rem}
+.admin-calendar-wrap{overflow-x:auto;background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.admin-calendar{table-layout:fixed;min-width:700px}.admin-calendar th{text-align:center;background:#f9fafb}.admin-calendar td{height:120px;vertical-align:top;padding:7px;overflow-wrap:anywhere}
+.admin-calendar td.empty-day{background:#f9fafb}.admin-calendar td.past-day{background:#fafafa;color:#9ca3af}.admin-calendar td.blocked-day{background:#fff4f4}
+.calendar-date{display:block;margin-bottom:5px;font-weight:700}.calendar-blocked{display:block;margin-bottom:4px;color:#991b1b;font-size:.72rem;font-weight:700}
+.admin-calendar-event{display:block;margin:4px 0;padding:5px 6px;border-left:3px solid #f59e0b;border-radius:4px;background:#fffbeb;color:#422006;font-size:.72rem;text-decoration:none}
+.admin-calendar-event.confirmed{border-left-color:#16a34a;background:#f0fdf4}.admin-calendar-event.proposed{border-left-color:#7c3aed;background:#f5f3ff}
+.admin-calendar-event small{display:block;color:#4b5563}.admin-calendar-event:hover{text-decoration:underline}
+.block-form{display:grid;grid-template-columns:1fr 1fr 2fr auto;gap:12px;align-items:end;margin:18px 0}.block-form label{margin:0}.block-form input{margin-top:6px}
+.block-table form{margin:0}.block-table button{white-space:nowrap}
+.pill.pending{background:#fef3c7}.pill.confirmed{background:#dcfce7}.pill.cancelled,.pill.rejected{background:#fee2e2}
+@media(max-width:720px){.block-form{grid-template-columns:1fr 1fr}.calendar-navigation{flex-wrap:wrap}.calendar-navigation h2{order:-1;width:100%;text-align:center}}

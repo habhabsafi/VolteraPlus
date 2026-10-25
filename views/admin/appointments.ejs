@@ -1,0 +1,42 @@
+<%- include('head') %>
+<div class="bar"><h1>Appointments</h1><a class="btn" href="/admin/appointments?month=<%= month %>#availability">Manage unavailable dates</a></div>
+<div class="calendar-navigation">
+  <a class="btn ghost" href="/admin/appointments?month=<%= previousMonth %>">&larr; Previous</a>
+  <h2><%= monthTitle %></h2>
+  <a class="btn ghost" href="/admin/appointments?month=<%= followingMonth %>">Next &rarr;</a>
+</div>
+<div class="admin-calendar-wrap">
+  <table class="admin-calendar">
+    <thead><tr><% ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'].forEach(function(day){ %><th><%= day %></th><% }) %></tr></thead>
+    <tbody><% weeks.forEach(function(week){ %><tr><% week.forEach(function(cell){ %>
+      <% if (!cell) { %><td class="empty-day"></td><% } else { %>
+      <td class="<%= cell.date < today ? 'past-day' : '' %><%= blocks.some(function(block){ return block.start_date <= cell.date && block.end_date >= cell.date; }) ? ' blocked-day' : '' %>">
+        <span class="calendar-date"><%= cell.day %></span>
+        <% if (blocks.some(function(block){ return block.start_date <= cell.date && block.end_date >= cell.date; })) { %><span class="calendar-blocked">Unavailable</span><% } %>
+        <% cell.events.forEach(function(event){ %>
+          <a class="admin-calendar-event <%= event.status %><%= event.type === 'Reschedule requested' ? ' proposed' : '' %>" href="/admin/appointments/<%= event.id %>">
+            <b><%= event.time %></b> <%= event.name %><small><%= event.service %> · <%= event.type === 'Reschedule requested' ? event.type : event.status %></small>
+          </a>
+        <% }) %>
+      </td>
+      <% } %>
+    <% }) %></tr><% }) %></tbody>
+  </table>
+</div>
+<p class="muted">Pending requests reserve their time until approved or rejected. A customer's pending reschedule keeps the existing confirmed slot reserved until you approve the new time.</p>
+
+<section id="availability" class="card">
+  <h2>Unavailable Date Ranges</h2>
+  <p class="muted">Blocked dates will not appear as bookable. A range cannot be blocked while it contains pending, confirmed, or proposed appointment times.</p>
+  <form method="post" action="/admin/appointments/blocks" class="block-form">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <label>From<input type="date" name="start_date" min="<%= today %>" required></label>
+    <label>Through<input type="date" name="end_date" min="<%= today %>" required></label>
+    <label>Reason<input type="text" name="reason" maxlength="255" placeholder="Unavailable"></label>
+    <button class="btn" type="submit">Block Dates</button>
+  </form>
+  <% if (blocks.length) { %><table class="block-table"><thead><tr><th>Dates</th><th>Reason</th><th></th></tr></thead><tbody>
+    <% blocks.forEach(function(block){ %><tr><td><%= block.start_date %> to <%= block.end_date %></td><td><%= block.reason %></td><td><form method="post" action="/admin/appointments/blocks/<%= block.id %>/delete" data-confirm="Remove this blackout range and reopen those dates?"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn danger" type="submit">Remove</button></form></td></tr><% }) %>
+  </tbody></table><% } else { %><p class="muted">No blocked dates overlap this month.</p><% } %>
+</section>
+<%- include('foot') %>

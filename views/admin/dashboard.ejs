@@ -2,6 +2,7 @@
 <h1>Dashboard</h1>
 <div class="stats">
   <a class="card" href="/admin/quotes"><strong><%= counts.newQuotes %></strong>New quote requests</a>
+  <a class="card" href="/admin/appointments"><strong><%= counts.pendingAppointments %></strong>Pending appointments</a>
   <div class="card"><strong><%= counts.services %></strong>Services</div>
   <div class="card"><strong><%= counts.people %></strong>Team members</div>
   <div class="card"><strong><%= counts.posts %></strong>Blog posts</div>
@@ -10,4 +11,3 @@
 </div>
 <p class="muted">Use the menu above to manage services, team members, blog posts, reviews and contact information.</p>
 <%- include('foot') %>
-
