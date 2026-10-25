@@ -6,6 +6,7 @@ const { sendQuoteEmails } = require("./mailer");
 const router = express.Router();
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const str = (v, max) => String(v ?? "").trim().slice(0, max);
+const turnstileSetupStarted = () => !!(process.env.TURNSTILE_SITE_KEY || process.env.TURNSTILE_SECRET_KEY);
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 2 * 1024 * 1024, files: 3, fields: 12, fieldSize: 10 * 1024, parts: 16 },
@@ -20,6 +21,32 @@ function parseImage(buffer) {
   if (buffer.length > 8 && buffer.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) return "image/png";
   if (buffer.length > 12 && buffer.subarray(0, 4).toString() === "RIFF" && buffer.subarray(8, 12).toString() === "WEBP") return "image/webp";
   return null;
+}
+
+async function verifyTurnstile(req, token) {
+  const siteKey = process.env.TURNSTILE_SITE_KEY;
+  const secret = process.env.TURNSTILE_SECRET_KEY;
+  if (!siteKey && !secret) return { valid: true, enabled: false };
+  if (!siteKey || !secret) return { valid: false, unavailable: true };
+  if (!token) return { valid: false, unavailable: false };
+
+  try {
+    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ secret, response: token, remoteip: req.ip }),
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!response.ok) throw new Error(`Siteverify returned HTTP ${response.status}`);
+    const result = await response.json();
+    const valid = result.success === true
+      && String(result.hostname || "").toLowerCase() === req.hostname.toLowerCase()
+      && result.action === "quote";
+    return { valid, unavailable: false };
+  } catch (e) {
+    console.error("Turnstile verification unavailable:", e.message);
+    return { valid: false, unavailable: true };
+  }
 }
 
 function parseQuoteBody(req, res, next) {
@@ -62,6 +89,20 @@ router.post("/", parseQuoteBody, async (req, res, next) => {
     if (!q.name || !EMAIL.test(q.email) || (!q.service && !q.message)) return reply(400, false, "Please enter your name, a valid email and a service.");
     const photos = (req.files || []).map((file) => ({ file, mime: parseImage(file.buffer) }));
     if (photos.some((photo) => !photo.mime)) return reply(400, false, "One or more files is not a valid JPG, PNG or WebP image.");
+    if (turnstileSetupStarted() && (!process.env.TURNSTILE_SITE_KEY || !process.env.TURNSTILE_SECRET_KEY)) {
+      console.error("Turnstile must have both TURNSTILE_SITE_KEY and TURNSTILE_SECRET_KEY configured.");
+      return reply(503, false, "Verification is temporarily unavailable. Please call us instead.");
+    }
+    const verification = await verifyTurnstile(req, str(b["cf-turnstile-response"], 2048));
+    if (!verification.valid) {
+      return reply(
+        verification.unavailable ? 503 : 403,
+        false,
+        verification.unavailable
+          ? "Verification is temporarily unavailable. Please try again or call us."
+          : "Please complete the security check and try again."
+      );
+    }
     q.photosCount = photos.length;
     const id = await withConnection(async (conn) => {
       await conn.beginTransaction();

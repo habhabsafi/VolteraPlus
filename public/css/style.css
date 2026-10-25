@@ -246,6 +246,7 @@ html{scroll-behavior:smooth}
 .photo-help,.photo-files{display:block;margin-top:7px}
 .photo-files{overflow-wrap:anywhere}
 .photo-files-error,.field.bad .photo-files{color:#b91c1c}
+.turnstile-wrap{margin:12px 0 16px;min-height:65px}
 .dark .photo-optional{color:#aaa}
 .dark .quote-photo-picker{background:#25252a;border-color:#65521f}
 .dark .quote-photo-picker:hover{background:#302c21;border-color:#d7a524}
