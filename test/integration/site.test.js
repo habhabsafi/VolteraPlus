@@ -170,6 +170,15 @@ test("home page renders through the HTTP stack with security headers", async () 
   assert.match(html, /id="quoteCartCount" aria-hidden="true">0<\/span>/);
   assert.match(html, /class="nav-icon phone-nav" aria-label="Call 613-555-0100" title="Call 613-555-0100"/);
   assert.match(html, /id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="navLinks"/);
+  assert.equal((html.match(/class="product-card">/g) || []).length, 3);
+  const firstFeatured = html.indexOf('href="/products/test-product-1"');
+  const secondFeatured = html.indexOf('href="/products/test-product-2"');
+  const thirdFeatured = html.indexOf('href="/products/test-product-3"');
+  const fourthFeatured = html.indexOf('href="/products/test-product-4"');
+  assert.ok(firstFeatured < secondFeatured && secondFeatured < thirdFeatured);
+  assert.equal(fourthFeatured, -1);
+  assert.ok(html.indexOf("Featured Products") < html.indexOf("Latest from Our Blog"));
+  assert.match(html, /<script src="\/js\/products\.js\?v=2" defer><\/script>/);
 });
 
 test("public pages render and legacy URLs redirect permanently", async () => {
