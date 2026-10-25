@@ -22,10 +22,12 @@
     const updatePhotoList = () => {
       if (!photoInput || !photoList) return;
       const files = [...photoInput.files];
+      const invalid = files.length > 3 || files.some((file) => file.size > 2 * 1024 * 1024);
       photoList.textContent = files.length
         ? files.map((file) => file.name).join(", ")
         : "No photos selected.";
-      photoList.classList.toggle("photo-files-error", files.length > 3 || files.some((file) => file.size > 2 * 1024 * 1024));
+      photoList.classList.toggle("photo-files-error", invalid);
+      photoInput.closest(".field").classList.toggle("bad", invalid);
     };
     photoInput?.addEventListener("change", updatePhotoList);
     f.addEventListener("reset", () => window.setTimeout(updatePhotoList));
