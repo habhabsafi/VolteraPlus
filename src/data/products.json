@@ -1,0 +1,52 @@
+[
+  {
+    "slug": "digital-multimeter",
+    "title": "Digital Multimeter",
+    "categorySlug": "electrical-products",
+    "categoryName": "Electrical Products",
+    "imageFile": "meter.jpg",
+    "description": "<p>Sample electrical test equipment for voltage, current, and continuity checks. Request a quote to confirm availability and specifications.</p>",
+    "details": "<ul><li>Portable handheld format</li><li>Suitable for general electrical troubleshooting</li><li>Confirm model and specifications when requesting a quote</li></ul>",
+    "tags": ["testing", "measurement", "maintenance"]
+  },
+  {
+    "slug": "led-ceiling-fixture",
+    "title": "LED Ceiling Fixture",
+    "categorySlug": "electrical-products",
+    "categoryName": "Electrical Products",
+    "imageFile": "fixture.jpg",
+    "description": "<p>Sample LED ceiling fixture for residential lighting projects. Request a quote to confirm availability and specifications.</p>",
+    "details": "<ul><li>Indoor ceiling-lighting fixture</li><li>Designed for energy-efficient lighting projects</li><li>Confirm size, finish, and specifications when requesting a quote</li></ul>",
+    "tags": ["lighting", "led", "interior"]
+  },
+  {
+    "slug": "residential-breaker-panel",
+    "title": "Residential Breaker Panel",
+    "categorySlug": "electrical-products",
+    "categoryName": "Electrical Products",
+    "imageFile": "panel.jpg",
+    "description": "<p>Sample residential electrical panel listing for renovation and upgrade projects. Request a quote to confirm compatibility and specifications.</p>",
+    "details": "<ul><li>Panel equipment for residential applications</li><li>Breaker configuration depends on the project</li><li>Have a licensed electrician confirm compatibility before installation</li></ul>",
+    "tags": ["panel", "breaker", "renovation"]
+  },
+  {
+    "slug": "electrical-control-board",
+    "title": "Electrical Control Board",
+    "categorySlug": "electrical-products",
+    "categoryName": "Electrical Products",
+    "imageFile": "board.jpg",
+    "description": "<p>Sample electrical control-board listing for equipment and building systems. Request a quote to confirm availability and specifications.</p>",
+    "details": "<ul><li>Control-board equipment for electrical systems</li><li>Configuration depends on the application</li><li>Confirm model and compatibility when requesting a quote</li></ul>",
+    "tags": ["controls", "electrical", "equipment"]
+  },
+  {
+    "slug": "soldering-station",
+    "title": "Soldering Station",
+    "categorySlug": "electrical-products",
+    "categoryName": "Electrical Products",
+    "imageFile": "solder.jpg",
+    "description": "<p>Sample bench-top soldering equipment for electrical repair work. Request a quote to confirm availability and specifications.</p>",
+    "details": "<ul><li>Bench-top equipment for electrical repair tasks</li><li>Intended for trained users and suitable applications</li><li>Confirm model and accessories when requesting a quote</li></ul>",
+    "tags": ["repair", "tools", "maintenance"]
+  }
+]

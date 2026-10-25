@@ -6,7 +6,9 @@ Server-rendered Node.js site using Express and EJS. Every page is real HTML for 
 
 Quote photos are stored as private MySQL attachments, not in the source tree or public assets. Admin users can view them from the quote details page. Uploads are limited to three JPG, PNG or WebP files at 2 MB each.
 
-Quote forms support Cloudflare Turnstile when `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` are set. Both are required to enable verification; submissions are verified server-side before they are saved. Without either key, the existing honeypot and rate limit remain active.
+Service and product quote forms support Cloudflare Turnstile when `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` are set. Both are required to enable verification; product quote challenges use the `product-quote` action and are verified server-side before requests are saved. Without either key, the existing honeypot and rate limit remain active.
+
+Product quote submissions send a request summary to `abe@volteraplus.ca` and a confirmation to the customer using the configured `MAIL_FROM` address. Set `MAIL_FROM` to a verified no-reply sender and configure `RESEND_API_KEY` for delivery. Initial setup seeds five sample electrical products and stores their image bytes in the MySQL media table; existing products with the same slugs are left unchanged.
 
 ## Appointments
 
@@ -51,4 +53,4 @@ Initial content is seeded only when its corresponding table is empty. Existing d
 - `views/`: EJS pages; `views/partials/`: header, footer, cards, forms
 - `public/`: CSS, client JS, and images
 
-Manage products and their categories at `/admin/products`, and review submissions at `/admin/product-quotes`. Customers browse `/products`, collect quantities in the browser-local quote cart, then submit a quote request with their contact details. Product photos use the database-backed media store; submitted requests and product snapshots are stored in MySQL. There is no purchase or payment flow. These features sit alongside the existing service, team, blog, review, and site settings administration.
+Manage products and their categories at `/admin/products`, and review submissions at `/admin/product-quotes`. Customers browse `/products`, search product titles, descriptions, details, categories, and tags, and filter/paginate the results at 12 products per page. Product cards let customers toggle products in the browser-local quote cart and choose quantities before submitting their contact details. Product photos use the database-backed media store; submitted requests and product snapshots are stored in MySQL. There is no purchase or payment flow. These features sit alongside the existing service, team, blog, review, and site settings administration.

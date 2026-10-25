@@ -2,9 +2,18 @@
 <section class="page-hero product-hero"><div class="container"><span class="eyebrow">Voltera Plus</span><h1>Products</h1><p>Browse our product range and request a quote for the items you need.</p></div></section>
 <section class="section product-catalog-section"><div class="container">
   <div class="product-catalog-heading"><div><span class="eyebrow">Find what you need</span><h2>Product catalogue</h2></div><p><%= resultCount %> <%= resultCount === 1 ? 'product' : 'products' %></p></div>
+  <form class="product-search" method="get" action="/products" role="search">
+    <label class="visually-hidden" for="product-search-input">Search products</label>
+    <input id="product-search-input" type="search" name="search" maxlength="100" value="<%= searchTerm %>" placeholder="Search products, tags, or categories">
+    <% if (selectedCategory) { %><input type="hidden" name="category" value="<%= selectedCategory %>"><% } %>
+    <button type="submit" aria-label="Search products" title="Search products">
+      <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>
+    </button>
+    <% if (searchTerm) { %><a class="product-search-clear" href="<%= categoryUrl(selectedCategory) %>">Clear search</a><% } %>
+  </form>
   <nav class="product-filters" aria-label="Filter products by category">
-    <a href="/products" class="<%= selectedCategory ? '' : 'active' %>">All products</a>
-    <% categories.forEach(function(category){ %><a href="/products?category=<%= encodeURIComponent(category.slug) %>" class="<%= selectedCategory === category.slug ? 'active' : '' %>"><%= category.name %><span><%= category.product_count %></span></a><% }) %>
+    <a href="<%= categoryUrl('') %>" class="<%= selectedCategory ? '' : 'active' %>">All products</a>
+    <% categories.forEach(function(category){ %><a href="<%= categoryUrl(category.slug) %>" class="<%= selectedCategory === category.slug ? 'active' : '' %>"><%= category.name %><span><%= category.product_count %></span></a><% }) %>
   </nav>
   <% if (products.length) { %>
   <div class="product-grid"><% products.forEach(function(product){ %><%- include('partials/product-card', {product: product}) %><% }) %></div>

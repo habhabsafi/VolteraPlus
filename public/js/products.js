@@ -95,6 +95,20 @@
     document.querySelectorAll("[data-submit-product-quote]").forEach((element) => {
       element.disabled = cart.length === 0;
     });
+    const savedCart = readCart();
+    document.querySelectorAll("[data-product-add]").forEach((button) => {
+      const item = savedCart.find((entry) => entry.slug === button.dataset.productSlug);
+      const selected = !!item;
+      button.classList.toggle("is-selected", selected);
+      button.setAttribute("aria-pressed", String(selected));
+      button.setAttribute("aria-label", `${selected ? "Remove" : "Add"} ${button.dataset.productTitle || "product"} ${selected ? "from" : "to"} quote cart`);
+      button.title = selected ? "Remove from quote cart" : "Add to quote cart";
+      const quantity = button.closest(".product-card-cart-control")?.querySelector("[data-product-card-quantity]");
+      if (quantity) {
+        quantity.hidden = !selected;
+        quantity.value = item?.quantity || 1;
+      }
+    });
   }
 
   function updateQuantity(slug, value) {
@@ -121,8 +135,22 @@
     renderItems();
   }
 
-  function showFeedback(message) {
-    document.querySelectorAll("[data-product-feedback]").forEach((element) => {
+  function setCardQuantity(slug, value) {
+    const quantity = Math.max(1, Math.min(99, Number.parseInt(value, 10) || 1));
+    const updated = readCart().map((item) => item.slug === slug ? { ...item, quantity } : item);
+    if (!writeCart(updated)) {
+      showFeedback("Your browser could not update the quote cart. Check its storage settings.");
+      return;
+    }
+    renderItems();
+  }
+
+  function showFeedback(message, source = null) {
+    const card = source?.closest(".product-card");
+    const feedback = card
+      ? card.querySelectorAll("[data-product-feedback]")
+      : document.querySelectorAll("[data-product-feedback]");
+    feedback.forEach((element) => {
       element.textContent = message;
     });
   }
@@ -131,6 +159,28 @@
     button.addEventListener("click", () => {
       const current = readCart();
       const slug = button.dataset.productSlug;
+      if (button.closest(".product-card")) {
+        const existing = current.some((item) => item.slug === slug);
+        const updated = existing
+          ? current.filter((item) => item.slug !== slug)
+          : [...current, {
+            slug,
+            title: button.dataset.productTitle || "Product",
+            image: button.dataset.productImage || "",
+            category: button.dataset.productCategory || "",
+            quantity: 1,
+          }];
+        if (!writeCart(updated)) {
+          showFeedback("Your browser could not save the quote cart. Check its storage settings.", button);
+          return;
+        }
+        showFeedback(
+          `${button.dataset.productTitle || "Product"} ${existing ? "removed from" : "added to"} your quote cart.`,
+          button
+        );
+        renderItems();
+        return;
+      }
       const quantityInput = document.querySelector("[data-product-quantity]");
       const amount = Math.max(1, Math.min(99, Number.parseInt(quantityInput?.value, 10) || 1));
       const existing = current.find((item) => item.slug === slug);
@@ -145,12 +195,15 @@
         ? current.map((entry) => entry.slug === slug ? item : entry)
         : [...current, item];
       if (!writeCart(updated)) {
-        showFeedback("Your browser could not save the quote cart. Check its storage settings.");
+        showFeedback("Your browser could not save the quote cart. Check its storage settings.", button);
         return;
       }
-      showFeedback(`${item.title} added to your quote cart.`);
+      showFeedback(`${item.title} added to your quote cart.`, button);
       renderItems();
     });
+  });
+  document.querySelectorAll("[data-product-card-quantity]").forEach((input) => {
+    input.addEventListener("change", () => setCardQuantity(input.dataset.productSlug, input.value));
   });
 
   document.querySelectorAll("[data-product-buy-now]").forEach((link) => {

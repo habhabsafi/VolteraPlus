@@ -63,6 +63,45 @@ async function seed() {
         await c.execute("INSERT INTO posts (id,title,img,cta,short,sections,published_at) VALUES (?,?,?,?,?,?,?)",
           [p.id, p.title, p.img, p.cta, p.short, JSON.stringify(p.sections), monthIndex(p.date)]);
     }
+
+    const seedProducts = load("products");
+    const productCategories = new Map();
+    const imageMimes = { ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png", ".webp": "image/webp" };
+    for (const [sortOrder, product] of seedProducts.entries()) {
+      const existing = (await c.query("SELECT id FROM products WHERE slug = ?", [product.slug]))[0][0];
+      if (existing) continue;
+
+      let categoryId = productCategories.get(product.categorySlug);
+      if (!categoryId) {
+        const existingCategory = (await c.query("SELECT id FROM product_categories WHERE slug = ?", [product.categorySlug]))[0][0];
+        if (existingCategory) {
+          categoryId = existingCategory.id;
+        } else {
+          const [category] = await c.execute(
+            "INSERT INTO product_categories (slug,name,sort_order) VALUES (?,?,?)",
+            [product.categorySlug, product.categoryName, sortOrder]
+          );
+          categoryId = category.insertId;
+        }
+        productCategories.set(product.categorySlug, categoryId);
+      }
+
+      const extension = path.extname(product.imageFile).toLowerCase();
+      const mime = imageMimes[extension];
+      if (!mime) throw new Error(`Unsupported seeded product image type: ${product.imageFile}`);
+      const imageName = `seed-${product.slug}${extension}`;
+      const imagePath = path.join(__dirname, "..", "public", "images", path.basename(product.imageFile));
+      await c.execute(
+        "INSERT IGNORE INTO media (name,mime,data) VALUES (?,?,?)",
+        [imageName, mime, fs.readFileSync(imagePath)]
+      );
+      const [result] = await c.execute(
+        "INSERT INTO products (slug,category_id,title,image,description,details,sort_order,published) VALUES (?,?,?,?,?,?,?,1)",
+        [product.slug, categoryId, product.title, `uploads/${imageName}`, product.description, product.details, sortOrder]
+      );
+      for (const tag of product.tags)
+        await c.execute("INSERT INTO product_tags (product_id,tag) VALUES (?,?)", [result.insertId, tag]);
+    }
   });
 }
 

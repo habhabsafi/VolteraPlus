@@ -1,7 +1,7 @@
 const express = require("express");
 const { query, withConnection } = require("./db");
 const store = require("./store");
-const { sendQuoteEmails } = require("./mailer");
+const { sendProductQuoteEmails } = require("./mailer");
 const { sanitizeProductHtml } = require("./product-content");
 const { verifyTurnstile } = require("./turnstile");
 
@@ -56,7 +56,7 @@ function createRouter({
   productStore = store,
   dbQuery = query,
   dbWithConnection = withConnection,
-  sendEmails = sendQuoteEmails,
+  sendEmails = sendProductQuoteEmails,
   verify = verifyTurnstile,
 } = {}) {
   const router = express.Router();
@@ -64,13 +64,22 @@ function createRouter({
   router.get("/products", wrap(async (req, res) => {
     const categories = await productStore.getProductCategories();
     const category = str(req.query.category, 100);
+    const search = str(req.query.search, 100);
     const requestedPage = Math.max(1, Number.parseInt(req.query.page, 10) || 1);
-    const firstPage = await productStore.getProducts({ category, limit: PAGE_SIZE, offset: 0 });
+    const firstPage = await productStore.getProducts({ category, search, limit: PAGE_SIZE, offset: 0 });
     const pages = Math.max(1, Math.ceil(firstPage.total / PAGE_SIZE));
     const page = Math.min(requestedPage, pages);
     const result = page === 1
       ? firstPage
-      : await productStore.getProducts({ category, limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE });
+      : await productStore.getProducts({ category, search, limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE });
+    const catalogUrl = ({ nextCategory = category, nextSearch = search, nextPage } = {}) => {
+      const params = new URLSearchParams();
+      if (nextCategory) params.set("category", nextCategory);
+      if (nextSearch) params.set("search", nextSearch);
+      if (nextPage) params.set("page", String(nextPage));
+      const query = params.toString();
+      return `/products${query ? `?${query}` : ""}`;
+    };
     res.render("products", {
       page: "products",
       title: "Products | Voltera Plus",
@@ -78,10 +87,12 @@ function createRouter({
       products: result.products,
       categories,
       selectedCategory: category,
+      searchTerm: search,
       currentPage: page,
       totalPages: pages,
       resultCount: result.total,
-      pageUrl: (number) => `/products?${category ? `category=${encodeURIComponent(category)}&` : ""}page=${number}`,
+      categoryUrl: (slug) => catalogUrl({ nextCategory: slug }),
+      pageUrl: (number) => catalogUrl({ nextPage: number }),
     });
   }));
 
@@ -194,15 +205,12 @@ function createRouter({
       }
     });
 
-    const itemSummary = items.map((item) => `${item.title} x ${item.quantity}`).join("\n");
     const emailResult = await sendEmails({
       name: values.name,
       email: values.email,
       phone: values.phone,
-      service: "Product quote",
-      source: "products",
-      photosCount: 0,
-      message: `Requested products:\n${itemSummary}${values.message ? `\n\nAdditional details:\n${values.message}` : ""}`,
+      items: items.map((item) => ({ title: item.title, slug: item.slug, quantity: item.quantity })),
+      message: values.message,
     }, await productStore.getSite());
     await dbQuery(
       "UPDATE product_quotes SET email_sent = ?, email_error = ? WHERE id = ?",
