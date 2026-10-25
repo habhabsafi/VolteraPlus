@@ -233,6 +233,25 @@ html{scroll-behavior:smooth}
 
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .form-ok.error{color:#b91c1c}
+.photo-optional{margin-left:5px;color:#777;font-size:.78rem;font-weight:400}
+.quote-photo-picker{position:relative;display:flex!important;align-items:center;gap:14px;padding:16px;border:1.5px dashed #d7a524;border-radius:12px;background:#fffaf0;cursor:pointer;transition:background .2s,border-color .2s}
+.quote-photo-picker:hover{background:#fff4d6;border-color:#b88108}
+.quote-photo-picker:focus-within{outline:2px solid var(--gold);outline-offset:2px}
+.quote-photo-picker>svg{width:30px;height:30px;flex:none;color:#a56e00}
+.quote-photo-picker .quote-photo-input{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.photo-picker-copy{display:grid;gap:3px;flex:1}
+.photo-picker-copy strong{font-size:.9rem;color:var(--ink)}
+.photo-picker-copy small,.photo-help,.photo-files{font-size:.78rem;color:#777}
+.photo-browse{padding:8px 12px;border-radius:7px;background:var(--gold);color:var(--ink);font-size:.82rem;font-weight:600;white-space:nowrap}
+.photo-help,.photo-files{display:block;margin-top:7px}
+.photo-files{overflow-wrap:anywhere}
+.photo-files-error,.field.bad .photo-files{color:#b91c1c}
+.dark .photo-optional{color:#aaa}
+.dark .quote-photo-picker{background:#25252a;border-color:#65521f}
+.dark .quote-photo-picker:hover{background:#302c21;border-color:#d7a524}
+.dark .photo-picker-copy strong{color:#fff}
+.dark .photo-picker-copy small,.dark .photo-help,.dark .photo-files{color:#bbb}
+@media(max-width:520px){.quote-photo-picker{gap:10px;padding:12px}.quote-photo-picker>svg{width:24px;height:24px}.photo-browse{padding:7px 9px;font-size:.75rem}}
 .team-profile{
   margin-top:10px;
 }

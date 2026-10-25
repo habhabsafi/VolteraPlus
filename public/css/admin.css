@@ -20,3 +20,4 @@ label.check{display:flex;align-items:center;gap:8px}label.check input{width:auto
 .filters{display:flex;gap:8px;flex-wrap:wrap}.chip{padding:6px 12px;border-radius:999px;background:#e5e7eb;color:#374151;text-decoration:none;font-weight:600}.chip.on{background:#f59e0b;color:#111}
 .pill{padding:3px 10px;border-radius:999px;background:#e5e7eb;font-size:.8rem;text-transform:capitalize}.pill.new{background:#fef3c7}.pill.won{background:#dcfce7}.pill.lost{background:#fee2e2}
 .stats a.card{text-decoration:none}
+.quote-photos{display:flex;gap:14px;flex-wrap:wrap}.quote-photos a{display:grid;gap:6px;width:min(220px,100%);color:#4b5563;font-size:.85rem}.quote-photos img{width:100%;height:160px;object-fit:cover;border-radius:8px;background:#e5e7eb}

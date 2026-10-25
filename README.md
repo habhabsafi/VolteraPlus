@@ -4,6 +4,8 @@ Website for Voltera Plus, a Red Seal certified Electrical, general contracting a
 
 Server-rendered Node.js site using Express and EJS. Every page is real HTML for SEO.
 
+Quote photos are stored as private MySQL attachments, not in the source tree or public assets. Admin users can view them from the quote details page. Uploads are limited to three JPG, PNG or WebP files at 2 MB each.
+
 ## Run locally
 
 ```

@@ -275,7 +275,23 @@ router.get("/quotes", wrap(async (req, res) => {
 router.get("/quotes/:id", wrap(async (req, res, next) => {
   const quote = (await query("SELECT * FROM quote_requests WHERE id = ?", [Number(req.params.id) || 0]))[0];
   if (!quote) return next();
-  res.render("admin/quote-detail", { nav: "quotes", quote, saved: req.query.saved === "1" });
+  const attachments = await query("SELECT id, OCTET_LENGTH(data) AS bytes FROM quote_attachments WHERE quote_id = ? ORDER BY id", [quote.id]);
+  res.render("admin/quote-detail", { nav: "quotes", quote, attachments, saved: req.query.saved === "1" });
+}));
+
+router.get("/quotes/:id/attachments/:attachmentId", wrap(async (req, res, next) => {
+  const attachment = (await query(
+    "SELECT mime, data FROM quote_attachments WHERE id = ? AND quote_id = ?",
+    [Number(req.params.attachmentId) || 0, Number(req.params.id) || 0]
+  ))[0];
+  if (!attachment) return next();
+  res.set({
+    "Content-Type": attachment.mime,
+    "Content-Disposition": "inline",
+    "Cache-Control": "private, no-store",
+    "X-Content-Type-Options": "nosniff",
+  });
+  res.send(attachment.data);
 }));
 
 router.post("/quotes/:id", wrap(async (req, res) => {

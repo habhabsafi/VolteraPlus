@@ -3,7 +3,8 @@
 
 <section style="margin-top:-90px"><div class="container">
   <% if (typeof sent !== 'undefined' && sent) { %><p class="form-ok" style="display:block">Thank you! We received your request and will contact you shortly.</p><% } %>
-  <form class="form-card" data-form method="post" action="/quote">
+  <% if (typeof error !== 'undefined' && error) { %><p class="form-ok error" style="display:block">We couldn't process the upload. Please try again or call us.</p><% } %>
+  <form class="form-card" data-form method="post" action="/quote" enctype="multipart/form-data">
   <%- include('partials/form-extras', {source: 'contact'}) %>
     <div class="field"><label>Full Name</label><input name="Name" data-req placeholder="Your full name"><span class="err">Please enter your name.</span></div>
     <div class="row">
@@ -12,6 +13,7 @@
     </div>
     <div class="field"><label>Required Service</label><%- include('partials/service-select', {selected: ''}) %><span class="err">Please choose a service.</span></div>
     <div class="field"><label>Message</label><textarea name="Message" rows="4" placeholder="Tell us about your project"></textarea></div>
+    <%- include('partials/quote-photo-upload') %>
     <button class="btn btn-gold" type="submit">Get in Touch</button><div class="form-ok"></div>
   </form>
 </div></section>
