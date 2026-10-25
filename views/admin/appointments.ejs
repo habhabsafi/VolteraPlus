@@ -8,9 +8,9 @@
 <div class="admin-calendar-wrap">
   <table class="admin-calendar">
     <thead><tr><% ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'].forEach(function(day){ %><th><%= day %></th><% }) %></tr></thead>
-    <tbody><% weeks.forEach(function(week){ %><tr><% week.forEach(function(cell){ %>
+    <tbody><% weeks.forEach(function(week){ %><tr><% week.forEach(function(cell, weekday){ %>
       <% if (!cell) { %><td class="empty-day"></td><% } else { %>
-      <td class="<%= cell.date < today ? 'past-day' : '' %><%= blocks.some(function(block){ return block.start_date <= cell.date && block.end_date >= cell.date; }) ? ' blocked-day' : '' %>">
+      <td data-weekday="<%= ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][weekday] %>" class="<%= cell.date < today ? 'past-day' : '' %><%= blocks.some(function(block){ return block.start_date <= cell.date && block.end_date >= cell.date; }) ? ' blocked-day' : '' %>">
         <span class="calendar-date"><%= cell.day %></span>
         <% if (blocks.some(function(block){ return block.start_date <= cell.date && block.end_date >= cell.date; })) { %><span class="calendar-blocked">Unavailable</span><% } %>
         <% cell.events.forEach(function(event){ %>
@@ -35,8 +35,8 @@
     <label>Reason<input type="text" name="reason" maxlength="255" placeholder="Unavailable"></label>
     <button class="btn" type="submit">Block Dates</button>
   </form>
-  <% if (blocks.length) { %><table class="block-table"><thead><tr><th>Dates</th><th>Reason</th><th></th></tr></thead><tbody>
-    <% blocks.forEach(function(block){ %><tr><td><%= block.start_date %> to <%= block.end_date %></td><td><%= block.reason %></td><td><form method="post" action="/admin/appointments/blocks/<%= block.id %>/delete" data-confirm="Remove this blackout range and reopen those dates?"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn danger" type="submit">Remove</button></form></td></tr><% }) %>
+  <% if (blocks.length) { %><table class="block-table admin-list"><thead><tr><th>Dates</th><th>Reason</th><th>Actions</th></tr></thead><tbody>
+    <% blocks.forEach(function(block){ %><tr><td data-label="Dates"><%= block.start_date %> to <%= block.end_date %></td><td data-label="Reason"><%= block.reason %></td><td class="actions" data-label="Actions"><form method="post" action="/admin/appointments/blocks/<%= block.id %>/delete" data-confirm="Remove this blackout range and reopen those dates?"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn danger" type="submit">Remove</button></form></td></tr><% }) %>
   </tbody></table><% } else { %><p class="muted">No blocked dates overlap this month.</p><% } %>
 </section>
 <%- include('foot') %>
