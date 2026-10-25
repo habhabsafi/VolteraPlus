@@ -3,7 +3,11 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
-  $("#navToggle")?.addEventListener("click", () => $("#navLinks").classList.toggle("open"));
+  $("#navToggle")?.addEventListener("click", (event) => {
+    const button = event.currentTarget;
+    const open = $("#navLinks").classList.toggle("open");
+    button.setAttribute("aria-expanded", String(open));
+  });
 
   document.addEventListener("click", (e) => {
     const b = e.target.closest(".acc button");

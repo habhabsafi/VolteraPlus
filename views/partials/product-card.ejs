@@ -1,0 +1,10 @@
+<article class="product-card">
+  <a class="product-card-link" href="/products/<%= product.slug %>">
+    <div class="product-card-image"><img src="<%= imgUrl(product.image) %>" alt="<%= product.title %>" loading="lazy"></div>
+    <div class="product-card-copy">
+      <span class="product-category"><%= product.category_name %></span>
+      <h2><%= product.title %></h2>
+      <span class="product-card-cta">View product <span aria-hidden="true">&rarr;</span></span>
+    </div>
+  </a>
+</article>

@@ -1,0 +1,24 @@
+<%- include('head') %>
+<div class="bar"><h1><%= isNew ? 'Add product' : 'Edit product' %></h1><a class="btn ghost" href="/admin/products">&larr; All products</a></div>
+<form class="card product-admin-form" method="post" enctype="multipart/form-data" action="<%= isNew ? '/admin/products' : '/admin/products/' + product.id %>" data-rich-form>
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <div class="grid2">
+    <label>Product title<input name="title" value="<%= product.title %>" maxlength="255" required></label>
+    <label>Category<select name="category_id" required><option value="">Choose a category</option><% categories.forEach(function(category){ %><option value="<%= category.id %>"<%= String(product.category_id) === String(category.id) ? ' selected' : '' %>><%= category.name %></option><% }) %></select></label>
+  </div>
+  <label>Tags <span class="muted">(comma-separated; used for related products)</span><input name="tags" value="<%= product.tags || '' %>" maxlength="1600" placeholder="calibration, insulation tester"></label>
+  <div class="grid2">
+    <label>Sort order<input type="number" name="sort_order" min="0" max="9999" value="<%= product.sort_order %>"></label>
+    <% if (!isNew) { %><p class="muted product-slug">Product URL: <a href="/products/<%= product.slug %>" target="_blank" rel="noopener">/products/<%= product.slug %></a></p><% } %>
+  </div>
+  <label>Product image
+    <select name="img"><option value="">Choose an existing image</option><% images.forEach(function(image){ %><option value="<%= image %>"<%= image === product.image ? ' selected' : '' %>><%= image.indexOf('uploads/') === 0 ? 'Database upload: ' + image.slice(8) : image %></option><% }) %></select>
+  </label>
+  <label>Or upload a new image (JPG, PNG or WebP, max 2 MB)<input type="file" name="image" accept="image/jpeg,image/png,image/webp"></label>
+  <%- include('_rich-editor', {label: 'Description', fieldName: 'description', content: product.description}) %>
+  <%- include('_rich-editor', {label: 'Details', fieldName: 'details', content: product.details}) %>
+  <label class="check"><input type="checkbox" name="published" value="1"<%= product.published ? ' checked' : '' %>> Published on the website</label>
+  <button class="btn" type="submit">Save product</button>
+</form>
+<% if (!isNew) { %><form method="post" action="/admin/products/<%= product.id %>/delete" data-confirm="Delete this product? Existing quote requests will keep their product snapshots."><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="btn danger" type="submit">Delete product</button></form><% } %>
+<%- include('foot') %>

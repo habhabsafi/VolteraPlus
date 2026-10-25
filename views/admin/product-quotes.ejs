@@ -1,0 +1,14 @@
+<%- include('head') %>
+<div class="bar"><h1>Product quote requests</h1></div>
+<p class="filters"><% [['', 'All'], ['new','New'], ['contacted','Contacted'], ['quoted','Quoted'], ['won','Won'], ['lost','Lost']].forEach(function(status){ %><a class="chip<%= filter === status[0] ? ' on' : '' %>" href="/admin/product-quotes<%= status[0] ? '?status=' + status[0] : '' %>"><%= status[1] %><% if (status[0] && counts[status[0]]) { %> (<%= counts[status[0]] %>)<% } %></a><% }) %></p>
+<div class="card table-scroll"><table class="admin-list"><thead><tr><th>Received</th><th>Name</th><th>Products</th><th>Contact</th><th>Status</th></tr></thead><tbody>
+  <% quotes.forEach(function(quote){ %><tr>
+    <td><%= String(quote.created_at).slice(0, 16).replace('T', ' ') %></td>
+    <td><a href="/admin/product-quotes/<%= quote.id %>"><%= quote.name %></a></td>
+    <td><%= quote.item_count %></td>
+    <td><a href="mailto:<%= quote.email %>"><%= quote.email %></a><% if (quote.phone) { %><br><%= quote.phone %><% } %></td>
+    <td><span class="pill <%= quote.status %>"><%= quote.status %></span></td>
+  </tr><% }) %>
+  <% if (!quotes.length) { %><tr><td colspan="5" class="muted">No product quote requests yet.</td></tr><% } %>
+</tbody></table></div>
+<%- include('foot') %>

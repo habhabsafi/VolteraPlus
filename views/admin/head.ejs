@@ -9,7 +9,7 @@
   <details class="admin-menu">
     <summary>Menu</summary>
     <nav>
-    <% [['dashboard','Dashboard','/admin'],['appointments','Appointments','/admin/appointments'],['quotes','Quotes','/admin/quotes'],['services','Services','/admin/services'],['people','Team','/admin/people'],['posts','Blog','/admin/posts'],['reviews','Reviews','/admin/reviews'],['settings','Contact Info','/admin/settings'],['account','My Account','/admin/account']].concat(admin.role === 'owner' ? [['users','Admin Users','/admin/users']] : []).forEach(function(n){ %><a href="<%= n[2] %>" class="<%= nav === n[0] ? 'active' : '' %>"><%= n[1] %></a><% }) %>
+    <% [['dashboard','Dashboard','/admin'],['appointments','Appointments','/admin/appointments'],['quotes','Quotes','/admin/quotes'],['product-quotes','Product quotes','/admin/product-quotes'],['services','Services','/admin/services'],['products','Products','/admin/products'],['people','Team','/admin/people'],['posts','Blog','/admin/posts'],['reviews','Reviews','/admin/reviews'],['settings','Contact Info','/admin/settings'],['account','My Account','/admin/account']].concat(admin.role === 'owner' ? [['users','Admin Users','/admin/users']] : []).forEach(function(n){ %><a href="<%= n[2] %>" class="<%= nav === n[0] ? 'active' : '' %>"><%= n[1] %></a><% }) %>
       <a href="/" target="_blank" rel="noopener">View site</a>
     </nav>
   </details>

@@ -1,0 +1,19 @@
+<%- include('partials/head') %>
+<section class="page-hero product-hero"><div class="container"><span class="eyebrow">No purchase required</span><h1>Request a product quote</h1><p>Share your contact details and selected products. Our team will follow up with pricing.</p></div></section>
+<section class="section"><div class="container product-checkout-layout" data-product-quote-context data-product-quote-direct="<%= directProduct ? JSON.stringify({slug: directProduct.slug, title: directProduct.title, image: imgUrl(directProduct.image), category: directProduct.category_name, quantity: directQuantity}) : '' %>" data-product-quote-sent="<%= sent ? 'true' : 'false' %>">
+  <% if (sent) { %>
+  <div class="product-quote-success"><span class="eyebrow">Request received</span><h2>Thank you for your quote request.</h2><p>We’ve received your selected products and will contact you soon.</p><a class="btn btn-gold" href="/products">Back to products</a></div>
+  <% } else { %>
+  <% if (error) { %><p class="product-form-error" role="alert"><%= error %></p><% } %>
+  <form class="product-contact-form" method="post" data-product-checkout action="/product-quote<%= directProduct ? '?product=' + encodeURIComponent(directProduct.slug) + '&quantity=' + directQuantity : '' %>">
+    <%- include('partials/form-extras', {source: 'products', action: 'product-quote'}) %>
+    <div class="product-form-panel"><h2>Your contact details</h2>
+      <label>Full name<input name="name" maxlength="150" autocomplete="name" required value="<%= values.name || '' %>"></label>
+      <div class="product-form-row"><label>Email address<input type="email" name="email" maxlength="190" autocomplete="email" required value="<%= values.email || '' %>"></label><label>Phone number <span>(optional)</span><input type="tel" name="phone" maxlength="40" autocomplete="tel" value="<%= values.phone || '' %>"></label></div>
+      <label>Additional details <span>(optional)</span><textarea name="message" maxlength="4000" rows="5" placeholder="Tell us about your project or any questions"><%= values.message || '' %></textarea></label>
+    </div>
+    <aside class="product-form-panel product-checkout-summary"><h2>Products for your quote</h2><div class="product-cart-items" data-product-cart-items></div><p class="product-cart-empty" data-cart-empty>No products selected. Add products before submitting a quote request.</p><input type="hidden" name="items" value="" data-product-cart-json><button class="btn btn-gold" type="submit" data-submit-product-quote>Send quote request</button><p class="product-no-purchase">This is a quote request only. There is no payment or purchase.</p></aside>
+  </form>
+  <% } %>
+</div></section>
+<%- include('partials/foot') %>

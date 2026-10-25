@@ -5,9 +5,13 @@ const fmtDate = (d) => { const [y, m, day] = String(d).slice(0, 10).split("-").m
 
 const toService = (r) => ({ id: r.id, cat: r.cat, name: r.name, img: r.img, short: r.short, why: r.why, perks: parseJson(r.perks), hub: parseJson(r.hub) });
 const toPost = (r) => ({ id: r.id, title: r.title, img: r.img, cta: r.cta, short: r.short, sections: parseJson(r.sections), date: fmtDate(r.published_at) });
+const toProduct = (r) => ({ ...r, tags: r.tags ? String(r.tags).split("|") : [] });
 
 const SERVICE_ORDER = "ORDER BY sort_order, name";
 const lim = (n) => (n ? ` LIMIT ${Number(n) | 0}` : "");
+const PRODUCT_COLUMNS = `p.id, p.slug, p.title, p.image, p.description, p.details, p.sort_order,
+  c.id AS category_id, c.slug AS category_slug, c.name AS category_name,
+  (SELECT GROUP_CONCAT(t.tag ORDER BY t.tag SEPARATOR '|') FROM product_tags t WHERE t.product_id = p.id) AS tags`;
 
 module.exports = {
   getSite: async () => (await query("SELECT * FROM site_settings WHERE id = 1"))[0],
@@ -36,4 +40,61 @@ module.exports = {
   },
   getRelatedPosts: async (id, limit = 3) =>
     (await query(`SELECT * FROM posts WHERE published = 1 AND id <> ? ORDER BY published_at DESC, id DESC${lim(limit)}`, [Number(id) || 0])).map(toPost),
+  getProductCategories: async () => query(
+    `SELECT c.id, c.slug, c.name, c.sort_order, COUNT(p.id) AS product_count
+     FROM product_categories c
+     JOIN products p ON p.category_id = c.id AND p.published = 1
+     GROUP BY c.id, c.slug, c.name, c.sort_order
+     ORDER BY c.sort_order, c.name`
+  ),
+  getProducts: async ({ category = "", limit = 12, offset = 0 } = {}) => {
+    const where = category ? "WHERE p.published = 1 AND c.slug = ?" : "WHERE p.published = 1";
+    const params = category ? [category] : [];
+    const pageLimit = Math.min(48, Math.max(1, Number(limit) | 0));
+    const pageOffset = Math.max(0, Number(offset) | 0);
+    const [products, totalRows] = await Promise.all([
+      query(
+        `SELECT ${PRODUCT_COLUMNS} FROM products p JOIN product_categories c ON c.id = p.category_id
+         ${where} ORDER BY p.sort_order, p.title LIMIT ${pageLimit} OFFSET ${pageOffset}`,
+        params
+      ),
+      query(
+        `SELECT COUNT(*) AS total FROM products p JOIN product_categories c ON c.id = p.category_id ${where}`,
+        params
+      ),
+    ]);
+    return { products: products.map(toProduct), total: Number(totalRows[0]?.total || 0) };
+  },
+  getProduct: async (slug) => {
+    const row = (await query(
+      `SELECT ${PRODUCT_COLUMNS} FROM products p JOIN product_categories c ON c.id = p.category_id
+       WHERE p.published = 1 AND p.slug = ?`,
+      [slug]
+    ))[0];
+    return row ? toProduct(row) : null;
+  },
+  getProductSlugs: async () => query("SELECT slug FROM products WHERE published = 1 ORDER BY id").then((rows) => rows.map((row) => row.slug)),
+  getProductsBySlugs: async (slugs) => {
+    if (!slugs.length) return [];
+    const placeholders = slugs.map(() => "?").join(",");
+    return (await query(
+      `SELECT p.id, p.slug, p.title, p.image, c.name AS category_name
+       FROM products p JOIN product_categories c ON c.id = p.category_id
+       WHERE p.published = 1 AND p.slug IN (${placeholders})`,
+      slugs
+    ));
+  },
+  getRelatedProducts: async (id, limit = 4) => {
+    const count = Math.min(12, Math.max(1, Number(limit) | 0));
+    return (await query(
+      `SELECT ${PRODUCT_COLUMNS} FROM products p JOIN product_categories c ON c.id = p.category_id
+       WHERE p.published = 1 AND p.id <> ? AND EXISTS (
+         SELECT 1 FROM product_tags current_tag
+         JOIN product_tags related_tag ON related_tag.tag = current_tag.tag
+         WHERE current_tag.product_id = ? AND related_tag.product_id = p.id
+       )
+       ORDER BY RAND() LIMIT ${count}`,
+      [Number(id) || 0, Number(id) || 0]
+    )).map(toProduct);
+  },
 };

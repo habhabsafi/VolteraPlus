@@ -33,12 +33,79 @@ const posts = [
     date: "October 24, 2026",
   },
 ];
+const products = Array.from({ length: 13 }, (_, index) => ({
+  id: index + 1,
+  slug: `test-product-${index + 1}`,
+  title: `Test product ${index + 1}`,
+  image: "panel.jpg",
+  description: index === 0
+    ? '<p>Product overview with <strong>rich formatting</strong>.</p><script>alert(1)</script>'
+    : `<p>Description for product ${index + 1}.</p>`,
+  details: `<p>Technical details for product ${index + 1}.</p>`,
+  tags: index < 3 ? ["calibration", "insulation"] : [`product-${index + 1}`],
+  category_id: 1,
+  category_slug: "test-equipment",
+  category_name: "Test Equipment",
+}));
+const productQuoteRecords = [];
+const productQuoteEmails = [];
+const productQuoteDb = {
+  dbWithConnection: async (run) => run({
+    beginTransaction: async () => {},
+    execute: async (sql, values) => {
+      if (sql.startsWith("INSERT INTO product_quotes")) {
+        const id = productQuoteRecords.length + 1;
+        productQuoteRecords.push({
+          id,
+          name: values[0],
+          email: values[1],
+          phone: values[2],
+          message: values[3],
+          items: [],
+        });
+        return [{ insertId: id }];
+      }
+      if (sql.startsWith("INSERT INTO product_quote_items")) {
+        const [quoteId, productId, title, slug, image, quantity] = values;
+        productQuoteRecords.find((quote) => quote.id === quoteId).items.push({
+          productId, title, slug, image, quantity,
+        });
+      }
+      return [{}];
+    },
+    commit: async () => {},
+    rollback: async () => {},
+  }),
+  dbQuery: async (sql, values) => {
+    const quote = productQuoteRecords.find((record) => record.id === values[2]);
+    quote.emailSent = values[0];
+    quote.emailError = values[1];
+    return { affectedRows: 1 };
+  },
+  sendEmails: async (quote, site) => {
+    productQuoteEmails.push({ quote, site });
+    return { sent: true, error: "" };
+  },
+  verify: async () => ({ valid: true, unavailable: false }),
+};
 const fakeStore = {
   getSite: async () => ({
     name: "Voltera Plus",
     phone: "613-555-0100",
     email: "hello@example.test",
   }),
+  getProductCategories: async () => [{ id: 1, slug: "test-equipment", name: "Test Equipment", product_count: products.length }],
+  getProducts: async ({ category = "", limit = 12, offset = 0 } = {}) => {
+    const matches = !category || category === "test-equipment" ? products : [];
+    return { products: matches.slice(offset, offset + limit), total: matches.length };
+  },
+  getProduct: async (slug) => products.find((product) => product.slug === slug) || null,
+  getRelatedProducts: async (id, limit = 4) => {
+    const current = products.find((product) => product.id === id);
+    return products.filter((product) => product.id !== id && product.tags.some((tag) => current.tags.includes(tag))).slice(0, limit);
+  },
+  getProductSlugs: async () => products.map((product) => product.slug),
+  getProductsBySlugs: async (slugs) => products.filter((product) => slugs.includes(product.slug)),
   getCategories: async () => [{ id: "electric", name: "Electrical" }],
   getFeaturedServices: async (category) => category === service.cat ? [service] : [],
   getReviews: async (limit) => {
@@ -63,7 +130,11 @@ const fakeStore = {
   getRelatedPosts: async (id) => posts.filter((post) => post.id !== Number(id)),
 };
 
-const server = createServer(createApp({ initialize: async () => {}, contentStore: fakeStore }));
+const server = createServer(createApp({
+  initialize: async () => {},
+  contentStore: fakeStore,
+  productOptions: productQuoteDb,
+}));
 let baseUrl;
 
 test.before(async () => {
@@ -84,6 +155,10 @@ test("home page renders through the HTTP stack with security headers", async () 
   assert.match(html, /<title>Voltera Plus \| Electrical, general contracting and handy man Services in Ottawa, ON<\/title>/);
   assert.match(html, /Certified\. <em>Red Seal\.<\/em> Licensed\. Trusted\./);
   assert.match(html, /hello@example\.test/);
+  assert.match(html, /class="nav-icon cart-nav[^"]*" aria-label="Quote cart" title="Quote cart"/);
+  assert.match(html, /id="quoteCartCount" aria-hidden="true">0<\/span>/);
+  assert.match(html, /class="nav-icon phone-nav" aria-label="Call 613-555-0100" title="Call 613-555-0100"/);
+  assert.match(html, /id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="navLinks"/);
 });
 
 test("public pages render and legacy URLs redirect permanently", async () => {
@@ -127,13 +202,99 @@ test("service and article detail pages render populated content", async () => {
 });
 
 test("dynamic detail routes return 404 for missing records", async () => {
-  for (const route of ["/services/missing-service", "/blog/999"]) {
+  for (const route of ["/services/missing-service", "/blog/999", "/products/missing-product"]) {
     const response = await fetch(`${baseUrl}${route}`);
     const html = await response.text();
 
     assert.equal(response.status, 404, route);
     assert.match(html, /Page Not Found \| Voltera Plus/, route);
   }
+});
+
+test("product catalogue filters categories and paginates results", async () => {
+  const firstPage = await fetch(`${baseUrl}/products`);
+  const firstHtml = await firstPage.text();
+  assert.equal(firstPage.status, 200);
+  assert.match(firstHtml, /Test product 1/);
+  assert.doesNotMatch(firstHtml, /Test product 13/);
+  assert.match(firstHtml, /href="\/products\?page=2"/);
+
+  const filteredPage = await fetch(`${baseUrl}/products?category=test-equipment&page=2`);
+  const filteredHtml = await filteredPage.text();
+  assert.equal(filteredPage.status, 200);
+  assert.match(filteredHtml, /Test product 13/);
+  assert.match(filteredHtml, /aria-current="page"/);
+  assert.match(filteredHtml, /Test Equipment/);
+});
+
+test("product detail sanitizes rich text and shows tag-related products", async () => {
+  const response = await fetch(`${baseUrl}/products/test-product-1`);
+  const html = await response.text();
+
+  assert.equal(response.status, 200);
+  assert.match(html, /Product overview with <strong>rich formatting<\/strong>/);
+  assert.doesNotMatch(html, /<script>alert\(1\)<\/script>/);
+  assert.match(html, /Related products/);
+  assert.match(html, /Test product 2/);
+  assert.match(html, /calibration/);
+});
+
+test("quote cart and buy-now pages render without a payment flow", async () => {
+  const cart = await fetch(`${baseUrl}/cart`);
+  const cartHtml = await cart.text();
+  assert.equal(cart.status, 200);
+  assert.match(cartHtml, /Quote cart/);
+  assert.match(cartHtml, /No payment is taken/);
+  assert.match(cartHtml, /name="robots" content="noindex,nofollow"/);
+
+  const checkout = await fetch(`${baseUrl}/product-quote?product=test-product-1`);
+  const checkoutHtml = await checkout.text();
+  assert.equal(checkout.status, 200);
+  assert.match(checkoutHtml, /Request a product quote/);
+  assert.match(checkoutHtml, /data-product-quote-direct="[^"]*test-product-1/);
+  assert.match(checkoutHtml, /no payment or purchase/i);
+
+  const directCheckout = await fetch(`${baseUrl}/product-quote?product=test-product-1&quantity=4`);
+  assert.match(await directCheckout.text(), /&#34;quantity&#34;:4/);
+});
+
+test("product quote submission snapshots validated items and sends a notification", async () => {
+  const response = await fetch(`${baseUrl}/product-quote`, {
+    method: "POST",
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      name: "Quote Customer",
+      email: "quote@example.test",
+      phone: "613-555-0101",
+      message: "Please include shipping details.",
+      website: "",
+      items: JSON.stringify([{ slug: "test-product-1", quantity: 3 }]),
+    }),
+    redirect: "manual",
+  });
+
+  assert.equal(response.status, 302);
+  assert.equal(response.headers.get("location"), "/product-quote?sent=1");
+  assert.deepEqual(productQuoteRecords.at(-1), {
+    id: 1,
+    name: "Quote Customer",
+    email: "quote@example.test",
+    phone: "613-555-0101",
+    message: "Please include shipping details.",
+    items: [{
+      productId: 1,
+      title: "Test product 1",
+      slug: "test-product-1",
+      image: "panel.jpg",
+      quantity: 3,
+    }],
+    emailSent: 1,
+    emailError: "",
+  });
+  assert.match(productQuoteEmails.at(-1).quote.message, /Test product 1 x 3/);
+
+  const confirmation = await fetch(`${baseUrl}${response.headers.get("location")}`);
+  assert.match(await confirmation.text(), /Thank you for your quote request/);
 });
 
 test("dynamic page content is HTML-escaped", async () => {
@@ -273,4 +434,6 @@ test("public CSS asset is served as a static resource", async () => {
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type"), /text\/css/);
   assert.match(css, /\.site-header/);
+  assert.match(css, /\.nav-icon/);
+  assert.match(css, /@media\s*\(max-width:\s*1080px\)/);
 });

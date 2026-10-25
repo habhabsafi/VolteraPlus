@@ -8,8 +8,9 @@ const { init } = require("./src/setup");
 const adminRoutes = require("./src/admin/routes");
 const quoteRoutes = require("./src/quote");
 const appointments = require("./src/appointments");
+const products = require("./src/products");
 
-function createApp({ initialize = init, contentStore = store } = {}) {
+function createApp({ initialize = init, contentStore = store, productOptions = {} } = {}) {
   const app = express();
   app.set("view engine", "ejs");
   app.set("views", path.join(__dirname, "views"));
@@ -69,6 +70,7 @@ app.use("/admin", express.urlencoded({ extended: false, limit: "100kb" }), admin
 
 app.use("/quote", quoteRoutes);
 app.use("/appointments", appointments.router);
+app.use("/", products.createRouter({ ...productOptions, productStore: contentStore }));
 
 const wrap = (fn) => (req, res, next) => fn(req, res, next).catch(next);
 
@@ -141,11 +143,15 @@ app.get("/:file.html", (req, res, next) => {
 });
 
 app.get("/robots.txt", (req, res) =>
-  res.type("text/plain").send(`User-agent: *\nDisallow: /admin\nDisallow: /appointments/\nAllow: /\nSitemap: ${res.locals.baseUrl}/sitemap.xml\n`));
+  res.type("text/plain").send(`User-agent: *\nDisallow: /admin\nDisallow: /appointments/\nDisallow: /cart\nDisallow: /product-quote\nAllow: /\nSitemap: ${res.locals.baseUrl}/sitemap.xml\n`));
 
 app.get("/sitemap.xml", wrap(async (req, res) => {
-  const [services, posts] = await Promise.all([contentStore.getServices(), contentStore.getPosts()]);
-  const urls = ["/", "/about", "/services", "/book-appointment", "/reviews", "/blog", "/contact", ...services.map((s) => `/services/${s.id}`), ...posts.map((p) => `/blog/${p.id}`)];
+  const [services, posts, productSlugs] = await Promise.all([
+    contentStore.getServices(),
+    contentStore.getPosts(),
+    contentStore.getProductSlugs(),
+  ]);
+  const urls = ["/", "/about", "/services", "/products", "/book-appointment", "/reviews", "/blog", "/contact", ...services.map((s) => `/services/${s.id}`), ...posts.map((p) => `/blog/${p.id}`), ...productSlugs.map((slug) => `/products/${slug}`)];
   res.type("application/xml").send(
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
       urls.map((u) => `  <url><loc>${res.locals.baseUrl}${u}</loc></url>`).join("\n") + `\n</urlset>\n`);

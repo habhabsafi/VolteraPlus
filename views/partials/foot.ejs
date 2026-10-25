@@ -4,7 +4,7 @@
     <div><a href="/" class="brand"><img src="/images/logo-mark.png" alt="">VOLT<span style='margin-left:-8px'>ERA</span><small>PLUS</small></a>
       <p style="margin-top:12px">Electrical, general contracting and handy man Services. <%= site.tagline %></p>
       <span class="badge-247">24/7 Available</span></div>
-    <div><h4>Navigation</h4><ul><li><a href="/about">About</a></li><li><a href="/reviews">Client Reviews</a></li><li><a href="/blog">Blog</a></li><li><a href="/contact">Contact</a></li></ul></div>
+    <div><h4>Navigation</h4><ul><li><a href="/about">About</a></li><li><a href="/products">Products</a></li><li><a href="/cart">Quote Cart</a></li><li><a href="/reviews">Client Reviews</a></li><li><a href="/blog">Blog</a></li><li><a href="/contact">Contact</a></li></ul></div>
     <div><h4>Services</h4><ul><% categories.forEach(function(c){ %><li><a href="/services#<%= c.id %>"><%= c.name %></a></li><% }) %></ul></div>
     <div><h4>Contact</h4><ul>
       <li><%= site.owner %>, <%= site.title %></li>
@@ -16,5 +16,6 @@
 </div></footer>
 <script src="/js/site.js"></script>
 <% if (page === 'book' || page === 'appointment') { %><script src="/js/booking.js" defer></script><% } %>
+<% if (page === 'products' || page === 'cart' || page === 'checkout') { %><script src="/js/products.js" defer></script><% } %>
 </body>
 </html>

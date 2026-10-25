@@ -29,13 +29,13 @@ Requires Node 20+. Set `BASE_URL` (e.g. `https://www.volteraplus.ca`) in product
 
 Run the unit and HTTP integration tests from `site/` with `npm test`. The tests use Node's built-in test runner and do not require database credentials. GitHub Actions runs them on pull requests targeting `main` or `master`.
 
-Coverage includes public page and detail rendering, sitemap/robots/static assets, quote-form validation/honeypot/upload/rate-limit paths, appointment-form rendering, and unit tests for authentication/CSRF, appointment helpers, JSON parsing, and Turnstile verification. HTTP tests use fixture data instead of MySQL; they do not yet cover migrations, successful database-backed quote or appointment submissions, admin CRUD, email delivery, or live Turnstile calls.
+Coverage includes public page and detail rendering, product filtering/pagination, cart and direct-quote flows, product quote validation and line-item snapshots, sitemap/robots/static assets, existing quote-form validation and rate limiting, and unit tests for product rich-text sanitizing, authentication/CSRF, appointment helpers, and Turnstile verification. HTTP tests use fixture data and mocked persistence/email instead of MySQL and external services; they do not yet cover migrations, real database transactions, admin route authorization/CRUD, or live email and Turnstile calls.
 
 To prevent merging until they pass, an administrator must configure repository branch protection or a ruleset for each target branch (`main` and/or `master`) and require the **Test website / test** status check. The check appears after the workflow runs once. The workflow reports this check but cannot enable GitHub's repository-level merge rules by itself.
 
 ## Production database and migrations
 
-Configure `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD` in the Node.js application's environment. On startup, the application applies numbered SQL files from `migrations/` in order and records each completed migration in `schema_migrations`. This includes new migrations such as `005_people.sql`; no separate shell command is required, but the configured database user must be allowed to create and alter tables.
+Configure `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD` in the Node.js application's environment. On startup, the application applies numbered SQL files from `migrations/` in order and records each completed migration in `schema_migrations`. This includes `008_products.sql`; no separate shell command is required, but the configured database user must be allowed to create and alter tables.
 
 Initial content is seeded only when its corresponding table is empty. Existing database content is not overwritten during deployment. Back up the database before deploying schema changes, and keep the database credentials in the hosting environment rather than in source control.
 
@@ -43,6 +43,7 @@ Initial content is seeded only when its corresponding table is empty. Existing d
 
 - `server.js`: routes, security headers, legacy `.html` redirects, sitemap and robots
 - `src/store.js`: database-backed public content access
+- `src/products.js`: public product catalogue and quote-request routes
 - `src/setup.js`: startup migrations and initial content seeding
 - `migrations/`: ordered MySQL/MariaDB schema migrations
 - `src/data/*.json`: initial seed content
@@ -50,4 +51,4 @@ Initial content is seeded only when its corresponding table is empty. Existing d
 - `views/`: EJS pages; `views/partials/`: header, footer, cards, forms
 - `public/`: CSS, client JS, and images
 
-Manage services, team members, blog posts, reviews, and site settings through `/admin`. Uploaded images are stored in the database so they persist across application redeployments.
+Manage products and their categories at `/admin/products`, and review submissions at `/admin/product-quotes`. Customers browse `/products`, collect quantities in the browser-local quote cart, then submit a quote request with their contact details. Product photos use the database-backed media store; submitted requests and product snapshots are stored in MySQL. There is no purchase or payment flow. These features sit alongside the existing service, team, blog, review, and site settings administration.

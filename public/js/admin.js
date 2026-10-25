@@ -17,3 +17,29 @@ document.addEventListener("click", function (e) {
   });
   box.appendChild(clone);
 });
+
+document.addEventListener("mousedown", function (e) {
+  if (e.target.closest("[data-rich-command]")) e.preventDefault();
+});
+
+document.addEventListener("click", function (e) {
+  var button = e.target.closest("[data-rich-command]");
+  if (!button) return;
+  var editor = button.closest(".rich-field").querySelector("[data-rich-editor]");
+  var command = button.dataset.richCommand;
+  editor.focus();
+  if (command === "createLink") {
+    var url = window.prompt("Enter a link URL");
+    if (url) document.execCommand(command, false, url);
+  } else {
+    document.execCommand(command, false, button.dataset.richValue || null);
+  }
+});
+
+document.querySelectorAll("[data-rich-form]").forEach(function (form) {
+  form.addEventListener("submit", function () {
+    form.querySelectorAll(".rich-field").forEach(function (field) {
+      field.querySelector("[data-rich-value]").value = field.querySelector("[data-rich-editor]").innerHTML;
+    });
+  });
+});
