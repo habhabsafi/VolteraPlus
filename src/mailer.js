@@ -58,7 +58,7 @@ async function sendQuoteEmails(q, site) {
   }
   const from = `"${site.name}" <${fromAddress()}>`;
   const to = process.env.MAIL_TO || site.email;
-  const rows = [["Name", q.name], ["Email", q.email], ["Phone", q.phone || "-"], ["Service", q.service || "-"], ["Source", q.source || "-"]];
+  const rows = [["Name", q.name], ["Email", q.email], ["Phone", q.phone || "-"], ["Service", q.service || "-"], ["Photos", q.photosCount ? `${q.photosCount} attached (view in admin)` : "None"], ["Source", q.source || "-"]];
   const table = rows.map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0"><b>${k}</b></td><td>${esc(v)}</td></tr>`).join("");
   let sent = false;
   let error = "";

@@ -21,12 +21,13 @@
 
 <section class="section"><div class="dark-two">
   <div class="left"><img src="/images/electrician.jpg" alt="" loading="lazy"><h3>Expert Electrical Services Tailored to Your Needs</h3><p>Serving Ottawa, ON and surrounding areas with free estimates.</p><a class="btn btn-light" style="margin-top:18px" href="/contact">Book Now</a></div>
-  <form class="form-card dark" data-form method="post" action="/quote">
+  <form class="form-card dark" data-form method="post" action="/quote" enctype="multipart/form-data">
     <%- include('partials/form-extras', {source: 'services'}) %>
     <h3 style="margin-bottom:8px">Request a Free Estimate</h3><p style="margin-bottom:20px">Tell us what you need and we will get back to you.</p>
     <div class="field"><label>Full Name</label><input name="Name" data-req placeholder="Your full name"><span class="err">Please enter your name.</span></div>
     <div class="field"><label>Required Service</label><%- include('partials/service-select', {selected: ''}) %><span class="err">Please choose a service.</span></div>
     <div class="field"><label>Email Address</label><input name="Email" type="email" data-req placeholder="Type your mail address"><span class="err">Please enter a valid email.</span></div>
+    <%- include('partials/quote-photo-upload') %>
     <button class="btn btn-gold" type="submit">Get a Quote</button><div class="form-ok"></div>
   </form>
 </div></section>

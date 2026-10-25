@@ -6,6 +6,17 @@
   <p><b>Email:</b> <a href="mailto:<%= quote.email %>"><%= quote.email %></a><% if (quote.phone) { %> &middot; <b>Phone:</b> <a href="tel:<%= quote.phone.replace(/[^\d+]/g, '') %>"><%= quote.phone %></a><% } %></p>
   <p><b>Service:</b> <%= quote.service || '-' %></p>
   <p><b>Message</b></p><p style="white-space:pre-wrap"><%= quote.message || '-' %></p>
+  <% if (attachments.length) { %>
+  <h3>Customer photos</h3>
+  <div class="quote-photos">
+    <% attachments.forEach(function(photo, i){ %>
+    <a href="/admin/quotes/<%= quote.id %>/attachments/<%= photo.id %>" target="_blank" rel="noopener">
+      <img src="/admin/quotes/<%= quote.id %>/attachments/<%= photo.id %>" alt="Customer uploaded photo <%= i + 1 %>">
+      <span>Photo <%= i + 1 %> · <%= Math.max(1, Math.round(photo.bytes / 1024)) %> KB</span>
+    </a>
+    <% }) %>
+  </div>
+  <% } %>
 </div>
 <form class="card" method="post" action="/admin/quotes/<%= quote.id %>">
   <input type="hidden" name="_csrf" value="<%= csrf %>">
