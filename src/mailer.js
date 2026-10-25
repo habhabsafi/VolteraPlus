@@ -1,11 +1,8 @@
-const nodemailer = require("nodemailer");
-
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const useResend = () => !!process.env.RESEND_API_KEY;
-const configured = () => useResend() || !!(process.env.SMTP_USER && process.env.SMTP_PASSWORD);
-const fromAddress = () => process.env.MAIL_FROM || process.env.SMTP_USER;
+const configured = () => !!(process.env.RESEND_API_KEY && process.env.MAIL_FROM);
+const fromAddress = () => process.env.MAIL_FROM;
 
-// Resend sends over HTTPS, which works on hosts that block outbound SMTP.
+// Resend sends over HTTPS.
 async function sendViaResend(m) {
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -21,39 +18,9 @@ async function sendViaResend(m) {
   }
 }
 
-let transport;
-function getTransport() {
-  if (!transport) {
-    const port = Number(process.env.SMTP_PORT || 465);
-    transport = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "smtp.gmail.com",
-      port,
-      secure: port === 465,
-      family: 4,
-      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASSWORD },
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 15000,
-    });
-  }
-  return transport;
-}
-
-// Sends the owner notification and customer confirmation. Returns { sent, error } for the owner email.
-// Gmail connections occasionally stall; one retry covers it.
-async function send(message) {
-  if (useResend()) return sendViaResend(message);
-  try {
-    return await getTransport().sendMail(message);
-  } catch (e) {
-    if (!/ETIMEDOUT|ECONNRESET|ESOCKET/.test(e.code || "")) throw e;
-    return getTransport().sendMail(message);
-  }
-}
-
 async function sendQuoteEmails(q, site) {
   if (!configured()) {
-    console.warn("SMTP not configured; quote emails skipped.");
+    console.warn("Resend not configured; quote emails skipped.");
     return { sent: false, error: "No email settings found: set RESEND_API_KEY and MAIL_FROM on the server." };
   }
   const from = `"${site.name}" <${fromAddress()}>`;
@@ -63,7 +30,7 @@ async function sendQuoteEmails(q, site) {
   let sent = false;
   let error = "";
   try {
-    await send({
+    await sendViaResend({
       from, to, replyTo: `"${q.name.replace(/"/g, "")}" <${q.email}>`,
       subject: `New estimate request from ${q.name}`,
       text: `${rows.map(([k, v]) => `${k}: ${v}`).join("\n")}\n\nMessage:\n${q.message || "-"}`,
@@ -75,7 +42,7 @@ async function sendQuoteEmails(q, site) {
     error = `${e.code || ""} ${e.message}`.trim().slice(0, 500);
   }
   try {
-    await send({
+    await sendViaResend({
       from, to: q.email, replyTo: to,
       subject: `We received your request | ${site.name}`,
       text: `Hi ${q.name},\n\nThanks for contacting ${site.name}. We received your request and will get back to you shortly.\nFor urgent matters call ${site.phone}.\n\n${site.name}`,
@@ -90,7 +57,7 @@ async function sendQuoteEmails(q, site) {
 // Used by the admin "send test email" button.
 async function sendTestEmail(to) {
   if (!configured()) throw new Error("No email settings found: set RESEND_API_KEY and MAIL_FROM on the server.");
-  await send({ from: fromAddress(), to, subject: "Test email from your website", text: "Email sending is working." });
+  await sendViaResend({ from: fromAddress(), to, subject: "Test email from your website", text: "Email sending is working." });
 }
 
 module.exports = { sendQuoteEmails, sendTestEmail };
