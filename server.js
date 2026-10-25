@@ -23,7 +23,9 @@ app.use(
         styleSrc: ["'self'", "https://fonts.googleapis.com", "'unsafe-inline'"],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
         imgSrc: ["'self'", "data:"],
-        scriptSrc: ["'self'"],
+        scriptSrc: ["'self'", "https://challenges.cloudflare.com"],
+        frameSrc: ["'self'", "https://challenges.cloudflare.com"],
+        connectSrc: ["'self'", "https://challenges.cloudflare.com"],
         formAction: ["'self'"],
         upgradeInsecureRequests: process.env.NODE_ENV === "production" ? [] : null,
       },
@@ -54,6 +56,7 @@ app.use(async (req, res, next) => {
       "Voltera Plus: Red Seal certified Electrical, general contracting and handy man in Ottawa, ON. 24/7 emergency service and free estimates.";
     res.locals.baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get("host")}`;
     res.locals.canonical = res.locals.baseUrl + req.path;
+    res.locals.turnstileSiteKey = process.env.TURNSTILE_SITE_KEY || "";
     next();
   } catch (e) {
     next(e);
@@ -142,6 +145,5 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 3000;
 if (require.main === module) app.listen(port, () => console.log(`Listening on http://localhost:${port}`));
 module.exports = app;
-
 
 

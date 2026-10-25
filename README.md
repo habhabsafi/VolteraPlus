@@ -6,6 +6,8 @@ Server-rendered Node.js site using Express and EJS. Every page is real HTML for 
 
 Quote photos are stored as private MySQL attachments, not in the source tree or public assets. Admin users can view them from the quote details page. Uploads are limited to three JPG, PNG or WebP files at 2 MB each.
 
+Quote forms support Cloudflare Turnstile when `TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` are set. Both are required to enable verification; submissions are verified server-side before they are saved. Without either key, the existing honeypot and rate limit remain active.
+
 ## Run locally
 
 ```
