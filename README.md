@@ -25,6 +25,12 @@ npm run dev     # http://localhost:3000
 
 Requires Node 20+. Set `BASE_URL` (e.g. `https://www.volteraplus.ca`) in production for canonical URLs and the sitemap.
 
+## Tests and pull requests
+
+Run the unit and HTTP integration tests from `site/` with `npm test`. The tests use Node's built-in test runner and do not require database credentials. GitHub Actions runs them on pull requests targeting `main` or `master`.
+
+To prevent merging until they pass, an administrator must configure repository branch protection or a ruleset for each target branch (`main` and/or `master`) and require the **Test website / test** status check. The check appears after the workflow runs once. The workflow reports this check but cannot enable GitHub's repository-level merge rules by itself.
+
 ## Production database and migrations
 
 Configure `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD` in the Node.js application's environment. On startup, the application applies numbered SQL files from `migrations/` in order and records each completed migration in `schema_migrations`. This includes new migrations such as `005_people.sql`; no separate shell command is required, but the configured database user must be allowed to create and alter tables.
