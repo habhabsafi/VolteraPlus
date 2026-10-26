@@ -3,6 +3,32 @@ document.addEventListener("submit", function (e) {
   if (msg && !window.confirm(msg)) e.preventDefault();
 });
 
+var adminMenuToggle = document.querySelector(".admin-menu-toggle");
+var adminMenu = document.querySelector("#admin-menu");
+if (adminMenuToggle && adminMenu) {
+  function closeAdminMenu() {
+    adminMenu.classList.remove("is-open");
+    adminMenuToggle.setAttribute("aria-expanded", "false");
+  }
+
+  adminMenuToggle.addEventListener("click", function () {
+    var isOpen = adminMenuToggle.getAttribute("aria-expanded") === "true";
+    adminMenu.classList.toggle("is-open", !isOpen);
+    adminMenuToggle.setAttribute("aria-expanded", String(!isOpen));
+  });
+
+  document.addEventListener("click", function (e) {
+    if (!adminMenu.contains(e.target) && !adminMenuToggle.contains(e.target)) closeAdminMenu();
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && adminMenu.classList.contains("is-open")) {
+      closeAdminMenu();
+      adminMenuToggle.focus();
+    }
+  });
+}
+
 // "Add item" buttons clone the last row and bump its numeric suffix.
 document.addEventListener("click", function (e) {
   var btn = e.target.closest("[data-add-row]");

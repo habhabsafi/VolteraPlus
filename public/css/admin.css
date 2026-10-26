@@ -35,24 +35,21 @@ label.check{display:flex;align-items:center;gap:8px}label.check input{width:auto
 @media(max-width:720px){.block-form{grid-template-columns:1fr 1fr}.calendar-navigation{flex-wrap:wrap}.calendar-navigation h2{order:-1;width:100%;text-align:center}}
 
 .admin-menu{flex:1;min-width:0}
-.admin-menu summary{display:none}
+.admin-menu-toggle{display:none}
 
 @media(max-width:760px){
-  .top{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;padding:12px 16px}
+  .top{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;padding:12px 16px}
   .top .brand{min-width:0;gap:7px;font-size:.95rem}
   .top .brand img{height:26px}
   .top form{gap:8px}
   .top form .btn{padding:8px 10px}
   .who{display:none}
-  .top .admin-menu{position:relative;flex:none}
-  .admin-menu summary{display:block;list-style:none;cursor:pointer;background:#374151;color:#fff;border-radius:8px;padding:9px 12px;font-weight:700;white-space:nowrap}
-  .admin-menu summary::-webkit-details-marker{display:none}
-  .admin-menu summary::after{content:"+";margin-left:8px}
-  .admin-menu[open] summary::after{content:"−"}
-  .top .admin-menu nav{display:none;position:absolute;z-index:10;top:calc(100% + 8px);right:0;width:min(280px,calc(100vw - 32px));padding:8px;background:#111827;border:1px solid #374151;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.24);flex-direction:column;flex-wrap:nowrap;gap:2px}
-  .top .admin-menu[open] nav{display:flex}
-  .top .admin-menu nav a{display:block;padding:10px 12px;border-radius:6px}
-  .top .admin-menu nav a.active,.top .admin-menu nav a:hover{background:#1f2937}
+  .admin-menu-toggle{display:block;grid-column:2;grid-row:1;background:#374151;color:#fff;border:0;border-radius:8px;padding:9px 12px;font:inherit;font-weight:700;white-space:nowrap;cursor:pointer}
+  .admin-menu-toggle:focus-visible{outline:2px solid #fbbf24;outline-offset:2px}
+  .top .admin-menu{display:none;position:absolute;z-index:10;top:calc(100% + 8px);right:16px;width:min(280px,calc(100vw - 32px));padding:8px;background:#111827;border:1px solid #374151;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.24);flex-direction:column;flex-wrap:nowrap;gap:2px}
+  .top .admin-menu.is-open{display:flex}
+  .top .admin-menu a{display:block;padding:10px 12px;border-radius:6px}
+  .top .admin-menu a.active,.top .admin-menu a:hover{background:#1f2937}
   .wrap{width:100%;margin:20px auto;padding:0 14px}
   h1{font-size:clamp(1.55rem,7vw,2rem);line-height:1.2;overflow-wrap:anywhere}
   .card{padding:16px;margin:14px 0}
@@ -121,7 +118,7 @@ label.check{display:flex;align-items:center;gap:8px}label.check input{width:auto
   .top .brand{font-size:.88rem}
   .top .brand img{height:24px}
   .top .btn{padding:8px}
-  .admin-menu summary{padding:9px}
+  .admin-menu-toggle{padding:9px}
   .wrap{padding:0 12px}
   .stats{grid-template-columns:1fr}
   .quote-photos a{width:100%}
