@@ -170,6 +170,15 @@ test("home page renders through the HTTP stack with security headers", async () 
   assert.match(html, /id="quoteCartCount" aria-hidden="true">0<\/span>/);
   assert.match(html, /class="nav-icon phone-nav" aria-label="Call 613-555-0100" title="Call 613-555-0100"/);
   assert.match(html, /id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="navLinks"/);
+  assert.match(html, /role="group" aria-label="Choose language"/);
+  assert.match(html, /data-language="en" aria-label="English" aria-pressed="true">EN/);
+  assert.match(html, /data-language="fr" aria-label="French" aria-pressed="false">FR/);
+  assert.match(html, /<script src="\/js\/translation\.js"><\/script>/);
+  assert.match(response.headers.get("content-security-policy"), /script-src[^;]*https:\/\/translate\.google\.com/);
+  assert.match(response.headers.get("content-security-policy"), /script-src[^;]*'sha256-R6kjt5FwTd5vAw94Q08NLDZsSaGTzg4NsdIfKtECSp0='/);
+  assert.match(response.headers.get("content-security-policy"), /script-src[^;]*https:\/\/translate-pa\.googleapis\.com/);
+  assert.match(response.headers.get("content-security-policy"), /style-src[^;]*https:\/\/www\.gstatic\.com/);
+  assert.match(response.headers.get("content-security-policy"), /frame-src[^;]*https:\/\/translate\.googleusercontent\.com/);
   assert.equal((html.match(/class="product-card">/g) || []).length, 3);
   const firstFeatured = html.indexOf('href="/products/test-product-1"');
   const secondFeatured = html.indexOf('href="/products/test-product-2"');
@@ -498,5 +507,7 @@ test("public CSS asset is served as a static resource", async () => {
   assert.match(response.headers.get("content-type"), /text\/css/);
   assert.match(css, /\.site-header/);
   assert.match(css, /\.nav-icon/);
+  assert.match(css, /\.goog-te-banner-frame\.skiptranslate\s*\{\s*display:\s*none\s*!important;/);
+  assert.match(css, /body\s*\{\s*top:\s*0\s*!important;/);
   assert.match(css, /@media\s*\(max-width:\s*1080px\)/);
 });
