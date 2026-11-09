@@ -64,14 +64,20 @@
     document.head.appendChild(script);
   }
 
+  function selectEnglish() {
+    currentLanguage = "en";
+    document.cookie = "googtrans=/en/en; path=/; max-age=31536000; SameSite=Lax";
+    updateLanguageButtons("en");
+    window.location.reload();
+  }
+
   window.googleTranslateElementInit = initializeGoogleTranslate;
   buttons.forEach((button) => {
     button.addEventListener("click", () => {
       if (button.dataset.language === "fr" && currentLanguage !== "fr") {
         selectFrench();
       } else if (button.dataset.language === "en" && currentLanguage !== "en") {
-        document.cookie = "googtrans=; path=/; max-age=0; SameSite=Lax";
-        window.location.reload();
+        selectEnglish();
       }
     });
   });
