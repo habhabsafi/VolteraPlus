@@ -1,6 +1,6 @@
 # Voltera Plus
 
-Website for Voltera Plus, a Red Seal certified Electrical, general contracting and handy man company serving Ottawa, ON and surrounding areas.
+Website for Voltera Plus, a Red Seal certified Electrical, general contracting and handy man company.
 
 Server-rendered Node.js site using Express and EJS. Every page is real HTML for SEO.
 
@@ -12,7 +12,7 @@ Product quote submissions send a request summary to `abe@volteraplus.ca` and a c
 
 ## Appointments
 
-Customers can request appointments at `/book-appointment`. Appointments are two hours, offered every day (including weekends) at 8:00 a.m., 10:00 a.m., noon, 2:00 p.m., and 4:00 p.m. Ottawa time. Pending and confirmed appointments reserve their time. Customers receive a private link to view, reschedule, or cancel without creating an account; rescheduling and cancellation close 24 hours before the appointment. Customer reschedule requests for confirmed appointments keep the current time reserved until an admin approves the change.
+Customers can request appointments at `/book-appointment`. Appointments are two hours, offered every day (including weekends) at 8:00 a.m., 10:00 a.m., noon, 2:00 p.m., and 4:00 p.m. local time. Pending and confirmed appointments reserve their time. Customers receive a private link to view, reschedule, or cancel without creating an account; rescheduling and cancellation close 24 hours before the appointment. Customer reschedule requests for confirmed appointments keep the current time reserved until an admin approves the change.
 
 Manage appointments and unavailable date ranges in `/admin/appointments`. Blocking a range that contains any pending or confirmed booking is prevented; move or cancel those appointments first. Appointment email uses the existing Resend settings. Set `APPOINTMENT_TOKEN_SECRET` to a persistent 64-character hexadecimal key (generate one with the command in `.env.example`) so management-link tokens can be encrypted for future email notifications. Keep this secret in the hosting environment and do not rotate it while appointments are active.
 

@@ -1,8 +1,8 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const {
-  currentOttawaDate,
-  currentOttawaMonth,
+  currentLocalDate,
+  currentLocalMonth,
   formatDate,
   formatTime,
   has24HoursNotice,
@@ -23,9 +23,9 @@ test("appointment date and time formatting is customer-readable", () => {
   assert.equal(formatTime("16:00"), "4:00 p.m.");
 });
 
-test("Ottawa calendar helpers return matching date and month formats", () => {
-  assert.match(currentOttawaDate(), /^\d{4}-\d{2}-\d{2}$/);
-  assert.equal(currentOttawaMonth(), currentOttawaDate().slice(0, 7));
+test("local calendar helpers return matching date and month formats", () => {
+  assert.match(currentLocalDate(), /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(currentLocalMonth(), currentLocalDate().slice(0, 7));
 });
 
 test("far-future appointments have sufficient rescheduling notice", () => {

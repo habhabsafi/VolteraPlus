@@ -10,7 +10,7 @@
   <% if (error === 'closed') { %><p class="form-ok error" style="display:block" role="alert">This appointment can no longer be changed.</p><% } %>
   <div class="form-card">
     <div class="appointment-heading"><h2><%= appointment.service %></h2><span class="appointment-status <%= appointment.status %>"><%= appointment.status %></span></div>
-    <p><b>Current appointment:</b> <%= appointment.formattedDate %> at <%= appointment.formattedTime %> (Ottawa time)</p>
+    <p><b>Current appointment:</b> <%= appointment.formattedDate %> at <%= appointment.formattedTime %> (local time)</p>
     <p><b>Address:</b> <%= appointment.address %></p>
     <p><b>Details:</b></p><p class="appointment-details"><%= appointment.details %></p>
     <% if (appointment.proposed_date) { %><p class="appointment-proposal"><b>Reschedule requested:</b> <%= appointment.formattedProposedDate %> at <%= appointment.formattedProposedTime %>. Your current appointment remains in place until we approve the change.</p><% } %>

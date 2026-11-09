@@ -78,7 +78,7 @@ function validSlot(date, time, requireFuture = true) {
   return validDate(date) && SLOT_TIMES.includes(time) && (!requireFuture || isFutureSlot(date, time));
 }
 
-function currentOttawaDate() {
+function currentLocalDate() {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: TIME_ZONE,
     year: "numeric",
@@ -89,8 +89,8 @@ function currentOttawaDate() {
   return `${values.year}-${values.month}-${values.day}`;
 }
 
-function currentOttawaMonth() {
-  return currentOttawaDate().slice(0, 7);
+function currentLocalMonth() {
+  return currentLocalDate().slice(0, 7);
 }
 
 function nextMonth(month) {
@@ -186,12 +186,12 @@ async function renderBooking(res, values = {}, error = null, status = 200) {
   res.status(status).render("book-appointment", {
     page: "book",
     title: "Book an Appointment | Voltera Plus",
-    description: "Request a two-hour appointment with Voltera Plus in Ottawa.",
+    description: "Request a two-hour appointment with Voltera Plus.",
     allServices: await store.getServices(),
-    initialMonth: validDate(selectedDate) && selectedDate.slice(0, 7) >= currentOttawaMonth()
+    initialMonth: validDate(selectedDate) && selectedDate.slice(0, 7) >= currentLocalMonth()
       ? selectedDate.slice(0, 7)
-      : currentOttawaMonth(),
-    minMonth: currentOttawaMonth(),
+      : currentLocalMonth(),
+    minMonth: currentLocalMonth(),
     values,
     error,
   });
@@ -241,7 +241,7 @@ async function availabilityForMonth(month) {
   const days = {};
   const [year, monthNumber] = month.split("-").map(Number);
   const count = new Date(Date.UTC(year, monthNumber, 0)).getUTCDate();
-  const today = currentOttawaDate();
+  const today = currentLocalDate();
   for (let day = 1; day <= count; day++) {
     const date = `${month}-${String(day).padStart(2, "0")}`;
     const blocked = blocks.some((range) => range.start_date <= date && range.end_date >= date);
@@ -283,7 +283,7 @@ router.get("/manage/:token", wrap(async (req, res) => {
     attachments,
     token: req.params.token,
     canChange: ["pending", "confirmed"].includes(appointment.status) && has24HoursNotice(appointment.appointment_date, appointment.start_time),
-    initialMonth: currentOttawaMonth(),
+    initialMonth: currentLocalMonth(),
     notice: req.query.notice || "",
     error: req.query.error || "",
   });
@@ -533,8 +533,8 @@ module.exports = {
   sendNotice,
   appointmentByToken,
   availabilityForMonth,
-  currentOttawaDate,
-  currentOttawaMonth,
+  currentLocalDate,
+  currentLocalMonth,
   formatDate,
   formatTime,
   lockAppointmentCalendar,

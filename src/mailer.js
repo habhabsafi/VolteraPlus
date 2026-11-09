@@ -144,7 +144,7 @@ async function sendAppointmentEmails({ appointment, site, manageUrl, adminUrl, e
   const proposed = appointment.proposed_date
     ? `${appointmentDate(appointment.proposed_date)} at ${appointmentTime(appointment.proposed_start_time)}`
     : "";
-  const summary = `${appointment.service}\n${date} at ${time} (Ottawa time)\n${appointment.address}`;
+  const summary = `${appointment.service}\n${date} at ${time} (local time)\n${appointment.address}`;
   const messageByEvent = {
     pending: {
       subject: `Appointment request received | ${site.name}`,
@@ -192,7 +192,7 @@ async function sendAppointmentEmails({ appointment, site, manageUrl, adminUrl, e
   const calendarText = event === "confirmed" || event === "rescheduled"
     ? `<p><a href="${esc(googleCalendarUrl({ ...appointment, siteName: site.name }))}">Add to Google Calendar</a></p>`
     : "";
-  const customerHtml = `<p>Hi ${esc(appointment.name)},</p><p>${esc(notice.intro)}</p><p><b>${esc(appointment.service)}</b><br>${esc(date)} at ${esc(time)} (Ottawa time)<br>${esc(appointment.address)}</p>${calendarText}<p><a href="${esc(manageUrl)}">View or manage this appointment</a></p><p>Please make reschedule or cancellation requests at least 24 hours in advance. For changes within 24 hours, call <b>${esc(site.phone)}</b>.</p><p>${esc(site.name)}</p>`;
+  const customerHtml = `<p>Hi ${esc(appointment.name)},</p><p>${esc(notice.intro)}</p><p><b>${esc(appointment.service)}</b><br>${esc(date)} at ${esc(time)} (local time)<br>${esc(appointment.address)}</p>${calendarText}<p><a href="${esc(manageUrl)}">View or manage this appointment</a></p><p>Please make reschedule or cancellation requests at least 24 hours in advance. For changes within 24 hours, call <b>${esc(site.phone)}</b>.</p><p>${esc(site.name)}</p>`;
   let sent = false;
   const errors = [];
   try {
@@ -217,7 +217,7 @@ async function sendAppointmentEmails({ appointment, site, manageUrl, adminUrl, e
         replyTo: `"${appointment.name.replace(/"/g, "")}" <${appointment.email}>`,
         subject: `New appointment activity from ${appointment.name}`,
         text: `${event}\n\n${appointment.name}\n${appointment.email}\n${appointment.phone}\n${summary}\n\nDetails:\n${appointment.details}\n\nCustomer appointment link: ${manageUrl}\nAdmin appointment: ${adminUrl}`,
-        html: `<p><b>${esc(event)}</b></p><p>${esc(appointment.name)}<br><a href="mailto:${esc(appointment.email)}">${esc(appointment.email)}</a><br>${esc(appointment.phone)}</p><p>${esc(appointment.service)}<br>${esc(date)} at ${esc(time)} (Ottawa time)<br>${esc(appointment.address)}</p><p><b>Details</b><br>${esc(appointment.details)}</p><p><a href="${esc(adminUrl)}">Open in admin</a></p>`,
+        html: `<p><b>${esc(event)}</b></p><p>${esc(appointment.name)}<br><a href="mailto:${esc(appointment.email)}">${esc(appointment.email)}</a><br>${esc(appointment.phone)}</p><p>${esc(appointment.service)}<br>${esc(date)} at ${esc(time)} (local time)<br>${esc(appointment.address)}</p><p><b>Details</b><br>${esc(appointment.details)}</p><p><a href="${esc(adminUrl)}">Open in admin</a></p>`,
       });
     } catch (e) {
       console.error("Owner appointment email failed:", e.code, e.message);

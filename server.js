@@ -54,9 +54,9 @@ app.use(async (req, res, next) => {
     res.locals.site = await contentStore.getSite();
     res.locals.categories = await contentStore.getCategories();
     res.locals.page = "";
-    res.locals.title = "Voltera Plus | Electrical, general contracting and handy man Services in Ottawa, ON";
+    res.locals.title = "Voltera Plus | Electrical, general contracting and handy man Services";
     res.locals.description =
-      "Voltera Plus: Red Seal certified Electrical, general contracting and handy man in Ottawa, ON. 24/7 emergency service and free estimates.";
+      "Voltera Plus: Red Seal certified Electrical, general contracting and handy man services. 24/7 emergency service and free estimates.";
     res.locals.baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get("host")}`;
     res.locals.canonical = res.locals.baseUrl + req.path;
     res.locals.turnstileSiteKey = process.env.TURNSTILE_SITE_KEY || "";
@@ -95,21 +95,21 @@ app.get("/", wrap(async (req, res) => {
 }));
 
 app.get("/about", wrap(async (req, res) =>
-  res.render("about", { page: "about", title: "About | Voltera Plus", description: "Meet the Voltera Plus team serving Ottawa, ON.", people: await contentStore.getPeople() })));
+  res.render("about", { page: "about", title: "About | Voltera Plus", description: "Meet the Voltera Plus team.", people: await contentStore.getPeople() })));
 
 app.get("/services", wrap(async (req, res) => {
   const [services, reviews] = await Promise.all([contentStore.getServices(), contentStore.getReviews(3)]);
-  res.render("services", { page: "services", title: "Services | Voltera Plus", description: "Electrical, general contractor and handy man services in Ottawa, ON.", services, reviews, allServices: services });
+  res.render("services", { page: "services", title: "Services | Voltera Plus", description: "Electrical, general contractor and handy man services.", services, reviews, allServices: services });
 }));
 
 app.get("/book-appointment", wrap(async (req, res) => {
   res.render("book-appointment", {
     page: "book",
     title: "Book an Appointment | Voltera Plus",
-    description: "Request a two-hour appointment with Voltera Plus in Ottawa.",
+    description: "Request a two-hour appointment with Voltera Plus.",
     allServices: await contentStore.getServices(),
-    initialMonth: appointments.currentOttawaMonth(),
-    minMonth: appointments.currentOttawaMonth(),
+    initialMonth: appointments.currentLocalMonth(),
+    minMonth: appointments.currentLocalMonth(),
     values: {},
     error: null,
   });
