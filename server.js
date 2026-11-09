@@ -27,7 +27,7 @@ app.use(
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
         imgSrc: ["'self'", "data:", "https://translate.googleapis.com", "https://www.google.com", "https://www.gstatic.com", "https://fonts.gstatic.com"],
         scriptSrc: ["'self'", "https://challenges.cloudflare.com", "https://translate.google.com", "https://translate.googleapis.com", "https://translate-pa.googleapis.com", "'sha256-R6kjt5FwTd5vAw94Q08NLDZsSaGTzg4NsdIfKtECSp0='"],
-        frameSrc: ["'self'", "https://challenges.cloudflare.com", "https://translate.google.com", "https://translate.googleapis.com", "https://translate.googleusercontent.com"],
+        frameSrc: ["'self'", "https://www.google.com", "https://challenges.cloudflare.com", "https://translate.google.com", "https://translate.googleapis.com", "https://translate.googleusercontent.com"],
         connectSrc: ["'self'", "https://challenges.cloudflare.com", "https://translate.google.com", "https://translate.googleapis.com", "https://translate-pa.googleapis.com", "https://www.google.com"],
         formAction: ["'self'"],
         upgradeInsecureRequests: process.env.NODE_ENV === "production" ? [] : null,

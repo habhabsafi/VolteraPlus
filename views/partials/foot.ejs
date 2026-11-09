@@ -10,7 +10,7 @@
       <li><%= site.owner %>, <%= site.title %></li>
       <li><a href="tel:+1<%= site.phone.replace(/\D/g, '') %>"><%= site.phone %></a></li>
       <li><a href="mailto:<%= site.email %>"><%= site.email %></a></li>
-      <li><%= site.area %></li></ul></div>
+      <li><a href="https://www.google.com/maps/search/?api=1&amp;query=<%= encodeURIComponent(site.area) %>" target="_blank" rel="noopener noreferrer"><%= site.area %></a></li></ul></div>
   </div>
   <div class="foot-bottom"><span>&copy; <%= new Date().getFullYear() %> Voltera Plus. All rights reserved.</span><span>Red Seal Certified. Free Estimates.</span></div>
 </div></footer>
