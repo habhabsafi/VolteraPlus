@@ -13,10 +13,22 @@
     document.documentElement.lang = language;
   }
 
+  function setGoogleTranslateCookie(language) {
+    const value = language ? `/en/${language}` : "";
+    const maxAge = language ? 31536000 : 0;
+    const cookie = `googtrans=${value}; path=/; max-age=${maxAge}; SameSite=Lax`;
+    document.cookie = cookie;
+
+    const domain = window.location.hostname.replace(/^www\./i, "");
+    if (domain.includes(".") && !/^\d+(?:\.\d+){3}$/.test(domain)) {
+      document.cookie = `googtrans=${value}; path=/; domain=${domain}; max-age=${maxAge}; SameSite=Lax`;
+    }
+  }
+
   function showTranslationError() {
     currentLanguage = "en";
     translateLoading = false;
-    document.cookie = "googtrans=; path=/; max-age=0; SameSite=Lax";
+    setGoogleTranslateCookie("");
     updateLanguageButtons("en");
     if (status) status.textContent = "French translation could not be loaded. Please try again later.";
   }
@@ -49,7 +61,7 @@
 
   function selectFrench() {
     currentLanguage = "fr";
-    document.cookie = "googtrans=/en/fr; path=/; max-age=31536000; SameSite=Lax";
+    setGoogleTranslateCookie("fr");
     updateLanguageButtons("fr");
     if (translateInitialized) {
       translateWhenReady();
@@ -66,7 +78,7 @@
 
   function selectEnglish() {
     currentLanguage = "en";
-    document.cookie = "googtrans=/en/en; path=/; max-age=31536000; SameSite=Lax";
+    setGoogleTranslateCookie("en");
     updateLanguageButtons("en");
     window.location.reload();
   }

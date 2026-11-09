@@ -173,7 +173,7 @@ test("home page renders through the HTTP stack with security headers", async () 
   assert.match(html, /role="group" aria-label="Choose language"/);
   assert.match(html, /data-language="en" aria-label="English" aria-pressed="true">EN/);
   assert.match(html, /data-language="fr" aria-label="French" aria-pressed="false">FR/);
-  assert.match(html, /<script src="\/js\/translation\.js"><\/script>/);
+  assert.match(html, /<script src="\/js\/translation\.js\?v=3"><\/script>/);
   assert.match(response.headers.get("content-security-policy"), /script-src[^;]*https:\/\/translate\.google\.com/);
   assert.match(response.headers.get("content-security-policy"), /script-src[^;]*'sha256-R6kjt5FwTd5vAw94Q08NLDZsSaGTzg4NsdIfKtECSp0='/);
   assert.match(response.headers.get("content-security-policy"), /script-src[^;]*https:\/\/translate-pa\.googleapis\.com/);
