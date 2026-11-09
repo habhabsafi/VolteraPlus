@@ -152,7 +152,7 @@ const nextMonth = (month) => {
 
 router.get("/appointments", wrap(async (req, res) => {
   const requestedMonth = str(req.query.month, 7);
-  const month = validMonth(requestedMonth) ? requestedMonth : appointments.currentOttawaMonth();
+  const month = validMonth(requestedMonth) ? requestedMonth : appointments.currentLocalMonth();
   const start = `${month}-01`;
   const end = nextMonth(month);
   const [rows, blocks] = await Promise.all([
@@ -209,7 +209,7 @@ router.get("/appointments", wrap(async (req, res) => {
     followingMonth,
     weeks,
     blocks,
-    today: appointments.currentOttawaDate(),
+    today: appointments.currentLocalDate(),
     error: req.query.error === "block"
       ? "Enter a valid date range that starts today or later."
       : req.query.error === "block-booked"
@@ -224,7 +224,7 @@ router.post("/appointments/blocks", wrap(async (req, res) => {
   const endDate = str(req.body.end_date, 10);
   const reason = str(req.body.reason, 255) || "Unavailable";
   if (!appointments.validSlot(startDate, "08:00", false) || !appointments.validSlot(endDate, "08:00", false)
-      || startDate < appointments.currentOttawaDate() || endDate < startDate) {
+      || startDate < appointments.currentLocalDate() || endDate < startDate) {
     return res.redirect("/admin/appointments?error=block");
   }
   try {
@@ -277,7 +277,7 @@ async function appointmentDetail(res, id, error = null, status = 200) {
     attachments,
     error,
     saved: false,
-    today: appointments.currentOttawaDate(),
+    today: appointments.currentLocalDate(),
   });
 }
 
@@ -301,7 +301,7 @@ router.get("/appointments/:id", wrap(async (req, res) => {
     attachments,
     error: null,
     saved: req.query.saved === "1",
-    today: appointments.currentOttawaDate(),
+    today: appointments.currentLocalDate(),
   });
 }));
 

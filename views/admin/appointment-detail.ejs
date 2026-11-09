@@ -5,7 +5,7 @@
   <% if (appointment.email_error) { %><p class="alert err"><b>Email delivery issue:</b> <%= appointment.email_error %></p><% } %>
   <p><b>Email:</b> <a href="mailto:<%= appointment.email %>"><%= appointment.email %></a> &middot; <b>Phone:</b> <a href="tel:<%= appointment.phone.replace(/[^\d+]/g, '') %>"><%= appointment.phone %></a></p>
   <p><b>Service:</b> <%= appointment.service %></p>
-  <p><b>Appointment:</b> <%= appointment.formattedDate %> at <%= appointment.formattedTime %> (Ottawa time)</p>
+  <p><b>Appointment:</b> <%= appointment.formattedDate %> at <%= appointment.formattedTime %> (local time)</p>
   <% if (appointment.proposed_date) { %><p class="appointment-proposal"><b>Requested reschedule:</b> <%= appointment.formattedProposedDate %> at <%= appointment.formattedProposedTime %></p><% } %>
   <p><b>Address:</b> <%= appointment.address %></p>
   <p><b>Details:</b></p><p class="appointment-details"><%= appointment.details %></p>
@@ -21,7 +21,7 @@
 <% if (appointment.status === 'pending' || appointment.status === 'confirmed') { %>
   <form class="card" method="post" action="/admin/appointments/<%= appointment.id %>/reschedule">
     <input type="hidden" name="_csrf" value="<%= csrf %>">
-    <h2>Reschedule Appointment</h2><p>Admin reschedules take effect immediately. All appointment times use Ottawa time.</p>
+    <h2>Reschedule Appointment</h2><p>Admin reschedules take effect immediately. All appointment times use local time.</p>
     <div class="grid2">
       <label>New date<input type="date" name="appointment_date" min="<%= today || '' %>" required></label>
       <label>Start time<select name="start_time" required><option value="">Choose a time</option><% ['08:00','10:00','12:00','14:00','16:00'].forEach(function(time){ %><option value="<%= time %>"><%= time %></option><% }) %></select></label>

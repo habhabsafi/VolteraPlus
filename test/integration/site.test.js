@@ -163,7 +163,7 @@ test("home page renders through the HTTP stack with security headers", async () 
 
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-security-policy"), /default-src 'self'/);
-  assert.match(html, /<title>Voltera Plus \| Electrical, general contracting and handy man Services in Ottawa, ON<\/title>/);
+  assert.match(html, /<title>Voltera Plus \| Electrical, general contracting and handy man Services<\/title>/);
   assert.match(html, /Certified\. <em>Red Seal\.<\/em> Licensed\. Trusted\./);
   assert.match(html, /hello@example\.test/);
   assert.match(html, /class="nav-icon cart-nav[^"]*" aria-label="Quote cart" title="Quote cart"/);
